@@ -6,10 +6,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <!--Подключаем переменные, указанные в проперти-файле-->
+    <!--Import properties values-->
     <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>
 
-    <!--Конфигурируем бин для доступа к базе данных-->
+    <!--Initialize datasourse-->
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource"
           p:driverClassName="${database.driverClassName}"
@@ -17,13 +17,13 @@
           p:username="${database.username}"
           p:password="${database.password}"/>
 
-    <!--Конфигурация начальной инициализации базы данных и заливки начальных данных-->
+    <!--Initialize datasource with default values-->
     <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
         <jdbc:script location="classpath:db/${jdbc.initLocation}"/>
         <jdbc:script encoding="utf-8" location="classpath:db/populateDB.sql"/>
     </jdbc:initialize-database>
 
-    <!--Конфигурация JPA Factory и провайдера Hibernate-->
+    <!--Initialize JPA (Hibernate)-->
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
           p:dataSource-ref="dataSource"
           p:packagesToScan="com.bionic.edu.**.model">
@@ -31,9 +31,9 @@
 
         <property name="jpaPropertyMap">
             <map>
-                <!--Для удобочитаемости выводимых sql команд-->
+                <!--Enable formatting sql commands in log-->
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>
-                <!--Добавление в лог sql команд комментариев-->
+                <!--Adding comments to sql commands in log-->
                 <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}"
                        value="${hibernate.use_sql_comments}"/>
 
@@ -41,18 +41,18 @@
         </property>
 
         <property name="jpaVendorAdapter">
-            <!--Включаем логгирование sql запросов-->
+            <!--Enable logging sql commands generated in Hibernate-->
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
                   p:showSql="${jpa.showSql}">
             </bean>
         </property>
     </bean>
 
-    <!--Инициализация бина для работы transactionManager-->
+    <!-- Transaction manager for a single JPA EntityManagerFactory (alternative to JTA) -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
           p:entityManagerFactory-ref="entityManagerFactory"/>
 
-    <!--Включаем работу transactionManager через аннотации-->
+    <!-- Enable configuration of transactionManager throw annotations-->
     <tx:annotation-driven/>
 
 </beans>

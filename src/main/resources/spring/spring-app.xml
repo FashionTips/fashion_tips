@@ -4,10 +4,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!--Включаем конфигурирование бинов по аннотациям-->
+    <!--Enable bean configuration throw annotations-->
     <context:annotation-config/>
 
-    <!--Импортируем настройки бинов для работы с базой данных-->
+    <!--Import setting for DB-->
     <import resource="spring-db.xml"/>
 
 </beans>
