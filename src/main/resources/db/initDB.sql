@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS requests;
 DROP TABLE IF EXISTS users;
 DROP SEQUENCE IF EXISTS global_seq;
@@ -18,7 +19,6 @@ CREATE TABLE requests
 (
   id          INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
   user_id     INTEGER NOT NULL,
-  name        VARCHAR NOT NULL,
   description TEXT,
   datetime    TIMESTAMP NOT NULL DEFAULT now(),
   pic_url     VARCHAR,
