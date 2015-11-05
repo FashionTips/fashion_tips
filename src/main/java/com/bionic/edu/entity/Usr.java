@@ -1,27 +1,37 @@
 package com.bionic.edu.entity;
 
+import javax.persistence.*;
+
 /**
- * User Entity.
+ * Usr Entity.
  * Created by maxim on 11/4/15.
+ * TODO: List<Post> property
+ * TODO: List<Comment> property
+ * TODO: add follows property
+ * TODO: add followers property
  */
-public class User {
+@Entity
+@NamedQuery(name = "User.getAll", query = "SELECT u from Usr u")
+public class Usr {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
     private String name;
     private String login;
     private String email;
     private String password;
-    private String avatar;
     private String description;
 
-    public User() {
+    public Usr() {
     }
 
-    public User(String name, String login, String email, String password, String avatar, String description) {
+    public Usr(String name, String login, String email, String password, String description) {
         this.name = name;
         this.login = login;
         this.email = email;
         this.password = password;
-        this.avatar = avatar;
         this.description = description;
     }
 
@@ -57,14 +67,6 @@ public class User {
         this.password = password;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -75,12 +77,12 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
+        return "Usr{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", login='" + login + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", avatar='" + avatar + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }
