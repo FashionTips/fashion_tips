@@ -10,7 +10,7 @@
 
         <properties>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
-            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost/hibernate_test"/>
+            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost/fashion_tips"/>
             <property name="hibernate.connection.username" value="max"/>
             <property name="hibernate.connection.password" value="1111"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
