@@ -5,8 +5,8 @@ import javax.persistence.*;
 /**
  * Item Entity.
  * Created by maxim on 11/5/15.
- * TODO: add post property
- * TODO: add user property
+ * TODO: create post property
+ * TODO: create user property
  */
 @Entity
 @NamedQuery(name = "Item.getAll", query = "SELECT i FROM Item i")
@@ -27,6 +27,14 @@ public class Item {
         this.name = name;
         this.brand = brand;
         this.popularity = popularity;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {

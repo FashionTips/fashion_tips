@@ -7,8 +7,8 @@ import javax.persistence.*;
  * Created by maxim on 11/4/15.
  * TODO: List<Post> property
  * TODO: List<Comment> property
- * TODO: add follows property
- * TODO: add followers property
+ * TODO: create follows property
+ * TODO: create followers property
  */
 @Entity
 @NamedQuery(name = "User.getAll", query = "SELECT u from Usr u")
@@ -33,6 +33,14 @@ public class Usr {
         this.email = email;
         this.password = password;
         this.description = description;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {

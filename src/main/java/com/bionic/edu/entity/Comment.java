@@ -5,8 +5,8 @@ import javax.persistence.*;
 /**
  * Comment Entity.
  * Created by maxim on 11/5/15.
- * TODO: add post property
- * TODO: add user property
+ * TODO: create post property
+ * TODO: create user property
  */
 @Entity
 @NamedQuery(name = "Comment.getAll", query = "SELECT c from Comment c")
@@ -22,6 +22,14 @@ public class Comment {
 
     public Comment(String text) {
         this.text = text;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getText() {

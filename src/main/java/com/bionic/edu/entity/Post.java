@@ -6,9 +6,9 @@ import java.util.Date;
 /**
  * Post Entity.
  * Created by maxim on 11/4/15.
- * TODO: add Usr property
- * TODO: add List<Item> property
- * TODO: add List<Comment> property
+ * TODO: create Usr property
+ * TODO: create List<Item> property
+ * TODO: create List<Comment> property
  */
 @Entity
 @NamedQuery(name = "Post.getAll", query = "SELECT p FROM Post p")
@@ -28,6 +28,14 @@ public class Post {
         this.description = description;
         this.likes = likes;
         this.date = date;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getDescription() {
