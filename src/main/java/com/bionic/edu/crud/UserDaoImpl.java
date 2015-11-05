@@ -24,16 +24,19 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
         em.remove(read(id));
     }
 
     @Override
+    @Transactional
     public Usr read(long id) {
         return em.find(Usr.class, id);
     }
 
     @Override
+    @Transactional
     public void update(Usr user) {
         em.merge(user);
     }
