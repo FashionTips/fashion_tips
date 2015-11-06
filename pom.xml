@@ -52,6 +52,14 @@
     </build>
 
     <dependencies>
+
+        <!--Java EE inject API-->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
+        </dependency>
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
