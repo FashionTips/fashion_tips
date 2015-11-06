@@ -4,11 +4,11 @@ DELETE FROM users;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 -- 100000
-INSERT INTO users (name, email, password) VALUES ('Макс','maks@gmail.com','password');
+INSERT INTO users (name, email, password, registered) VALUES ('Макс','maks@gmail.com','password','2015-11-01 06:00:00');
 -- 100001
-INSERT INTO users (name, email, password) VALUES ('Юля','yulia@yandex.ru','password');
+INSERT INTO users (name, email, password, registered) VALUES ('Юля','yulia@yandex.ru','password','2015-11-01 07:00:00');
 -- 100002
-INSERT INTO users (name, email, password) VALUES ('Аня','anya@ukr.net','password');
+INSERT INTO users (name, email, password, registered) VALUES ('Аня','anya@ukr.net','password','2015-11-01 08:00:00');
 
 -- 100003
 INSERT INTO requests (user_id, description, datetime, pic_url)

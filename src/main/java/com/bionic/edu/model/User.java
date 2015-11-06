@@ -36,12 +36,23 @@ public class User extends BaseEntity {
 
     public User() {}
 
-    public User(String email, String password, String name, LocalDateTime registered) {
+    public User(Integer id, String email, String password, String name, LocalDateTime registered) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.registered = registered;
     }
+
+    public User(User user) {
+        this.id = user.getId();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.name = user.getName();
+        this.registered = user.getRegistered();
+    }
+
+
 
     @Override
     public String toString() {
