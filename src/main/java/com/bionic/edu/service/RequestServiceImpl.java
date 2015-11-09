@@ -38,9 +38,9 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request get(int id, int userId) throws NotFoundException {
-        Request request = requestRepository.get(id, userId);
-        if (request == null) throw LOG.getNotFoundException(String.format("Could not get request with id=%d and userId=%d",id, userId));
+    public Request get(int id) throws NotFoundException {
+        Request request = requestRepository.get(id);
+        if (request == null) throw LOG.getNotFoundException(String.format("Could not get request with id=%d",id));
         return request;
     }
 

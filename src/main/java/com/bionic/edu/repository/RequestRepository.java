@@ -10,14 +10,14 @@ import java.util.List;
  */
 public interface RequestRepository {
 
-    //null if updated request do not belong to user
+    //null if updated request do not belong to user or not fount
     Request save(Request request, int userId);
 
-    //fasle if request do not belong to user
+    //fasle if request do not belong to user or not fount
     boolean delete(int id, int userId);
 
-    //null if request do not belong to user
-    Request get(int id, int userId);
+    //null if request with id not found
+    Request get(int id);
 
     List<Request> getAll(int userId);
 }

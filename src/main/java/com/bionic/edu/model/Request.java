@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "requests")
 public class Request extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -28,7 +28,8 @@ public class Request extends BaseEntity {
     @Column(name = "pic_url")
     private String picUrl;
 
-    public Request() {};
+
+    public Request() {}
 
     public Request(Integer id, User user, String description, LocalDateTime dateTime, String picUrl) {
         this.id = id;

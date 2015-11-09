@@ -16,7 +16,7 @@ public interface RequestService {
 
     void delete(int id, int userId) throws NotFoundException;
 
-    Request get(int id, int userId) throws NotFoundException;
+    Request get(int id) throws NotFoundException;
 
     List<Request> getAll(int userId);
 }

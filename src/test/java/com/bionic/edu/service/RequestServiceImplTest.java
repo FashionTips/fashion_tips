@@ -1,6 +1,5 @@
 package com.bionic.edu.service;
 
-import com.bionic.edu.UserTestData;
 import com.bionic.edu.model.Request;
 import com.bionic.edu.util.exception.NotFoundException;
 import org.junit.Rule;
@@ -46,7 +45,7 @@ public class RequestServiceImplTest {
         Request updatedRequest = new Request(REQ2);
         updatedRequest.setDescription("new Description");
         requestService.update(updatedRequest, USER2_ID);
-        REQ_MATCHER.assertEquals(updatedRequest, requestService.get(REQ2_ID, USER2_ID));
+        REQ_MATCHER.assertEquals(updatedRequest, requestService.get(REQ2_ID));
     }
 
     @Test
@@ -65,13 +64,7 @@ public class RequestServiceImplTest {
 
     @Test
     public void testGet() throws Exception {
-        REQ_MATCHER.assertEquals(REQ4, requestService.get(REQ4_ID, USER3_ID));
-    }
-
-    @Test
-    public void testGetWrongUserId() throws Exception {
-        thrown.expect(NotFoundException.class);
-        REQ_MATCHER.assertEquals(REQ4,requestService.get(REQ4_ID,USER2_ID));
+        REQ_MATCHER.assertEquals(REQ4, requestService.get(REQ4_ID));
     }
 
     @Test

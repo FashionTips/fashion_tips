@@ -30,7 +30,7 @@ CREATE TABLE comments
   id            INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
   user_id       INTEGER NOT NULL,
   request_id    INTEGER NOT NULL,
-  comment_text  TEXT,
+  comment_text  TEXT NOT NULL ,
   datetime      TIMESTAMP NOT NULL DEFAULT now(),
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
   FOREIGN KEY (request_id) REFERENCES requests (id) ON DELETE CASCADE
