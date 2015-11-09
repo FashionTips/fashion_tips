@@ -12,7 +12,7 @@ import java.time.Month;
  */
 public class UserTestData {
 
-    public static final ModelMatcher<User, String> MATCHER = new ModelMatcher<>(User::toString);
+    public static final ModelMatcher<User, String> USER_MATCHER = new ModelMatcher<>(User::toString);
 
     public static final int USER1_ID = BaseEntity.START_SEQ;
     public static final int USER2_ID = BaseEntity.START_SEQ + 1;

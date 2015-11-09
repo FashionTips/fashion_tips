@@ -28,25 +28,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(User user) throws NotFoundException {
         if (userRepository.save(user) == null)
-            throw LOG.getNotFoundException("Could not update entity with id=" + user.getId());
+            throw LOG.getNotFoundException("Could not update user with id=" + user.getId());
     }
 
     @Override
     public void delete(int id) throws NotFoundException {
-        if (!userRepository.delete(id)) throw LOG.getNotFoundException("Could not delete entity with id=" + id);
+        if (!userRepository.delete(id)) throw LOG.getNotFoundException("Could not delete user with id=" + id);
     }
 
     @Override
     public User get(int id) throws NotFoundException {
         User user = userRepository.get(id);
-        if (user == null) throw LOG.getNotFoundException("Could not found entity with id=" + id);
+        if (user == null) throw LOG.getNotFoundException("Could not found user with id=" + id);
         return user;
     }
 
     @Override
     public User getByEmail(String email) throws NotFoundException {
         User user = userRepository.getByEmail(email);
-        if (user == null) throw LOG.getNotFoundException("Could not found entity with email=" + email);
+        if (user == null) throw LOG.getNotFoundException("Could not found user with email=" + email);
         return user;
     }
 

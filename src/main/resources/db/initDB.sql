@@ -19,9 +19,9 @@ CREATE TABLE requests
 (
   id          INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
   user_id     INTEGER NOT NULL,
-  description TEXT,
+  description TEXT NOT NULL,
   datetime    TIMESTAMP NOT NULL DEFAULT now(),
-  pic_url     VARCHAR,
+  pic_url     VARCHAR NOT NULL ,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 

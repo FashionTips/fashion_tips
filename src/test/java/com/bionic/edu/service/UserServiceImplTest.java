@@ -16,7 +16,6 @@ import javax.inject.Inject;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.EnumSet;
 
 import static com.bionic.edu.UserTestData.*;
 
@@ -40,7 +39,7 @@ public class UserServiceImplTest {
         User newUser = new User(null,"new_email@gmail.com","123456","New User", newUserRegisteredTime);
         User createdUser = service.save(newUser);
         newUser.setId(createdUser.getId());
-        MATCHER.assertListEquals(Arrays.asList(newUser,USER3,USER1,USER2),service.getAll());
+        USER_MATCHER.assertListEquals(Arrays.asList(newUser,USER3,USER1,USER2),service.getAll());
     }
 
     @Test
@@ -55,13 +54,13 @@ public class UserServiceImplTest {
         User updatedUser = new User(USER3);
         updatedUser.setName("Анютка");
         service.update(updatedUser);
-        MATCHER.assertEquals(updatedUser, service.get(USER3_ID));
+        USER_MATCHER.assertEquals(updatedUser, service.get(USER3_ID));
     }
 
     @Test
     public void testDelete() throws Exception {
         service.delete(USER1_ID);
-        MATCHER.assertListEquals(Arrays.asList(USER3, USER2), service.getAll());
+        USER_MATCHER.assertListEquals(Arrays.asList(USER3, USER2), service.getAll());
     }
 
     @Test
@@ -72,16 +71,16 @@ public class UserServiceImplTest {
 
     @Test
     public void testGet() throws Exception {
-        MATCHER.assertEquals(USER2, service.get(USER2_ID));
+        USER_MATCHER.assertEquals(USER2, service.get(USER2_ID));
     }
 
     @Test
     public void testGetByEmail() throws Exception {
-        MATCHER.assertEquals(USER3, service.getByEmail("anya@ukr.net"));
+        USER_MATCHER.assertEquals(USER3, service.getByEmail("anya@ukr.net"));
     }
 
     @Test
     public void testGetAll() throws Exception {
-        MATCHER.assertListEquals(Arrays.asList(USER3, USER1, USER2), service.getAll());
+        USER_MATCHER.assertListEquals(Arrays.asList(USER3, USER1, USER2), service.getAll());
     }
 }
