@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--Enable annotation configuration-->
+    <mvc:annotation-driven/>
+    <context:component-scan base-package="com.bionic.edu.**.web"/>
+
+    <!-- Serve static resources from src/main/webapp/ -->
+    <mvc:default-servlet-handler/>
+
+    <!--Set JSP location-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          p:prefix="/WEB-INF/jsp/"
+          p:suffix=".jsp"/>
+
+
+    <!--  all resources inside folder src/main/webapp/resources are mapped so they can be referred to inside JSP files -->
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+    <!-- uses WebJars so Javascript and CSS libs can be declared as Maven dependencies (Bootstrap, jQuery...) -->
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+
+    <!--Set location of localization message files-->
+    <!--<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"-->
+          <!--p:cacheSeconds="60"-->
+          <!--p:defaultEncoding="UTF-8">-->
+        <!--<property name="basenames" value="file:///#{systemEnvironment['TRAINMAN_ROOT']}/config/messages/app"/>-->
+    <!--</bean>-->
+
+
+</beans>

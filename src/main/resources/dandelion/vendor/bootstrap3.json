@@ -1,0 +1,22 @@
+{
+  "bundle": "bootstrap3",
+  "dependencies": ["jquery"],
+  "assets": [
+    {
+      "name": "bootstrap3",
+      "version": "3.3.1",
+      "type": "js",
+      "locations": {
+        "webjar": "bootstrap.min.js"
+      }
+    },
+    {
+      "name": "bootstrap3",
+      "version": "3.3.1",
+      "type": "css",
+      "locations": {
+        "webjar": "bootstrap.min.css"
+      }
+    }
+  ]
+}

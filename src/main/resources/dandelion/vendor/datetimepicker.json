@@ -1,0 +1,22 @@
+{
+  "bundle": "datetimepicker",
+  "dependencies": ["jquery"],
+  "assets": [
+    {
+      "name": "datetimepicker",
+      "version": "2.3.4",
+      "type": "js",
+      "locations": {
+        "webjar": "jquery.datetimepicker.js"
+      }
+    },
+    {
+      "name": "datetimepicker",
+      "version": "2.3.4",
+      "type": "css",
+      "locations": {
+        "webjar": "jquery.datetimepicker.css"
+      }
+    }
+  ]
+}
