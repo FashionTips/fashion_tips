@@ -71,6 +71,16 @@ public class Post {
                 "id=" + id +
                 ", description='" + description + '\'' +
                 ", likes=" + likes +
+                ", date=" + date +
+                ", user=" + user +
                 '}';
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
