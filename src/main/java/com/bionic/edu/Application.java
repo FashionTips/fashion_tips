@@ -12,9 +12,12 @@ public class Application {
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
         UserService userService = context.getBean(UserService.class);
-//        User user = new User("Max", "solomkinmv", "solomkinmv@gmail.com", "1111", "");
-//        for (User user1: userService.getAll()) {
-//            System.out.println(user1);
-//        }
+        User u1 = new User("User1", "user1", "user1@example.com", "1111", "");
+        User u2 = new User("User2", "user2", "user1@example.com", "1111", "");
+        User u3 = new User("User3", "user3", "user1@example.com", "1111", "");
+        userService.save(u1);
+        userService.save(u2);
+        userService.save(u3);
+        userService.getAll().forEach(System.out::println);
     }
 }
