@@ -43,7 +43,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> getUserPosts(long userId) {
-        return em.createQuery("SELECT p FROM Post p WHERE p.user = :userId", Post.class)
+        return em.createQuery("SELECT p FROM Post p WHERE p.user.id = :userId", Post.class)
                 .setParameter("userId", userId).getResultList();
     }
 }

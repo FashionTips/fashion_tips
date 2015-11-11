@@ -44,6 +44,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getUserPosts(long userId) {
-        return null;
+        return postDao.getUserPosts(userId);
     }
 }
