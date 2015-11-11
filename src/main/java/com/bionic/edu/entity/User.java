@@ -3,7 +3,7 @@ package com.bionic.edu.entity;
 import javax.persistence.*;
 
 /**
- * Usr Entity.
+ * User Entity.
  * Created by maxim on 11/4/15.
  * TODO: List<Post> property
  * TODO: List<Comment> property
@@ -11,8 +11,8 @@ import javax.persistence.*;
  * TODO: create followers property
  */
 @Entity
-@NamedQuery(name = "User.getAll", query = "SELECT u from Usr u")
-public class Usr {
+@Table(name = "account")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,10 +24,10 @@ public class Usr {
     private String password;
     private String description;
 
-    public Usr() {
+    public User() {
     }
 
-    public Usr(String name, String login, String email, String password, String description) {
+    public User(String name, String login, String email, String password, String description) {
         this.name = name;
         this.login = login;
         this.email = email;
@@ -85,7 +85,7 @@ public class Usr {
 
     @Override
     public String toString() {
-        return "Usr{" +
+        return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", login='" + login + '\'' +

@@ -6,12 +6,11 @@ import java.util.Date;
 /**
  * Post Entity.
  * Created by maxim on 11/4/15.
- * TODO: create Usr property
  * TODO: create List<Item> property
  * TODO: create List<Comment> property
  */
 @Entity
-@NamedQuery(name = "Post.getAll", query = "SELECT p FROM Post p")
+@Table(name = "post")
 public class Post {
 
     @Id
@@ -20,6 +19,10 @@ public class Post {
     private String description;
     private int likes;
     private Date date;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private User user;
 
     public Post() {
     }

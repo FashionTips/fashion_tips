@@ -9,6 +9,7 @@ import javax.persistence.*;
  * TODO: create user property
  */
 @Entity
+@Table(name = "comment")
 @NamedQuery(name = "Comment.getAll", query = "SELECT c from Comment c")
 public class Comment {
 
@@ -16,6 +17,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String text;
+
+    @OneToOne
+    private User user;
 
     public Comment() {
     }
@@ -46,5 +50,13 @@ public class Comment {
                 "id=" + id +
                 ", text='" + text + '\'' +
                 '}';
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

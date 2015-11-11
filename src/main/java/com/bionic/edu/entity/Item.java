@@ -9,7 +9,7 @@ import javax.persistence.*;
  * TODO: create user property
  */
 @Entity
-@NamedQuery(name = "Item.getAll", query = "SELECT i FROM Item i")
+@Table(name = "item")
 public class Item {
 
     @Id
