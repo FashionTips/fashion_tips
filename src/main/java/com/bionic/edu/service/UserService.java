@@ -8,7 +8,7 @@ import java.util.List;
  * Created by maxim on 11/5/15.
  */
 public interface UserService {
-    User add(User user);
+    User save(User user);
     void delete(long id);
     User getById(long id);
     List<User> getAll();

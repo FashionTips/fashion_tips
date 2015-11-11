@@ -2,6 +2,7 @@ package com.bionic.edu.service;
 
 import com.bionic.edu.dao.UserDao;
 import com.bionic.edu.entity.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -11,13 +12,14 @@ import java.util.List;
  * Created by maxim on 11/5/15.
  */
 @Named
+@Transactional
 public class UserServiceImpl implements UserService {
     @Inject
     private UserDao userDao;
 
     @Override
-    public User add(User user) {
-        return userDao.add(user);
+    public User save(User user) {
+        return userDao.save(user);
     }
 
     @Override

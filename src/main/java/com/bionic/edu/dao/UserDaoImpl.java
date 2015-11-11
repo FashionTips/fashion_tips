@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
@@ -13,13 +14,12 @@ import java.util.List;
  * Created by maxim on 11/5/15.
  */
 @Repository
-@Transactional
 public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    public User add(User user) {
+    public User save(User user) {
         em.persist(user);
         return user;
     }
@@ -36,7 +36,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getAll() {
-        return (List<User>) em.createQuery("SELECT a FROM account a").getResultList();
+        return em.createQuery("SELECT u FROM User u", User.class).getResultList();
     }
 
     @Override
