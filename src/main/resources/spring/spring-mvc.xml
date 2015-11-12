@@ -25,6 +25,11 @@
     <!-- uses WebJars so Javascript and CSS libs can be declared as Maven dependencies (Bootstrap, jQuery...) -->
     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
 
+    <!-- add interceptors -->
+    <mvc:interceptors>
+        <bean class="com.bionic.edu.web.interceptor.ModelInterceptor"/>
+    </mvc:interceptors>
+
     <!--Set location of localization message files-->
     <!--<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"-->
           <!--p:cacheSeconds="60"-->

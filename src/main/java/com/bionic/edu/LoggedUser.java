@@ -26,6 +26,17 @@ public class LoggedUser implements UserDetails, Serializable {
         return 100000;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public User updateUser(User updatedUser) {
+        this.user.setEmail(updatedUser.getEmail());
+        this.user.setName(updatedUser.getName());
+        this.user.setPassword(updatedUser.getPassword());
+        return this.user;
+    }
+
     public static LoggedUser safeGet() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null) {

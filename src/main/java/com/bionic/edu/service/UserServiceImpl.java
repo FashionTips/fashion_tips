@@ -26,11 +26,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User save(User user) {
+        user.setEmail(user.getEmail().toLowerCase());
         return userRepository.save(user);
     }
 
     @Override
     public void update(User user) throws NotFoundException {
+        user.setEmail(user.getEmail().toLowerCase());
         if (userRepository.save(user) == null)
             throw LOG.getNotFoundException("Could not update user with id=" + user.getId());
     }

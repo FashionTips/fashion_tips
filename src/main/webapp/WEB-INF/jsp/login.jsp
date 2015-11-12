@@ -2,6 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib prefix="dandelion" uri="http://github.com/dandelion" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <dandelion:asset cssExcludes="jumbotron_narrowCSS"/>
@@ -25,8 +26,16 @@
 </nav>
 <div class="jumbotron">
     <div class="container">
-        <p></p>
-        <img src="http://savepic.su/6451085.png" class="img-responsive" alt="Fashion Tips"/>
+        <img src="http://savepic.su/6451085.png" class="img-responsive col-sm-3" alt="Fashion Tips"/>
+        <div class="col-sm-9">
+            <p>Добро пожаловать в сервис Fashion Tips. Войдите под своей учетной записью или зарегистрируйтесь.</p>
+            <p><a class="btn btn-primary btn-lg" role="button" href="register">Зарегистрироваться &raquo;</a></p>
+            <c:if test="${not empty message}">
+                <div class="message">
+                    Пользователь зарегистрирован.
+                </div>
+            </c:if>
+        </div>
     </div>
 </div>
 
