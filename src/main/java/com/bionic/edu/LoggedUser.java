@@ -26,6 +26,10 @@ public class LoggedUser implements UserDetails, Serializable {
         return 100000;
     }
 
+    public static int getLoggedId() {
+        return safeGet().getUser().getId();
+    }
+
     public User getUser() {
         return user;
     }

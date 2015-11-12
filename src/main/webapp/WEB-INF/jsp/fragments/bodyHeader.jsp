@@ -11,6 +11,7 @@
             <c:url value="/logout" var="logout"/>
             <form:form class="navbar-form navbar-right" action="${logout}" method="post">
                 <sec:authorize access="isAuthenticated()">
+                    <a class="btn btn-warning" role="button" href="/requests/new">Спросить совет</a>
                     <a class="btn btn-info" role="button" href="<c:url value='/profile'/>">${user.name} профиль</a>
                     <input type="submit" class="btn btn-primary" value="Logout">
                 </sec:authorize>
