@@ -37,7 +37,7 @@ public class RequestServiceImplTest {
         Request newRequest = new Request(null, null, "Новая курточка.","http://trendy.wmj.ru/uploads/images/00/00/17/2013/04/21/93046b.jpg");
         Request created = requestService.save(newRequest, USER3_ID);
         newRequest.setId(created.getId());
-        REQ_MATCHER.assertListEquals(Arrays.asList(newRequest,REQ4),requestService.getAll(USER3_ID));
+        REQ_MATCHER.assertListEquals(Arrays.asList(newRequest,REQ4),requestService.getAllByUserId(USER3_ID));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class RequestServiceImplTest {
     @Test
     public void testDelete() throws Exception {
         requestService.delete(REQ3_ID, USER2_ID);
-        REQ_MATCHER.assertListEquals(Arrays.asList(REQ2), requestService.getAll(USER2_ID));
+        REQ_MATCHER.assertListEquals(Arrays.asList(REQ2), requestService.getAllByUserId(USER2_ID));
     }
 
     @Test
@@ -69,6 +69,6 @@ public class RequestServiceImplTest {
 
     @Test
     public void testGetAll() throws Exception {
-        REQ_MATCHER.assertListEquals(Arrays.asList(REQ3,REQ2), requestService.getAll(USER2_ID));
+        REQ_MATCHER.assertListEquals(Arrays.asList(REQ3,REQ2), requestService.getAllByUserId(USER2_ID));
     }
 }

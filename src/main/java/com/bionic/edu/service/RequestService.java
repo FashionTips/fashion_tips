@@ -18,5 +18,7 @@ public interface RequestService {
 
     Request get(int id) throws NotFoundException;
 
-    List<Request> getAll(int userId);
+    List<Request> getAllByUserId(int userId);
+
+    List<Request> getAll();
 }

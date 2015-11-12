@@ -19,5 +19,7 @@ public interface RequestRepository {
     //null if request with id not found
     Request get(int id);
 
-    List<Request> getAll(int userId);
+    List<Request> getAllbyUserId(int userId);
+
+    List<Request> getAll();
 }

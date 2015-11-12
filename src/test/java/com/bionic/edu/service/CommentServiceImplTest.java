@@ -40,7 +40,7 @@ public class CommentServiceImplTest {
         Comment newComment = new Comment(null, REQ4, null, "new CommentText", LocalDateTime.now());
         Comment created = commentService.save(newComment, USER1_ID);
         newComment.setId(created.getId());
-        COMM_MATCHER.assertListEquals(Arrays.asList(newComment, COMM4_1),commentService.getAllByRequest(REQ4_ID));
+        COMM_MATCHER.assertListEquals(Arrays.asList(COMM4_1,newComment),commentService.getAllByRequest(REQ4_ID));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class CommentServiceImplTest {
     @Test
     public void testDelete() throws Exception {
         commentService.delete(COMM3_1_ID, USER3_ID);
-        COMM_MATCHER.assertListEquals(Arrays.asList(COMM3_3, COMM3_2), commentService.getAllByRequest(REQ3_ID));
+        COMM_MATCHER.assertListEquals(Arrays.asList(COMM3_2, COMM3_3), commentService.getAllByRequest(REQ3_ID));
     }
 
     @Test
@@ -78,6 +78,6 @@ public class CommentServiceImplTest {
 
     @Test
     public void testGetAllByRequest() throws Exception {
-        COMM_MATCHER.assertListEquals(Arrays.asList(COMM3_3,COMM3_2,COMM3_1), commentService.getAllByRequest(REQ3_ID));
+        COMM_MATCHER.assertListEquals(Arrays.asList(COMM3_1,COMM3_2,COMM3_3), commentService.getAllByRequest(REQ3_ID));
     }
 }

@@ -29,5 +29,8 @@ public interface ProxyRequestRepository extends JpaRepository<Request, Integer> 
     Request get(@Param("id") int id);
 
     @Query("SELECT r FROM Request r WHERE r.user.id=:userId ORDER BY r.dateTime DESC ")
-    List<Request> getAll(@Param("userId")int userId);
+    List<Request> getAllbyUserId(@Param("userId") int userId);
+
+    @Query("SELECT r FROM Request r ORDER BY r.dateTime DESC ")
+    List<Request> getAll();
 }

@@ -43,7 +43,12 @@ public class RequestRepositoryImpl implements RequestRepository {
     }
 
     @Override
-    public List<Request> getAll(int userId) {
-        return proxy.getAll(userId);
+    public List<Request> getAllbyUserId(int userId) {
+        return proxy.getAllbyUserId(userId);
+    }
+
+    @Override
+    public List<Request> getAll() {
+        return proxy.getAll();
     }
 }

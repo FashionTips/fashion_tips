@@ -1,5 +1,8 @@
 package com.bionic.edu.web;
 
+import com.bionic.edu.model.Comment;
+import com.bionic.edu.model.Request;
+import com.bionic.edu.service.CommentService;
 import com.bionic.edu.service.RequestService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,9 +21,21 @@ public class RequestController {
     @Inject
     private RequestService requestService;
 
+    @Inject
+    private CommentService commentService;
+
     @RequestMapping(value = "/requests/{id}", method = RequestMethod.GET)
     public String getRequest(@PathVariable("id") int id, Model model) {
-        model.addAttribute("request", requestService.get(id));
+        Request request = requestService.get(id);
+        model.addAttribute("request", request);
+        model.addAttribute("comments", commentService.getAllByRequest(id));
+        model.addAttribute("newComment", new Comment());
         return "request";
+    }
+
+    @RequestMapping(value = "/requests", method = RequestMethod.GET)
+    public String getAllRequests(Model model) {
+        model.addAttribute("requests", requestService.getAll());
+        return "requests";
     }
 }

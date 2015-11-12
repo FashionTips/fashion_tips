@@ -27,6 +27,6 @@ public interface ProxyCommentRepository extends JpaRepository<Comment, Integer> 
     @Query("SELECT c FROM Comment c WHERE c.id=:id")
     Comment get(@Param("id") int id);
 
-    @Query("SELECT c FROM Comment c WHERE c.request.id=:requestId ORDER BY c.dateTime DESC ")
+    @Query("SELECT c FROM Comment c WHERE c.request.id=:requestId ORDER BY c.dateTime ASC ")
     List<Comment> getAllByRequest(@Param("requestId")int requestId);
 }

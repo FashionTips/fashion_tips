@@ -23,9 +23,8 @@ public class Comment extends BaseEntity {
     @Column(name = "comment_text", nullable = false)
     private String commentText;
 
-    @NotNull
     @Column(name = "datetime", nullable = false)
-    private LocalDateTime dateTime = LocalDateTime.now();
+    private LocalDateTime dateTime;
 
     public Comment() {}
 
