@@ -18,13 +18,11 @@ import java.time.LocalDateTime;
 public class User extends BaseEntity {
 
     @Column(name = "email", nullable = false, unique = true)
-    @Email
     @NotEmpty
     protected String email;
 
     @Column(name = "password", nullable = false)
     @NotEmpty
-    @Length(min = 5)
     protected String password;
 
     @Column(name = "name", nullable = false)
