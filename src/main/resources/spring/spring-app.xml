@@ -10,6 +10,9 @@
     <!--Import setting for DB-->
     <import resource="spring-db.xml"/>
 
+    <!--Import setting for Spring Security-->
+    <import resource="spring-security.xml"/>
+
     <!--Create service beans-->
     <context:component-scan base-package="com.bionic.edu.**.service"/>
 

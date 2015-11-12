@@ -1,9 +1,13 @@
 package com.bionic.edu.service;
 
+import com.bionic.edu.LoggedUser;
 import com.bionic.edu.LoggerWrapper;
 import com.bionic.edu.model.User;
 import com.bionic.edu.repository.UserRepository;
 import com.bionic.edu.util.exception.NotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -12,8 +16,8 @@ import java.util.List;
 /**
  * Created by VPortianko on 06.11.2015.
  */
-@Named
-public class UserServiceImpl implements UserService {
+@Named("userService")
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private static final LoggerWrapper LOG = LoggerWrapper.get(UserServiceImpl.class);
 
@@ -53,5 +57,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAll() {
         return userRepository.getAll();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.getByEmail(email.toLowerCase());
+        if (user == null) {
+            throw new UsernameNotFoundException("User " + email + " is not found");
+        }
+        return new LoggedUser(user);
     }
 }

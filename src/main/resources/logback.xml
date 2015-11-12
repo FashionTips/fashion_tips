@@ -18,6 +18,7 @@
     </appender>
 
     <logger name="com.bionic.edu" level="DEBUG"/>
+    <!--<logger name="org.springframework.security" level="DEBUG"/>-->
 
     <root level="INFO">
         <appender-ref ref="console"/>
