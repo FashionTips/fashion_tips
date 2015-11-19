@@ -10,6 +10,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fashion-tips-service</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>com.bionic.edu</groupId>
+            <artifactId>fashion-tips-persistence</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 
 </project>
