@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+    <!--<beans:bean id="restAuthenticationEntryPoint"-->
+                <!--class="com.bionic.edu.security.RestAuthenticationEntryPoint"/>-->
+
+    <!--entry-point-ref="restAuthenticationEntryPoint"-->
+    <http auto-config="true">
+        <!--<csrf disabled="true"/>-->
+
+        <http-basic/>
+        <intercept-url pattern="/users**" access="hasRole('ROLE_USER')" />
+        <!--<form-login-->
+                <!--authentication-success-handler-ref="mySuccessHandler"-->
+                <!--authentication-failure-handler-ref="myFailureHandler"-->
+        <!--/>-->
+
+        <!--<logout />-->
+
+    </http>
+
+    <!--<beans:bean id="mySuccessHandler"-->
+                <!--class="com.bionic.edu.security.MySavedRequestAwareAuthenticationSuccessHandler"/>-->
+    <!--<beans:bean id="myFailureHandler" class=-->
+            <!--"org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"/>-->
+
+    <authentication-manager>
+        <authentication-provider>
+            <user-service>
+                <user name="tempUser" password="12345" authorities="ROLE_USER" />
+                <user name="tempAdmin" password="12345" authorities="ROLE_ADMIN" />
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+
+
+</beans:beans>
