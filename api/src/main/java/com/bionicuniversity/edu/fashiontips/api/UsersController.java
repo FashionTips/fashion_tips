@@ -1,28 +1,23 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
 
-import com.bionic.edu.entity.User;
-import com.bionic.edu.service.UserService;
-import com.bionic.edu.service.util.exception.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.service.UserService;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.Collection;
-import java.util.List;
+import javax.inject.Inject;
 
 @RestController
 @RequestMapping("/users")
 public class UsersController {
 
-   // @Autowired
+    @Inject
     private UserService userService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/:{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ResponseEntity<User> getUser(@PathVariable int id) throws NotFoundException {
         User user = userService.get(new Long(id));
         return new ResponseEntity<>(user, HttpStatus.OK);
