@@ -14,6 +14,9 @@
 
     <properties>
         <servlet-api.version>3.1.0</servlet-api.version>
+
+        <!--Spring Security-->
+        <spring-security.version>4.0.3.RELEASE</spring-security.version>
     </properties>
 
     <dependencies>
@@ -49,6 +52,18 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

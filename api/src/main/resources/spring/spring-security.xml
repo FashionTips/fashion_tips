@@ -1,41 +1,41 @@
-<!--<?xml version="1.0" encoding="UTF-8"?>-->
-<!--<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"-->
-       <!--xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
-       <!--xmlns="http://www.springframework.org/schema/security"-->
-       <!--xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd-->
-                           <!--http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">-->
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
-    <!--&lt;!&ndash;<beans:bean id="restAuthenticationEntryPoint"&ndash;&gt;-->
-                <!--&lt;!&ndash;class="com.bionic.edu.security.RestAuthenticationEntryPoint"/>&ndash;&gt;-->
+    <!--<beans:bean id="restAuthenticationEntryPoint"-->
+                <!--class="com.bionic.edu.security.RestAuthenticationEntryPoint"/>-->
 
-    <!--&lt;!&ndash;entry-point-ref="restAuthenticationEntryPoint"&ndash;&gt;-->
-    <!--&lt;!&ndash;<http auto-config="true">&ndash;&gt;-->
-        <!--&lt;!&ndash;&lt;!&ndash;<csrf disabled="true"/>&ndash;&gt;&ndash;&gt;-->
+    <!--entry-point-ref="restAuthenticationEntryPoint"-->
+    <http>
+        <http-basic/>
+        <intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+        <csrf disabled="true"/>
+        <!--<form-login-->
+                <!--authentication-success-handler-ref="mySuccessHandler"-->
+                <!--authentication-failure-handler-ref="myFailureHandler"-->
+        <!--/>-->
 
-        <!--&lt;!&ndash;<http-basic/>&ndash;&gt;-->
-        <!--&lt;!&ndash;<intercept-url pattern="/users**" access="hasRole('ROLE_USER')" />&ndash;&gt;-->
-        <!--&lt;!&ndash;&lt;!&ndash;<form-login&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;&lt;!&ndash;authentication-success-handler-ref="mySuccessHandler"&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;&lt;!&ndash;authentication-failure-handler-ref="myFailureHandler"&ndash;&gt;&ndash;&gt;-->
-        <!--&lt;!&ndash;&lt;!&ndash;/>&ndash;&gt;&ndash;&gt;-->
+        <!--<logout />-->
 
-        <!--&lt;!&ndash;&lt;!&ndash;<logout />&ndash;&gt;&ndash;&gt;-->
+    </http>
 
-    <!--&lt;!&ndash;</http>&ndash;&gt;-->
+    <!--<beans:bean id="mySuccessHandler"-->
+                <!--class="com.bionic.edu.security.MySavedRequestAwareAuthenticationSuccessHandler"/>-->
+    <!--<beans:bean id="myFailureHandler" class=-->
+            <!--"org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"/>-->
 
-    <!--&lt;!&ndash;<beans:bean id="mySuccessHandler"&ndash;&gt;-->
-                <!--&lt;!&ndash;class="com.bionic.edu.security.MySavedRequestAwareAuthenticationSuccessHandler"/>&ndash;&gt;-->
-    <!--&lt;!&ndash;<beans:bean id="myFailureHandler" class=&ndash;&gt;-->
-            <!--&lt;!&ndash;"org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"/>&ndash;&gt;-->
-
-    <!--&lt;!&ndash;<authentication-manager>&ndash;&gt;-->
-        <!--&lt;!&ndash;<authentication-provider>&ndash;&gt;-->
-            <!--&lt;!&ndash;<user-service>&ndash;&gt;-->
-                <!--&lt;!&ndash;<user name="tempUser" password="12345" authorities="ROLE_USER" />&ndash;&gt;-->
-                <!--&lt;!&ndash;<user name="tempAdmin" password="12345" authorities="ROLE_ADMIN" />&ndash;&gt;-->
-            <!--&lt;!&ndash;</user-service>&ndash;&gt;-->
-        <!--&lt;!&ndash;</authentication-provider>&ndash;&gt;-->
-    <!--&lt;!&ndash;</authentication-manager>&ndash;&gt;-->
+    <authentication-manager>
+        <authentication-provider>
+            <user-service>
+                <user name="login1" password="1111" authorities="ROLE_USER" />
+                <user name="login2" password="1111" authorities="ROLE_USER" />
+                <user name="login3" password="1111" authorities="ROLE_USER" />
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
 
 
-<!--</beans:beans>-->
+</beans:beans>
