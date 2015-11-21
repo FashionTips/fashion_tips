@@ -12,6 +12,7 @@
     <artifactId>fashion-tips-api</artifactId>
     <packaging>war</packaging>
 
+
     <properties>
         <servlet-api.version>3.1.0</servlet-api.version>
 
@@ -20,7 +21,6 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>com.bionicuniversity.edu</groupId>
             <artifactId>fashion-tips-service</artifactId>
@@ -72,4 +72,5 @@
         </dependency>
 
     </dependencies>
+
 </project>

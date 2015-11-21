@@ -1,0 +1,1 @@
+mvn tomcat7:run -pl :fashion-tips-api -am
