@@ -8,8 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by Sergiy on 18.11.2015
- * Project: fashion-tips
+ *  Generic Service Interface.
  */
 public interface GenericService<T extends BaseEntity<PK>, PK extends Serializable> {
 
@@ -22,5 +21,4 @@ public interface GenericService<T extends BaseEntity<PK>, PK extends Serializabl
     T get(PK id) throws NotFoundException;
 
     List<T> getAll();
-
 }

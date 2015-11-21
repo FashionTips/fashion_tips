@@ -1,8 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.service.util.exception;
 
 /**
- * Created by Sergiy on 16.11.2015
- * Project: fashion-tips
+ * NotFound Exception: Custom Runtime Exception.
  */
 
 public class NotFoundException extends RuntimeException{

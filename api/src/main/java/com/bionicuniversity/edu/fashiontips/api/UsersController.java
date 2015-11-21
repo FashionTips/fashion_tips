@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 
+/**
+ * Controller for users.
+ */
+
 @RestController
 @RequestMapping("/users")
 public class UsersController {
@@ -18,8 +22,8 @@ public class UsersController {
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public ResponseEntity<User> getUser(@PathVariable int id) throws NotFoundException {
-        User user = userService.get(new Long(id));
+    public ResponseEntity<User> getUser(@PathVariable Long id) throws NotFoundException {
+        User user = userService.get(id);
         user.setPassword(null);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
