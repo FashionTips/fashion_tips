@@ -11,7 +11,6 @@ import java.util.List;
 
 /**
  * GenericDao implementation.
- * Created by maxim on 11/18/15.
  */
 public abstract class GenericDaoImpl<T extends BaseEntity, PK extends Serializable> implements GenericDao<T, PK> {
 

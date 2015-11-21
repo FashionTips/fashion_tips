@@ -1,6 +1,3 @@
-/**
- * Created by Maksym Dolia on 18.11.2015.
- */
 var app = angular.module('fashion-tips-web', ['ngRoute', 'ngMessages']);
 
 app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {

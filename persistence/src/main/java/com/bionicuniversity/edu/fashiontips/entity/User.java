@@ -6,10 +6,8 @@ import javax.persistence.*;
  * Entity class for User.
  */
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User extends BaseEntity<Long> {
-
-
     private String login;
     private String email;
     private String password;

@@ -6,8 +6,7 @@ import com.bionicuniversity.edu.fashiontips.service.UserService;
 import javax.inject.Named;
 
 /**
- * Created by Sergiy on 18.11.2015
- * Project: fashion-tips
+ * User Service Implementation.
  */
 @Named
 public class UserServiceImpl extends GenericServiceImpl<User, Long> implements UserService {
