@@ -1,5 +1,6 @@
 var app = angular.module('fashion-tips-web', ['ngRoute', 'ngMessages']);
 
+/** App Configuration **/
 app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 
     $routeProvider.when("/", {
@@ -12,6 +13,7 @@ app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPro
         redirectTo : "/"
     });
 
+    /* Set to all request's headers, that they are ajax */
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
 }]);

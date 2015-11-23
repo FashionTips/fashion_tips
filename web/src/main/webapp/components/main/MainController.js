@@ -1,4 +1,4 @@
-var MainController = function ($rootScope, $scope, $http, $location) {
+var MainController = ['$rootScope', '$scope', '$http', '$location', function ($rootScope, $scope, $http, $location) {
 
     var authenticate = function (credentials, callback) {
 
@@ -8,18 +8,14 @@ var MainController = function ($rootScope, $scope, $http, $location) {
         } : {};
 
         $http.get("http://localhost:8080/users/1", {headers: headers}).success(function (data) {
-            if (data.login) {
-                $rootScope.authenticated = true;
-            } else {
-                $rootScope.authenticated = false;
-            }
+            $rootScope.authenticated = data.login;
             callback && callback();
         }).error(function () {
             $rootScope.authenticated = false;
             callback && callback();
         });
 
-    }
+    };
 
     authenticate();
     $scope.credentials = {};
@@ -38,10 +34,10 @@ var MainController = function ($rootScope, $scope, $http, $location) {
     $scope.logout = function () {
         $rootScope.authenticated = false;
         $location.path("/");
-    }
+    };
 
     $scope.clickMe = function () {
         $http.get("http://localhost:8080/users");
-    }
+    };
 
-};
+}];

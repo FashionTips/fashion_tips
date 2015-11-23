@@ -1,7 +1,8 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -11,25 +12,29 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown" ng-show="!authenticated">
+                <li class="dropdown" data-ng-show="!authenticated">
                     <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
-                    <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
-                        <form name="signinForm" accept-charset="UTF-8" ng-submit="login()">
-                            <div class="form-group has-feedback" ng-class="{ 'has-error': signinForm.username.$invalid }">
-                                <input class="form-control" type="text" placeholder="Username" id="username" name="username" ng-model="credentials.username" required>
-                                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="signinForm.username.$touched"></span>
+                    <div class="dropdown-menu">
+                        <form name="signinForm" accept-charset="UTF-8" data-ng-submit="login()">
+                            <div class="form-group has-feedback" data-ng-class="{ 'has-error': signinForm.username.$invalid }">
+                                <input class="form-control" type="text" placeholder="Username" id="username"
+                                       name="username" data-ng-model="credentials.username" required>
+                                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"
+                                      data-ng-show="signinForm.username.$touched"></span>
                                 <span class="sr-only">(success)</span>
                             </div>
-                            <div class="form-group has-feedback" ng-class="{ 'has-error': signinForm.password.$invalid }">
-                                <input class="form-control" placeholder="Password" id="password" name="password" ng-model="credentials.password" required>
-                                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="signinForm.password.$touched"></span>
+                            <div class="form-group has-feedback" data-ng-class="{ 'has-error': signinForm.password.$invalid }">
+                                <input class="form-control" placeholder="Password" id="password" name="password"
+                                       data-ng-model="credentials.password" required>
+                                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"
+                                      data-ng-show="signinForm.password.$touched"></span>
                                 <span class="sr-only">(success)</span>
                             </div>
                             <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Sign In">
                         </form>
                     </div>
                 </li>
-                <li ng-show="authenticated"><a href="" ng-click="logout()">logout</a></li>
+                <li data-ng-show="authenticated"><a href="" data-ng-click="logout()">logout</a></li>
             </ul>
         </div>
     </div>
