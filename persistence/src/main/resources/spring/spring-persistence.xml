@@ -19,42 +19,76 @@
     <context:property-placeholder location="classpath:db/postgresql.properties"
                                   system-properties-mode="OVERRIDE"/>
 
+    <bean id="transactionManager"
+          class="org.springframework.orm.jpa.JpaTransactionManager"
+          p:entityManagerFactory-ref="entityManagerFactory"/>
 
-    <!--Initialize datasource with default values-->
-    <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
-        <jdbc:script location="classpath:db/${jdbc.initLocation}"/>
-        <jdbc:script encoding="utf-8" location="classpath:db/${jdbc.filloutDB}"/>
-    </jdbc:initialize-database>
+    <tx:annotation-driven/>
 
-    <bean id="dataSource"
+    <beans profile="dev">
+
+        <jdbc:embedded-database type="HSQL" id="dataSource"/>
+
+        <jdbc:initialize-database>
+            <jdbc:script encoding="utf-8" location="classpath:db/fillOutInMemoryDB.sql"/>
+        </jdbc:initialize-database>
+
+        <bean id="entityManagerFactory"
+              class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+            <property name="packagesToScan" value="com.bionicuniversity.edu.fashiontips.entity"/>
+            <property name="dataSource" ref="dataSource"/>
+            <property name="jpaVendorAdapter">
+                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                    <property value="${jpa.showSql}" name="showSql"/>
+                </bean>
+            </property>
+            <property name="jpaPropertyMap">
+                <map>
+                    <entry key="hibernate.hbm2ddl.auto" value="create"/>
+                    <!--Enable formatting sql commands in log-->
+                    <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>
+                    <!--Adding comments to sql commands in log-->
+                    <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}"
+                           value="${hibernate.use_sql_comments}"/>
+                </map>
+            </property>
+        </bean>
+
+    </beans>
+
+    <beans profile="production">
+        <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource"
           p:driverClassName="${database.driverClassName}"
           p:url="${database.url}"
           p:username="${database.username}"
           p:password="${database.password}"/>
 
-    <bean id="entityManagerFactory"
-          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="packagesToScan" value="com.bionicuniversity.edu.fashiontips.entity"/>
-        <property name="dataSource" ref="dataSource"/>
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-                <property value="${jpa.showSql}" name="showSql"/>
-            </bean>
-        </property>
-        <property name="jpaPropertyMap">
-            <map>
-                <!--Enable formatting sql commands in log-->
-                <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>
-                <!--Adding comments to sql commands in log-->
-                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}"
-                       value="${hibernate.use_sql_comments}"/>
-            </map>
-        </property>
-    </bean>
+        <!--Initialize datasource with default values-->
+        <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
+            <jdbc:script location="classpath:db/${jdbc.initLocation}"/>
+            <jdbc:script encoding="utf-8" location="classpath:db/${jdbc.filloutDB}"/>
+        </jdbc:initialize-database>
 
-    <bean id="transactionManager"
-          class="org.springframework.orm.jpa.JpaTransactionManager"
-          p:entityManagerFactory-ref="entityManagerFactory"/>
-    <tx:annotation-driven/>
+        <bean id="entityManagerFactory"
+              class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+            <property name="packagesToScan" value="com.bionicuniversity.edu.fashiontips.entity"/>
+            <property name="dataSource" ref="dataSource"/>
+            <property name="jpaVendorAdapter">
+                <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                    <property value="${jpa.showSql}" name="showSql"/>
+                </bean>
+            </property>
+            <property name="jpaPropertyMap">
+                <map>
+                    <!--Enable formatting sql commands in log-->
+                    <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>
+                    <!--Adding comments to sql commands in log-->
+                    <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}"
+                           value="${hibernate.use_sql_comments}"/>
+                </map>
+            </property>
+        </bean>
+    </beans>
+
 </beans>
