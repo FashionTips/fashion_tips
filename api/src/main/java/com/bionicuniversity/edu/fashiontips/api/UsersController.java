@@ -13,7 +13,7 @@ import javax.inject.Inject;
 /**
  * Controller for users.
  */
-
+@CrossOrigin
 @RestController
 @RequestMapping("/users")
 public class UsersController {
