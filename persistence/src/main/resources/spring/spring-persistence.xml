@@ -16,22 +16,18 @@
 
     <context:component-scan base-package="com.bionicuniversity.edu.fashiontips.**.dao"/>
 
-    <context:property-placeholder location="classpath:db/postgresql.properties"
-                                  system-properties-mode="OVERRIDE"/>
-
+    <bean id="dataSource"
+      class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+      p:driverClassName="${database.driverClassName}"
+      p:url="${database.url}"
+      p:username="${database.username}"
+      p:password="${database.password}"/>
 
     <!--Initialize datasource with default values-->
     <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
         <jdbc:script location="classpath:db/${jdbc.initLocation}"/>
         <jdbc:script encoding="utf-8" location="classpath:db/${jdbc.filloutDB}"/>
     </jdbc:initialize-database>
-
-    <bean id="dataSource"
-          class="org.springframework.jdbc.datasource.DriverManagerDataSource"
-          p:driverClassName="${database.driverClassName}"
-          p:url="${database.url}"
-          p:username="${database.username}"
-          p:password="${database.password}"/>
 
     <bean id="entityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -56,5 +52,17 @@
     <bean id="transactionManager"
           class="org.springframework.orm.jpa.JpaTransactionManager"
           p:entityManagerFactory-ref="entityManagerFactory"/>
+
     <tx:annotation-driven/>
+
+    <beans profile="dev">
+        <context:property-placeholder location="classpath:db/hsqldb.properties"
+                                      system-properties-mode="OVERRIDE"/>
+    </beans>
+
+    <beans profile="production">
+        <context:property-placeholder location="classpath:db/postgresql.properties"
+                                      system-properties-mode="OVERRIDE"/>
+    </beans>
+
 </beans>
