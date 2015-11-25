@@ -7,7 +7,12 @@
 
     <http>
         <http-basic/>
-        <intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+
+        <!-- Permit OPTIONS request for all to support cors -->
+        <intercept-url pattern="/**" method="OPTIONS" access="permitAll"/>
+
+        <!-- Only authenticated users can access the api methods -->
+        <intercept-url pattern="/**" access="isAuthenticated()" />
         <csrf disabled="true"/>
     </http>
 
