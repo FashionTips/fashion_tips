@@ -50,6 +50,7 @@ public class Post extends BaseEntity<Long> {
     @Override
     public String toString() {
         return "Post{" +
+                "id='" + super.getId() + '\'' +
                 "user=" + user +
                 ", created=" + created +
                 ", textMessage='" + textMessage + '\'' +

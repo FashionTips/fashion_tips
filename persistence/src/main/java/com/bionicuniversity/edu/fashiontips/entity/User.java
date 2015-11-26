@@ -55,6 +55,7 @@ public class User extends BaseEntity<Long> {
     @Override
     public String toString() {
         return "User{" +
+                "id='" + super.getId() + '\'' +
                 "login='" + login + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
