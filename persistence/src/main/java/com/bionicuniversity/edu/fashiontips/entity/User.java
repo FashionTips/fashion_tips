@@ -1,6 +1,8 @@
 package com.bionicuniversity.edu.fashiontips.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Entity class for User.
@@ -11,6 +13,9 @@ public class User extends BaseEntity<Long> {
     private String login;
     private String email;
     private String password;
+
+    @OneToMany(cascade = CascadeType.REFRESH,fetch = FetchType.EAGER, mappedBy = "user")
+    private Set<Post> posts = new HashSet<>();
 
     public User() {
     }
@@ -39,13 +44,22 @@ public class User extends BaseEntity<Long> {
         this.password = password;
     }
 
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
+                "id='" + super.getId() + '\'' +
+                "login='" + login + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", posts=" + posts +
                 '}';
     }
 }
