@@ -5,8 +5,8 @@ var app = angular.module('fashion-tips-web', ['ngRoute', 'ngMessages', 'ngResour
 var urlApi = "http://localhost:8080"; // URL
 
 /* App Configuration */
-app.config(['$routeProvider', '$httpProvider', '$locationProvider',
-    function ($routeProvider, $httpProvider, $locationProvider) {
+app.config(['$routeProvider', '$httpProvider',
+    function ($routeProvider, $httpProvider) {
 
         $routeProvider
             .when("/", {
@@ -22,8 +22,8 @@ app.config(['$routeProvider', '$httpProvider', '$locationProvider',
                 controller: 'ProfileController'
             })
             .when("/profile/post", {
-                templateUrl: "components/post/addPost.html",
-                controller: "PostController"
+                templateUrl: "components/posts/addPost.html",
+                controller: 'PostsController'
             })
             .otherwise({
                 redirectTo: "/"
@@ -37,5 +37,5 @@ app.config(['$routeProvider', '$httpProvider', '$locationProvider',
 
 /* Controllers */
 app.controller('MainController', MainController);
-app.controller('ProfileController', ProfileController);
 app.controller('PostController', PostController);
+app.controller('ProfileController', ProfileController);
