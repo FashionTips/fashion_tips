@@ -28,6 +28,13 @@ public class UsersController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/by")
+    public ResponseEntity<User> getUserByLogin(@RequestParam(value = "login")String login) {
+        User user = userService.getByLogin(login);
+        user.setPassword(null);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorInformation> processUserNotFoundEx(Exception e) {
         ErrorInformation error = new ErrorInformation(e.getClass().toString(), e.getMessage());
