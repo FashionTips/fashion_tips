@@ -1,3 +1,8 @@
+DROP TABLE IF EXISTS posts;
+DROP INDEX IF EXISTS category_index;
+DROP TABLE IF EXISTS category;
+DROP INDEX IF EXISTS email;
+DROP INDEX IF EXISTS login;
 DROP TABLE IF EXISTS users ;
 
 CREATE TABLE users (
@@ -11,3 +16,15 @@ CREATE TABLE users (
 CREATE UNIQUE INDEX login ON users (login);
 
 CREATE UNIQUE INDEX email ON users (email);
+
+
+CREATE TABLE posts (
+  id BIGSERIAL,
+  user_id BIGINT NOT NULL,
+  image_path VARCHAR(128),
+  user_post VARCHAR(256),
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  category VARCHAR(64) NOT NULL ,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "post_id" PRIMARY KEY (id)
+);

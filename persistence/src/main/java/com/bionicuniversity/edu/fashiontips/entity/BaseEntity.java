@@ -10,7 +10,11 @@ import java.io.Serializable;
  * Abstract base entity.
  */
 @MappedSuperclass
-public abstract class BaseEntity<T> implements Serializable {
+public abstract class BaseEntity<T extends Serializable> implements Serializable {
+
+    /**
+     * T value is an ID of Entity Class
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected T id;
