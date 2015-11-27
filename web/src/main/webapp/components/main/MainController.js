@@ -1,10 +1,30 @@
-var MainController = ['$rootScope', '$scope', '$http', '$location', '$location',
-    function ($rootScope, $scope, $http, $location) {
+var MainController = ['$rootScope', '$scope', '$http', '$location', '$localStorage',
+    function ($rootScope, $scope, $http, $location, $localStorage) {
 
-        /* if this is login page - show login dropdown form */
-        $scope.$watch(function () {
-            $scope.showLogin = $location.url() === '/login';
-        });
+        $scope.login = function () {
+
+            if(mockLogin) {
+                $rootScope.authenticated = true;
+                $rootScope.$storage.user = user;
+                $location.path("/profile");
+                return;
+            }
+
+            authenticate($scope.credentials, function () {
+                if ($rootScope.authenticated) {
+                    $location.path("/profile");
+                    $scope.error = false;
+                } else {
+                    $location.path("/");
+                    $scope.error = true;
+                }
+            });
+        };
+
+        $scope.logout = function () {
+            delete $rootScope.$storage.user;
+            $location.path("/");
+        };
 
         var authenticate = function (credentials, callback) {
 
@@ -23,30 +43,13 @@ var MainController = ['$rootScope', '$scope', '$http', '$location', '$location',
 
         };
 
-        authenticate();
+        //authenticate();
         $scope.credentials = {};
-        $scope.login = function () {
 
-            if(mockLogin) {
-                $rootScope.authenticated = true;
-                $rootScope.user = user;
-                $location.path("/profile");
-                return;
-            }
+        $rootScope.$storage = $localStorage.$default({
+            user: null
+        });
 
-            authenticate($scope.credentials, function () {
-                if ($rootScope.authenticated) {
-                    $location.path("/profile");
-                    $scope.error = false;
-                } else {
-                    $location.path("/");
-                    $scope.error = true;
-                }
-            });
-        };
+        $rootScope.authenticated = $rootScope.$storage.user != null;
 
-        $scope.logout = function () {
-            $rootScope.authenticated = false;
-            $location.path("/");
-        };
     }];

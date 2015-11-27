@@ -1,8 +1,8 @@
 /* MODULE */
-var app = angular.module('fashion-tips-web', ['ngRoute', 'ngMessages', 'ngResource']);
+var app = angular.module('fashion-tips-web', ['ngRoute', 'ngMessages', 'ngResource', 'ngStorage']);
 
 /* App constants */
-var mockLogin = false;
+var mockLogin = true;
 var user = {name: 'John', username: 'john_doe', email: 'john_doe@gamil.com'};
 
 /* URLs */
