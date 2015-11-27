@@ -13,17 +13,13 @@ app.config(['$routeProvider', '$httpProvider',
                 templateUrl: "components/main/main.html",
                 controller: 'MainController'
             })
-            .when("/login", {
-                templateUrl: "components/main/main.html",
-                controller: 'MainController'
-            })
             .when("/profile", {
                 templateUrl: "components/profile/profile.html",
                 controller: 'ProfileController'
             })
             .when("/profile/post", {
-                templateUrl: "components/posts/addPost.html",
-                controller: 'PostsController'
+                templateUrl: "components/post/addPost.html",
+                controller: 'PostController'
             })
             .otherwise({
                 redirectTo: "/"
