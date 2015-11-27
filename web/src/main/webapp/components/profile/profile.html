@@ -1,10 +1,9 @@
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
-            <h4>Hello, {{ user.name }}!</h4>
-            <p>Username: {{ user.username }}</p>
-            <p>Email: {{ user.email }}</p>
-            <a href="#/profile/post">Add new post</a>
+        <div class="jumbotron">
+            <h1>Hello, {{ $storage.user.login }}!</h1>
+            <p>Email: {{ $storage.user.email }}</p>
+            <p><a class="btn btn-primary btn-lg" href="#/profile/post" role="button">Add post</a></p>
         </div>
     </div>
 </div>
