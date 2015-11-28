@@ -2,6 +2,9 @@ package com.bionicuniversity.edu.fashiontips.dao.impl;
 
 import com.bionicuniversity.edu.fashiontips.dao.GenericDao;
 import com.bionicuniversity.edu.fashiontips.entity.BaseEntity;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,6 +28,7 @@ public abstract class GenericDaoImpl<T extends BaseEntity, PK extends Serializab
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public T save(T object) {
         if (object == null) {
             throw new IllegalArgumentException();
@@ -49,6 +53,7 @@ public abstract class GenericDaoImpl<T extends BaseEntity, PK extends Serializab
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void delete(PK id) {
         em.remove(getById(id));
     }
