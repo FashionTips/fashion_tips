@@ -22,15 +22,16 @@
 
     <build>
         <plugins>
-            <!-- Embedded Jetty-->
             <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.3.5.v20151012</version>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
                 <configuration>
-                    <httpConnector>
-                        <port>8081</port>
-                    </httpConnector>
+                    <path>/</path>
+                    <port>8081</port>
+                    <systemProperties>
+                        <file.encoding>UTF-8</file.encoding>
+                    </systemProperties>
                 </configuration>
             </plugin>
         </plugins>
