@@ -32,6 +32,7 @@ app.config(['$routeProvider', '$httpProvider',
     }]);
 
 /* Controllers */
+app.controller('MenuController', MenuController);
 app.controller('MainController', MainController);
 app.controller('PostController', PostController);
 app.controller('ProfileController', ProfileController);
