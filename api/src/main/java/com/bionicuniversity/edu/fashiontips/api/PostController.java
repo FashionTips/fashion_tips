@@ -2,11 +2,14 @@ package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.entity.Category;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
+import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.inject.Inject;
 import java.security.Principal;
@@ -35,26 +38,44 @@ public class PostController {
      * with such id.
      *
      * @param id post's id
-     * @return  post instance
+     * @return post instance
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Post getPost(@PathVariable long id) {
-        validatePost(id);
         return postService.get(id);
+    }
+
+    /**
+     * Returns all user's posts.
+     *
+     * @param principal authenticated user
+     * @return list of posts
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    public List<Post> getPosts(Principal principal) {
+        User user = userService.getByLogin(principal.getName());
+        return postService.getAllByUser(user);
     }
 
     /**
      * Adds given post to database.
      *
-     * @param post post to add to database
+     * @param post      post to add to database
+     * @param principal authenticated user
      * @return response with status 201 (CREATED) and post's data in body
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> saveNewPost(@RequestBody Post post, Principal principal) {
-        post.setCategory(Category.POST);
+        post.setCategory(Category.POST);    // temporary workaround
         post.setUser(userService.getByLogin(principal.getName()));
         Post savedPost = postService.save(post);
-        return new ResponseEntity<>(savedPost, HttpStatus.CREATED);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("posts/" + savedPost.getId())
+                .build()
+                .toUri());
+        return new ResponseEntity<>(savedPost, headers, HttpStatus.CREATED);
     }
 
     /**
@@ -64,30 +85,18 @@ public class PostController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deletePost(@PathVariable long id) {
-        validatePost(id);
         postService.delete(id);
     }
 
-    /* Check is there post in db with given id */
-    private void validatePost(long id) {
-        if(postService.get(id) == null) {
-            throw new PostNotFoundException(id);
-        }
-    }
-}
-
-
-/**
- *  Exception, which determines that post is not present in database. Sets the HttpStatus to 404 (Not Found)
- */
-@ResponseStatus(HttpStatus.NOT_FOUND)
-class PostNotFoundException extends RuntimeException {
-
-    public PostNotFoundException() {
-        super("Post doesn’t exist");
-    }
-
-    public PostNotFoundException(long id) {
-        super("Could not find post with id " + id + ".");
+    /**
+     * Updates post with given data.
+     *
+     * @param id post's id
+     * @param post new post data
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public void updatePost(@PathVariable long id, @RequestBody Post post) {
+        post.setId(id);
+        postService.save(post);
     }
 }

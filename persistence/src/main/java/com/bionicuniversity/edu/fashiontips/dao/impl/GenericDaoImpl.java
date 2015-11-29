@@ -48,7 +48,7 @@ public abstract class GenericDaoImpl<T extends BaseEntity, PK extends Serializab
     @Override
     public List<T> getAll() {
         return em.createQuery(String.format(
-                        "SELECT o FROM %s o", templateClass.getSimpleName()),
+                "SELECT o FROM %s o", templateClass.getSimpleName()),
                 templateClass).getResultList();
     }
 
@@ -56,5 +56,11 @@ public abstract class GenericDaoImpl<T extends BaseEntity, PK extends Serializab
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void delete(PK id) {
         em.remove(getById(id));
+    }
+
+    @Override
+    @Transactional
+    public void deleteAll() {
+        em.createQuery(String.format("DELETE FROM %s", templateClass.getSimpleName())).executeUpdate();
     }
 }

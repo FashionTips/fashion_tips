@@ -16,4 +16,9 @@ public interface GenericDao<T extends BaseEntity, PK extends Serializable> {
     List<T> getAll();
 
     void delete(PK id);
+
+    /**
+     * Deletes all records.
+     */
+    void deleteAll();
 }

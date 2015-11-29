@@ -34,11 +34,4 @@ public class UsersController {
         user.setPassword(null);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorInformation> processUserNotFoundEx(Exception e) {
-        ErrorInformation error = new ErrorInformation(e.getClass().toString(), e.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
-
 }

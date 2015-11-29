@@ -1,7 +1,5 @@
-package com.bionicuniversity.edu.fashiontips.daotests;
+package com.bionicuniversity.edu.fashiontips.dao;
 
-import com.bionicuniversity.edu.fashiontips.dao.PostDao;
-import com.bionicuniversity.edu.fashiontips.dao.UserDao;
 import com.bionicuniversity.edu.fashiontips.entity.Category;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
@@ -21,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
- * Calss for testing UserDao
+ * Class for testing PostDao
  */
 
 @ActiveProfiles("dev")
@@ -30,15 +28,14 @@ import static org.junit.Assert.assertNull;
 @Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         config = @SqlConfig(encoding = "UTF-8"))
-public class UserDaoTest {
+public class PostDaoTest {
+
     private static User user1 = new User("login4", "email4@example.com", "1111");
     private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Category.QUESTION);
-    private static User user2 = new User("login1", "email1@example.com", "1111");
-    private static Post post2 = new Post(user2, "title1", "what fits me with these pants?", Category.QUESTION);
     static {
         user1.setId(4L);
-        user2.setId(1L);
     }
+
 
     @Inject
     private PostDao postDao;
@@ -50,41 +47,36 @@ public class UserDaoTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void testSaveUser() {
+    public void testAddPost() {
         User user = new User("login4", "email4@example.com", "1111");
         user = userDao.save(user);
         System.out.println(user);
-        assertEquals(user1, userDao.getById(4L));
+        Post post = new Post(user, "title4", "How my glasses fits me?", Category.QUESTION);
+        post = postDao.save(post);
+        System.out.println(post);
+        Post expected = postDao.getById(7L);
+        post.setCreated(expected.getCreated());
+        assertEquals(post.toString(), postDao.getById(7L).toString());
     }
 
     @Test
-    public void testDeleteUser() {
-        userDao.delete(1L);
+    public void testDeletePost() {
+        postDao.delete(1L);
+        Post post = postDao.getById(1L);
+        assertNull(post);
+    }
+
+    @Test
+    public void testGetPostById() {
         User user = userDao.getById(1L);
-        assertNull(user);
+        Post post = new Post();
+        post.setUser(user);
+        post.setTitle("title1");
+        post.setTextMessage("what fits me with these pants?");
+        post.setCategory(Category.QUESTION);
+        Post expected = postDao.getById(1L);
+        post.setCreated(expected.getCreated());
+        post.setId(1L);
+        assertEquals(post.toString(), expected.toString());
     }
-
-    @Test
-    public void testGetUserById() {
-        User user = new User();
-        user.setId(1L);
-        user.setPassword("1111");
-        user.setEmail("email1@example.com");
-        user.setLogin("login1");
-        User expected = userDao.getById(1L);
-        assertEquals(user.toString(), expected.toString());
-    }
-
-//    @Test
-//    public void testGetPostsOfUser() {
-//        User user = userDao.getById(1L);
-//        Post[] posts = new Post[2];
-//        Post post1 = new Post(user2, "title1", "what fits me with these pants?", Category.QUESTION);
-//        Post post2 = new Post(user2, "title1", "what fits me with these pants? Again", Category.POST);
-//        post1.setId(user.getPosts().toArray(new Post[0])[0].getId());
-//        post2.setId(user.getPosts().toArray(new Post[0])[1].getId());
-//        posts[0] = post1;
-//        posts[1] = post2;
-//        assertArrayEquals(posts, user.getPosts().toArray(new Post[0]));
-//    }
 }
