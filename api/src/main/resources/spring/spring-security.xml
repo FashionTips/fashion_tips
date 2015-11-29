@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+    <http>
+        <http-basic entry-point-ref="entryPoint"/>
+
+        <!-- Permit OPTIONS request for all to support cors -->
+        <intercept-url pattern="/**" method="OPTIONS" access="permitAll"/>
+
+        <!-- Only authenticated users can access the api methods -->
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <csrf disabled="true"/>
+        <custom-filter ref="restLogoutFilter" position="LOGOUT_FILTER"/>
+    </http>
+
+    <!--Initialize custom entry point for HTTP Basic Auth-->
+    <beans:bean id="entryPoint" class="com.bionicuniversity.edu.fashiontips.security.CustomBasicAuthenticationEntryPoint">
+        <beans:constructor-arg name="realmName" value="Fashion Tips Application"/>
+    </beans:bean>
+
+    <!-- Initialize custom logout filter for REST interface -->
+    <beans:bean id="restLogoutFilter" class="com.bionicuniversity.edu.fashiontips.security.CustomLogoutFilter">
+        <beans:constructor-arg>
+            <beans:bean class="org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler" />
+        </beans:constructor-arg>
+        <beans:constructor-arg>
+            <beans:list>
+                <beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+            </beans:list>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    <authentication-manager>
+        <authentication-provider>
+            <user-service>
+                <user name="login1" password="1111" authorities="ROLE_USER" />
+                <user name="login2" password="1111" authorities="ROLE_USER" />
+                <user name="login3" password="1111" authorities="ROLE_USER" />
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+</beans:beans>
