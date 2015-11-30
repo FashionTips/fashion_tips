@@ -103,7 +103,12 @@ public class PostControllerTest {
     @Test
     public void testGetPostUserUnauthorised() throws Exception {
         mockMvc.perform(get("/posts/" + post1.getId()))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.id", is(post1.getId().intValue())))
+                .andExpect(jsonPath("$.title", is(post1.getTitle())))
+                .andExpect(jsonPath("$.textMessage", is(post1.getTextMessage())))
+                .andExpect(jsonPath("$.category", is(post1.getCategory().name())));
     }
 
     @Test
