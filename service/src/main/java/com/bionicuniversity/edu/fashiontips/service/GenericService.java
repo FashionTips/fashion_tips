@@ -2,7 +2,6 @@ package com.bionicuniversity.edu.fashiontips.service;
 
 
 import com.bionicuniversity.edu.fashiontips.entity.BaseEntity;
-import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,11 +13,11 @@ public interface GenericService<T extends BaseEntity<PK>, PK extends Serializabl
 
     T save(T object);
 
-    void update(T object) throws NotFoundException;
+    void update(T object);
 
-    void delete(PK id) throws NotFoundException;
+    void delete(PK id);
 
-    T get(PK id) throws NotFoundException;
+    T get(PK id);
 
     List<T> getAll();
 }

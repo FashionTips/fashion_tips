@@ -28,25 +28,32 @@ public class GenericServiceImpl<T extends BaseEntity<PK>, PK extends Serializabl
         return repository.save(object);
     }
 
-    public void update(T object) throws NotFoundException {
+    public void update(T object) {
+        validate(object.getId());
         repository.save(object);
     }
 
-    public void delete(PK id) throws NotFoundException {
+    public void delete(PK id) {
+        validate(id);
         repository.delete(id);
     }
 
-    public T get(PK id) throws NotFoundException {
+    public T get(PK id) {
+        validate(id);
+        return repository.getById(id);
+    }
+
+    public List<T> getAll() {
+        return repository.getAll();
+    }
+
+    /* check whether object with given id exists in persistence and throws NotFoundException in a case of absence */
+    private void validate(PK id) {
         T object = repository.getById(id);
         if (object == null) {
             throw new NotFoundException(
                     String.format("Could not found %s with id  = %s",
                             tClass.getSimpleName().toLowerCase(), id.toString()));
         }
-        return object;
-    }
-
-    public List<T> getAll() {
-        return repository.getAll();
     }
 }

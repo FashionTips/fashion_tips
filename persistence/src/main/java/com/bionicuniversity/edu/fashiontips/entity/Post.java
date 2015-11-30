@@ -1,10 +1,16 @@
 package com.bionicuniversity.edu.fashiontips.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
  * Entity Class Post whish mapped on post table in DB
+ *
  * @author Alexandr
  * @since 25.11.2015
  */
@@ -15,6 +21,8 @@ public class Post extends BaseEntity<Long> {
     /**
      * Column user, which consists User Entity
      */
+    @JsonProperty("author")
+    @JsonIgnoreProperties(value = {"id", "email", "password"})
     @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
@@ -23,6 +31,7 @@ public class Post extends BaseEntity<Long> {
      * Column created which represent creating date of post
      * Auto convert by LocalDateTimeConverter
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @Column(name = "created", nullable = false, insertable = false)
     private LocalDateTime created;
 
@@ -49,8 +58,7 @@ public class Post extends BaseEntity<Long> {
     }
 
     /**
-     *
-     * @param user - referenced to User Entity
+     * @param user    - referenced to User Entity
      * @param message - consists user's message
      */
     public Post(User user, String title, String message, Category category) {
@@ -68,6 +76,7 @@ public class Post extends BaseEntity<Long> {
         this.user = user;
     }
 
+    @JsonIgnore
     public LocalDateTime getCreated() {
         return created;
     }
