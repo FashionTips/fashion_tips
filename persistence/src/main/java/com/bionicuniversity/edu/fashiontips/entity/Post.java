@@ -13,6 +13,7 @@ import java.util.List;
  * Entity Class Post whish mapped on post table in DB
  *
  * @author Alexandr
+ * @author Volodymyr Portianko
  * @since 25.11.2015
  */
 @Entity
@@ -52,6 +53,10 @@ public class Post extends BaseEntity<Long> {
     @Column(nullable = false, updatable = true, insertable = true)
     private Category category;
 
+    /*
+    * List of posts images
+    * Relationships store in separate table
+    * */
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinTable(
             name = "post_images",

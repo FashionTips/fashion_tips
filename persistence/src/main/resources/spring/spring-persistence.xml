@@ -56,17 +56,19 @@
     <tx:annotation-driven/>
 
     <beans profile="dev">
-        <context:property-placeholder location="classpath:db/hsqldb.properties"
-                                      system-properties-mode="OVERRIDE"/>
-
-        <bean class="com.bionicuniversity.edu.fashiontips.dao.impl.ImageDaoImpl">
-            <constructor-arg value=""/>
-        </bean>
+        <context:property-placeholder
+                location="classpath:db/hsqldb.properties,
+                          classpath:fashion_tips.properties"
+                ignore-unresolvable="true"
+                system-properties-mode="OVERRIDE"/>
     </beans>
 
     <beans profile="production">
-        <context:property-placeholder location="classpath:db/postgresql.properties"
-                                      system-properties-mode="OVERRIDE"/>
+        <context:property-placeholder
+                location="classpath:db/postgresql.properties,
+                          classpath:fashion_tips.properties"
+                ignore-unresolvable="true"
+                system-properties-mode="OVERRIDE"/>
     </beans>
 
 </beans>

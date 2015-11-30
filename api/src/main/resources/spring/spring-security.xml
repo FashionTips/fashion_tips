@@ -11,6 +11,9 @@
         <!-- Permit OPTIONS request for all to support cors -->
         <intercept-url pattern="/**" method="OPTIONS" access="permitAll"/>
 
+        <!-- Permit unauth access to images -->
+        <intercept-url pattern="/images/**" method="GET" access="permitAll"/>
+
         <!-- Only authenticated users can access the api methods -->
         <intercept-url pattern="/**" access="isAuthenticated()" />
         <csrf disabled="true"/>

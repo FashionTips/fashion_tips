@@ -20,7 +20,7 @@
                 <!--</div>-->
             <!--</div>-->
 
-            <div class="btn-group" data-toggle="buttons">
+            <div class=" form-group btn-group" data-toggle="buttons">
                 <label class="btn btn-default **active**">
                     <input type="radio" name="Category" id="POST" ng-model="postForm.category" checked>
                     POST </label>
@@ -33,6 +33,11 @@
                 <!--<input type="file" onchange="angular.element(this).scope().uploadFile(this.files)">-->
                 <!--<p class="help-block">Attach picture.</p>-->
             <!--</div>-->
+            <div class="form-group">
+                <input type = "file" file-model = "myFile"/>
+                <button ng-click = "uploadFile()">upload me</button>
+            </div>
+
             <div class="form-group">
                 <button type="submit" class="btn btn-default" data-ng-click="submit()">Submit</button>
             </div>

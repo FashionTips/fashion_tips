@@ -7,6 +7,8 @@ import java.io.IOException;
 
 /**
  *  Interface for Image entity dao
+ *
+ *  @author Volodymyr Portianko
  */
 public interface ImageDao {
 
