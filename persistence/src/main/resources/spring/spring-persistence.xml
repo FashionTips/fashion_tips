@@ -58,6 +58,10 @@
     <beans profile="dev">
         <context:property-placeholder location="classpath:db/hsqldb.properties"
                                       system-properties-mode="OVERRIDE"/>
+
+        <bean class="com.bionicuniversity.edu.fashiontips.dao.impl.ImageDaoImpl">
+            <constructor-arg value=""/>
+        </bean>
     </beans>
 
     <beans profile="production">

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Entity Class Post whish mapped on post table in DB
@@ -50,6 +51,14 @@ public class Post extends BaseEntity<Long> {
      */
     @Column(nullable = false, updatable = true, insertable = true)
     private Category category;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinTable(
+            name = "post_images",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "img_id")
+    )
+    private List<Image> images;
 
     /**
      * Default Constructor
@@ -109,6 +118,14 @@ public class Post extends BaseEntity<Long> {
         this.title = title;
     }
 
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+
 
     @Override
     public String toString() {
@@ -119,6 +136,7 @@ public class Post extends BaseEntity<Long> {
                 ", title=" + title +
                 ", textMessage='" + textMessage + '\'' +
                 ", category=" + category +
+                ", images=" + images +
                 '}';
     }
 }
