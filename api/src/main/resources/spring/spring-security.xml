@@ -36,11 +36,13 @@
 
     <authentication-manager>
         <authentication-provider>
-            <user-service>
-                <user name="login1" password="1111" authorities="ROLE_USER" />
-                <user name="login2" password="1111" authorities="ROLE_USER" />
-                <user name="login3" password="1111" authorities="ROLE_USER" />
-            </user-service>
+            <password-encoder hash="bcrypt" />
+            <jdbc-user-service
+                    data-source-ref="dataSource"
+                    users-by-username-query="select login, password, 1 from users where login = ?"
+                    authorities-by-username-query="select login, role from users
+                                                   join roles on users.id = roles.user_id
+                                                   where login = ?"/>
         </authentication-provider>
     </authentication-manager>
 </beans:beans>

@@ -66,7 +66,7 @@ public class UserDaoTest {
     public void testGetUserById() {
         User user = new User();
         user.setId(1L);
-        user.setPassword("1111");
+        user.setPassword("$2a$10$nMaTdVApgGyalfxJdehKM.7/vfJznBdMqois3Ppw2sarqHpfHSZy6");
         user.setEmail("email1@example.com");
         user.setLogin("login1");
         User expected = userDao.getById(1L);
