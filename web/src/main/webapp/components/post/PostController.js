@@ -4,9 +4,23 @@ var PostController = ['$rootScope', '$scope', '$resource', '$http', '$location',
         /* get post id from route provider */
         var postId = $routeParams.id;
 
+        /* Define Posts resource */
+        var Posts = $resource(urlApi + '/posts/:id', {}, {
+            save: {
+                method: 'POST',
+                transformResponse: function (data) {
+
+                    /* make response headers and data available after call */
+                    var response = {};
+                    response.data = JSON.parse(data);
+                    return response;
+                }
+            }
+        });
+
         if (postId) {    //if postId is present
             /* upload post by id */
-            //$scope.post = Posts.get({id: postId});
+            $scope.post = Posts.get({id: postId});
         }
 
         $scope.newPostUrl;
@@ -42,18 +56,4 @@ var PostController = ['$rootScope', '$scope', '$resource', '$http', '$location',
                 $scope.error = true;
             });
         };
-
-        /* Define Posts resource */
-        var Posts = $resource(urlApi + '/posts/:id', {}, {
-            save: {
-                method: 'POST',
-                transformResponse: function (data) {
-
-                    /* make response headers and data available after call */
-                    var response = {};
-                    response.data = JSON.parse(data);
-                    return response;
-                }
-            }
-        });
     }];
