@@ -14,9 +14,9 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import javax.validation.ConstraintViolationException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Class for testing PostDao
@@ -47,7 +47,7 @@ public class PostDaoTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void testAddPost() {
+    public void testAddValidPost() {
         User user = new User("login4", "email4@example.com", "1111");
         user = userDao.save(user);
         System.out.println(user);
@@ -57,6 +57,14 @@ public class PostDaoTest {
         Post expected = postDao.getById(7L);
         post.setCreated(expected.getCreated());
         assertEquals(post.toString(), postDao.getById(7L).toString());
+    }
+
+    @Test
+    public void testAddNotValidPost() {
+        thrown.expect(ConstraintViolationException.class);
+        Post post = new Post(user1, "", "", Category.POST);
+        postDao.save(post);
+        fail("Should not save not valid entities.");
     }
 
     @Test

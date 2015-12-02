@@ -140,13 +140,21 @@ public class PostControllerTest {
     }
 
     @Test
-    public void testSaveNewPostUserAuthorised() throws Exception {
+    public void testSaveNewPostWithValidDataUserAuthorised() throws Exception {
         Post post = new Post(user, "Some title", "what fits me with these pants?", Category.QUESTION);
         post.setCreated(LocalDateTime.now());
 
         mockMvc.perform(post("/posts").with(httpBasic(user.getLogin(), "1111")).contentType(contentType).content(json(post)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", notNullValue()));
+    }
+
+    @Test
+    public void testSaveNewPostWithNotValidDataUserAuthorised() throws Exception {
+        Post post = new Post(user, "", "", Category.QUESTION);
+
+        mockMvc.perform(post("/posts").with(httpBasic(user.getLogin(), "1111")).contentType(contentType).content(json(post)))
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
