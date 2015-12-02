@@ -11,6 +11,9 @@
         <!-- Permit OPTIONS request for all to support cors -->
         <intercept-url pattern="/**" method="OPTIONS" access="permitAll"/>
 
+        <!--Permit posts GET request for unauthorized users.-->
+        <intercept-url pattern="/posts/*" method="GET" access="permitAll"/>
+
         <!-- Only authenticated users can access the api methods -->
         <intercept-url pattern="/**" access="isAuthenticated()" />
         <csrf disabled="true"/>
