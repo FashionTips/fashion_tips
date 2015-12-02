@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+
 /**
  * Class to handle exceptions in global app scope.
  *
@@ -39,5 +42,26 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorInformation> processUnspecifiedException(Exception e) {
         ErrorInformation error = new ErrorInformation(e.getClass().toString(), e.getMessage());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Handles validation exceptions.
+     *
+     * @param e exception
+     * @return response entity
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorInformation> processValidationException(ConstraintViolationException e) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        /* build message with all validation errors */
+        e.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .map(str -> str + " ")
+                .forEach(stringBuilder::append);
+        ErrorInformation error = new ErrorInformation(e.getClass().toString(), stringBuilder.toString());
+        return ResponseEntity.unprocessableEntity().body(error);
     }
 }
