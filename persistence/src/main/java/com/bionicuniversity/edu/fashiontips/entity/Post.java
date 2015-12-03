@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,9 +42,13 @@ public class Post extends BaseEntity<Long> {
     /**
      * Column TextMessage which represent user's ext-message
      */
+    @NotBlank(message = "Post body could not be empty.")
+    @Size(max = 1000, message = "Post body may not has more than 1000 characters.")
     @Column(name = "user_post")
     private String textMessage;
 
+    @NotBlank(message = "Title could not be empty.")
+    @Size(max = 100, message = "Title may not has more than 100 characters.")
     @Column(name = "title")
     private String title;
 

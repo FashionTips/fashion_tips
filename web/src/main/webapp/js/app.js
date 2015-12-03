@@ -21,6 +21,10 @@ app.config(['$routeProvider', '$httpProvider',
                 templateUrl: "components/post/addPost.html",
                 controller: 'PostController'
             })
+            .when("/post/:id", {
+                templateUrl: "components/post/post.html",
+                controller: 'PostController'
+            })
             .otherwise({
                 redirectTo: "/"
             });

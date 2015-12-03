@@ -91,7 +91,7 @@ public class PostControllerTest {
 
     @Test
     public void testGetPostUserAuthorised() throws Exception {
-        mockMvc.perform(get("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), user.getPassword())))
+        mockMvc.perform(get("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.id", is(post1.getId().intValue())))
@@ -103,18 +103,23 @@ public class PostControllerTest {
     @Test
     public void testGetPostUserUnauthorised() throws Exception {
         mockMvc.perform(get("/posts/" + post1.getId()))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.id", is(post1.getId().intValue())))
+                .andExpect(jsonPath("$.title", is(post1.getTitle())))
+                .andExpect(jsonPath("$.textMessage", is(post1.getTextMessage())))
+                .andExpect(jsonPath("$.category", is(post1.getCategory().name())));
     }
 
     @Test
     public void testGetNonexistentPost() throws Exception {
-        mockMvc.perform(get("/posts/-1").with(httpBasic(user.getLogin(), user.getPassword())))
+        mockMvc.perform(get("/posts/-1").with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void testGetPostsUserAuthorised() throws Exception {
-        mockMvc.perform(get("/posts").with(httpBasic(user.getLogin(), user.getPassword())))
+        mockMvc.perform(get("/posts").with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -135,13 +140,21 @@ public class PostControllerTest {
     }
 
     @Test
-    public void testSaveNewPostUserAuthorised() throws Exception {
+    public void testSaveNewPostWithValidDataUserAuthorised() throws Exception {
         Post post = new Post(user, "Some title", "what fits me with these pants?", Category.QUESTION);
         post.setCreated(LocalDateTime.now());
 
-        mockMvc.perform(post("/posts").with(httpBasic(user.getLogin(), user.getPassword())).contentType(contentType).content(json(post)))
+        mockMvc.perform(post("/posts").with(httpBasic(user.getLogin(), "1111")).contentType(contentType).content(json(post)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", notNullValue()));
+    }
+
+    @Test
+    public void testSaveNewPostWithNotValidDataUserAuthorised() throws Exception {
+        Post post = new Post(user, "", "", Category.QUESTION);
+
+        mockMvc.perform(post("/posts").with(httpBasic(user.getLogin(), "1111")).contentType(contentType).content(json(post)))
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -159,13 +172,13 @@ public class PostControllerTest {
 
     @Test
     public void testDeleteExistingPostUserAuthorised() throws Exception {
-        mockMvc.perform(delete("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), user.getPassword())))
+        mockMvc.perform(delete("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void testDeleteNonexistentPost() throws Exception {
-        mockMvc.perform(delete("/posts/-1").with(httpBasic(user.getLogin(), user.getPassword())))
+        mockMvc.perform(delete("/posts/-1").with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isNotFound());
     }
 
