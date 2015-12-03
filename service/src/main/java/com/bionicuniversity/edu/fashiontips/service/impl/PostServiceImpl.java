@@ -5,8 +5,10 @@ import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
+import com.bionicuniversity.edu.fashiontips.service.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
 import java.util.function.Consumer;
@@ -20,8 +22,8 @@ import java.util.function.Consumer;
 @Named
 public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements PostService {
 
-    @Value("${application.api.url}")
-    private String apiUrl;
+    @Inject
+    private ImageUtil imageUtil;
 
     @Override
     public List<Post> getAllByUser(User user) {
@@ -32,7 +34,7 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     public Post get(Long id) {
         Post post =  super.get(id);
         post.getImages().stream().
-                forEach(image -> image.setImgUrl(String.format("%s/images/%s", apiUrl, image.getImgName())));
+                forEach(imageUtil::createUrlName);
         return post;
     }
 }

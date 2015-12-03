@@ -40,8 +40,7 @@ public class ImageDaoImpl implements ImageDao {
         image.setImgName(String.format("%s-%s", image.getId(), image.getImgName()));
 
         /* Saving file on disk */
-        Path path = Paths.get(imageDirectory.substring(imageDirectory.length() - 1,imageDirectory.length()).equals("/") ?
-                imageDirectory + image.getImgName() : imageDirectory + "/" + image.getImgName());
+        Path path = Paths.get(imageDirectory + image.getImgName());
         Files.write(path, image.getData(), StandardOpenOption.CREATE_NEW);
         return image;
     }

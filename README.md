@@ -2,7 +2,7 @@
 Fashion Tips BU Project
 
 # Run locally API
-`mvn tomcat7:run -pl :fashion-tips-api -am -Dspring.profiles.active=dev`
+`mvn tomcat7:run -pl :fashion-tips-api -am -Dspring.profiles.active=dev,initImgFolder`
 # Run locally WEB
 `mvn tomcat7:run -pl :fashion-tips-web`
 

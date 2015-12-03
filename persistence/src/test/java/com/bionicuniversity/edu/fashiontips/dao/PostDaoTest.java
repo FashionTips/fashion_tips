@@ -16,6 +16,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static com.bionicuniversity.edu.fashiontips.ImageTestData.*;
 import static org.junit.Assert.*;
 
 /**
@@ -52,6 +56,7 @@ public class PostDaoTest {
         user = userDao.save(user);
         System.out.println(user);
         Post post = new Post(user, "title4", "How my glasses fits me?", Category.QUESTION);
+        post.setImages(Arrays.asList(IMAGE4, IMAGE5));
         post = postDao.save(post);
         System.out.println(post);
         Post expected = postDao.getById(7L);
@@ -82,6 +87,7 @@ public class PostDaoTest {
         post.setTitle("title1");
         post.setTextMessage("what fits me with these pants?");
         post.setCategory(Category.QUESTION);
+        post.setImages(Arrays.asList(IMAGE1, IMAGE2, IMAGE3));
         Post expected = postDao.getById(1L);
         post.setCreated(expected.getCreated());
         post.setId(1L);

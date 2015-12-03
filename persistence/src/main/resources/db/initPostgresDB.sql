@@ -1,12 +1,8 @@
 DROP TABLE IF EXISTS post_images;
 DROP TABLE IF EXISTS images;
 DROP TABLE IF EXISTS posts;
-DROP INDEX IF EXISTS category_index;
-DROP TABLE IF EXISTS category;
-DROP INDEX IF EXISTS email;
-DROP INDEX IF EXISTS login;
 DROP TABLE IF EXISTS roles;
-DROP TABLE IF EXISTS users ;
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
   id BIGSERIAL,
@@ -15,10 +11,17 @@ CREATE TABLE users (
   password VARCHAR,
   CONSTRAINT "user_id" PRIMARY KEY (id)
 );
-
 CREATE UNIQUE INDEX login ON users (login);
-
 CREATE UNIQUE INDEX email ON users (email);
+
+CREATE TABLE roles (
+  id BIGSERIAL,
+  role VARCHAR NOT NULL,
+  description VARCHAR DEFAULT NULL,
+  user_id BIGINT NOT NULL,
+  CONSTRAINT "role_id" PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 CREATE TABLE posts (
   id BIGSERIAL,
@@ -30,15 +33,6 @@ CREATE TABLE posts (
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "post_id" PRIMARY KEY (id)
 );
-
-CREATE TABLE roles (
-  id BIGSERIAL,
-  role VARCHAR NOT NULL,
-  description VARCHAR DEFAULT NULL,
-  user_id BIGINT NOT NULL,
-  CONSTRAINT "role_id" PRIMARY KEY (id),
-  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
-););
 
 CREATE TABLE images (
   id BIGSERIAL,
@@ -52,4 +46,4 @@ CREATE TABLE post_images (
   FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
   FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE,
   CONSTRAINT post_pictures_idx UNIQUE (post_id, img_id)
-)
+);

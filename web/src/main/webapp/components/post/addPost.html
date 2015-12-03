@@ -27,14 +27,13 @@
                     <input type="radio" name="Category" id="QUESTION" ng-model="postForm.category">
                     QUESTION </label>
             </div>
-            <!--<div class="form-group">-->
-                <!--<label>Photo</label>-->
-                <!--<input type="file" onchange="angular.element(this).scope().uploadFile(this.files)">-->
-                <!--<p class="help-block">Attach picture.</p>-->
-            <!--</div>-->
+
+            <div class="form-group">
+                <img data-ng-src="{{image.imgUrl}}" ng-repeat="image in postForm.images" height="100"/>
+            </div>
             <div class="form-group">
                 <input type = "file" file-model = "myFile"/>
-                <button ng-click = "uploadFile()">upload me</button>
+                <button ng-click = "uploadFile()">Upload image</button>
             </div>
 
             <div class="form-group">

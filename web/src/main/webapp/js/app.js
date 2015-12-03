@@ -41,6 +41,10 @@ app.controller('MainController', MainController);
 app.controller('PostController', PostController);
 app.controller('ProfileController', ProfileController);
 
+/* Directives */
+
+/* Directive for input file object */
+/* It maps chosen file to angular model object */
 app.directive('fileModel', ['$parse', function ($parse) {
     return {
         restrict: 'A',
@@ -55,22 +59,4 @@ app.directive('fileModel', ['$parse', function ($parse) {
             });
         }
     };
-}]);
-
-app.service('fileUpload', ['$http', function ($http) {
-    this.uploadFileToUrl = function(file, uploadUrl){
-        var fd = new FormData();
-        fd.append('file', file);
-
-        $http.post(uploadUrl, fd, {
-            transformRequest: angular.identity,
-            headers: {'Content-Type': undefined},
-        })
-
-            .success(function(){
-            })
-
-            .error(function(){
-            });
-    }
 }]);

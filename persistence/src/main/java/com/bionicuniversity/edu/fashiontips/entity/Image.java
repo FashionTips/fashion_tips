@@ -24,7 +24,7 @@ public class Image extends BaseEntity<Long> {
     private String imgName;
 
     /*
-    * Parameter with actual file content
+    * Parameter with file content
     * Needed only for saving file to the filesystem
     */
     @JsonIgnore
@@ -41,6 +41,11 @@ public class Image extends BaseEntity<Long> {
     }
 
     public Image(String imgName) {
+        this.imgName = imgName;
+    }
+
+    public Image(Long id, String imgName) {
+        this.id = id;
         this.imgName = imgName;
     }
 

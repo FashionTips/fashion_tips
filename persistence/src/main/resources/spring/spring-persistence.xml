@@ -71,4 +71,8 @@
                 system-properties-mode="OVERRIDE"/>
     </beans>
 
+    <beans profile="initImgFolder">
+        <bean class="com.bionicuniversity.edu.fashiontips.dao.util.InitializeImageStorage"/>
+    </beans>
+
 </beans>

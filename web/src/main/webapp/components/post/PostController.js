@@ -33,12 +33,26 @@ var PostController = ['$rootScope', '$scope', '$resource', '$http', '$location',
             console.log('file is ' );
             console.dir(file);
 
-            var uploadUrl = "http://localhost:8080/images/upload";
-            fileUpload.uploadFileToUrl(file, uploadUrl);
+            var uploadUrl = urlApi + "/images/upload";
+            var fd = new FormData();
+            fd.append('file', file);
+
+            $http.post(uploadUrl, fd, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined},
+            })
+
+                .success(function(data){
+                    $scope.postForm.images.push(data);
+                })
+
+                .error(function(){
+                });
         };
 
         /* data from post form */
         $scope.postForm = {};
+        $scope.postForm.images = [];
 
         $scope.submit = function () {
             Posts.save($scope.postForm, function (data) {

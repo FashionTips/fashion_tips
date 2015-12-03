@@ -1,12 +1,12 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
-import com.bionicuniversity.edu.fashiontips.entity.Image;
-import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
@@ -15,41 +15,35 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.*;
+import static com.bionicuniversity.edu.fashiontips.ImageTestData.*;
+
 
 /**
  * Class for testing ImageDao
+ *
+ * @author Volodymyr Portianko
  */
-@ActiveProfiles("dev")
+@ActiveProfiles({"dev", "initImgFolder"})
 @ContextConfiguration("classpath:spring/spring-persistence.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
+@Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+        config = @SqlConfig(encoding = "UTF-8"))
 public class ImageDaoTest {
-
-    @Value("${images.path}")
-    private String imageDirectory;
 
     @Inject
     private ImageDao imageDao;
 
-    private Image testImage1;
-
-    private Path testImage1Path;
-
-    {
-        testImage1 = new Image("testImage1.jpg");
-        testImage1.setData("fsdfsd".getBytes());
-    }
-
-    @After
-    public void onExit() throws Exception {
-        if (Files.exists(testImage1Path)) Files.delete(testImage1Path);
-    }
+    @Value("${application.images.path}")
+    private String imageDirectory;
 
     @Test
     public void testSave() throws Exception {
-        Image created = imageDao.save(testImage1);
-        testImage1Path = Paths.get(imageDirectory.substring(imageDirectory.length() - 1, imageDirectory.length()).equals("/") ?
-                imageDirectory + created.getImgName() : imageDirectory + "/" + created.getImgName());
-        assertTrue(Files.exists(testImage1Path));
+        Path testImagePath = Paths.get(
+                String.format("%s%s%s", imageDirectory, TEST_IMAGE_DIRECTORY, IMAGE_NEW.getImgName()));
+        IMAGE_NEW.setData(Files.readAllBytes(testImagePath));
+        imageDao.save(IMAGE_NEW);
+        Path createdFile = Paths.get(imageDirectory + IMAGE_NEW.getImgName());
+        Files.delete(createdFile);
     }
 }

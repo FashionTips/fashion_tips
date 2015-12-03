@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,6 +27,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -41,11 +43,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {
-        "classpath:spring/spring-mvc.xml",
-        "classpath:spring/spring-service.xml",
-        "classpath:spring/spring-persistence.xml",
-        "classpath:spring/spring-security.xml"
+@ContextHierarchy({
+        @ContextConfiguration(name = "parent", locations = {
+                "classpath:spring/spring-service.xml",
+                "classpath:spring/spring-persistence.xml",
+                "classpath:spring/spring-security.xml"
+        }) ,
+        @ContextConfiguration(name = "child", locations = {
+                "classpath:spring/spring-mvc.xml"
+        })
 })
 @Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,

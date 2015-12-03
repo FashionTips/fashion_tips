@@ -3,6 +3,7 @@ package com.bionicuniversity.edu.fashiontips.service.impl;
 import com.bionicuniversity.edu.fashiontips.dao.ImageDao;
 import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.service.ImageService;
+import com.bionicuniversity.edu.fashiontips.service.util.ImageUtil;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.ImageUploadExeption;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -19,16 +20,16 @@ import java.io.IOException;
 @Named
 public class ImageServiceImpl implements ImageService {
 
-    @Value("${application.api.url}")
-    private String apiUrl;
-
     @Inject
     private ImageDao imageDao;
+
+    @Inject
+    private ImageUtil imageUtil;
 
     @Override
     public Image save(Image image) throws IOException {
         imageDao.save(image);
-        image.setImgUrl(String.format("%s/images/%s", apiUrl, image.getImgName()));
+        imageUtil.createUrlName(image);
         return image;
     }
 }

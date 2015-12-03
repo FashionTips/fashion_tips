@@ -63,7 +63,7 @@ public class Post extends BaseEntity<Long> {
     * List of posts images
     * Relationships store in separate table
     * */
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "post_images",
             joinColumns = @JoinColumn(name = "post_id"),
