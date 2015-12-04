@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * Entity Class Post whish mapped on post table in DB
@@ -40,13 +39,9 @@ public class Post extends BaseEntity<Long> {
     /**
      * Column TextMessage which represent user's ext-message
      */
-    @NotBlank(message = "Post body could not be empty.")
-    @Size(max = 1000, message = "Post body may not has more than 1000 characters.")
     @Column(name = "user_post")
     private String textMessage;
 
-    @NotBlank(message = "Title could not be empty.")
-    @Size(max = 100, message = "Title may not has more than 100 characters.")
     @Column(name = "title")
     private String title;
 
@@ -56,6 +51,17 @@ public class Post extends BaseEntity<Long> {
      */
     @Column(nullable = false, updatable = true, insertable = true)
     private Category category;
+
+    /**
+     * Set of tags which used in this post
+     */
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "posts_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags;
 
     /**
      * Default Constructor
@@ -115,6 +121,13 @@ public class Post extends BaseEntity<Long> {
         this.title = title;
     }
 
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
 
     @Override
     public String toString() {
@@ -125,6 +138,7 @@ public class Post extends BaseEntity<Long> {
                 ", title=" + title +
                 ", textMessage='" + textMessage + '\'' +
                 ", category=" + category +
+                ", tags=" + tags +
                 '}';
     }
 }
