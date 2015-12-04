@@ -11,25 +11,26 @@
             <div class="page-header">
                 <h2>Post: {{ postForm.title }}</h2>
             </div>
-            <div class="form-group">
-                <label>Title</label>
-                <input type="text" class="form-control" placeholder="Title" data-ng-model="postForm.title" autofocus>
-            </div>
-            <div class="form-group">
+            <form data-ng-submit="submit()">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" class="form-control" placeholder="Title" data-ng-model="postForm.title"
+                           autofocus>
+                </div>
+                <div class="form-group">
                 <textarea class="form-control" rows="3" data-ng-model="postForm.textMessage"
                           title="Textarea"></textarea>
-            </div>
-            <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-default">
-                    <input type="radio" name="Category" id="POST" ng-model="postForm.category">
-                    POST </label>
-                <label class="btn btn-default">
-                    <input type="radio" name="Category" id="QUESTION" ng-model="postForm.category">
-                    QUESTION </label>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-default" data-ng-click="submit()">Submit</button>
-            </div>
+                </div>
+                <label class="radio-inline">
+                    <input type="radio" name="category" value="POST" data-ng-model="postForm.category"> POST
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="category" value="QUESTION" data-ng-model="postForm.category"> QUESTION
+                </label>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
