@@ -1,0 +1,43 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="jumbotron">
+                <h1>Hello, {{ $storage.user.login }}!</h1>
+
+                <p>Email: {{ $storage.user.email }}</p>
+
+                <p><a class="btn btn-primary btn-lg" href="#/profile/post" role="button">Add post</a></p>
+            </div>
+
+            <div class="page-header">
+                <h2>{{ posts.length == 0 ? "You have no posts ;(" : "Recent posts"}}</h2>
+            </div>
+
+            <!--<div data-ng-repeat="post in posts">-->
+                <!--<span class="label label-primary">{{ post.category }}</span>-->
+                <!--<div class="panel panel-default post-menu">-->
+                    <!--<div class="btn-group pull-right">-->
+                        <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"-->
+                                <!--aria-expanded="false">-->
+                            <!--<span class="caret"></span>-->
+                            <!--<span class="sr-only">Toggle Dropdown</span>-->
+                        <!--</button>-->
+                        <!--<ul class="dropdown-menu">-->
+                            <!--<li><a href="#">Get link</a></li>-->
+                            <!--<li role="separator" class="divider"></li>-->
+                            <!--<li><a href="#">Delete</a></li>-->
+                        <!--</ul>-->
+                    <!--</div>-->
+                    <!--<div class="panel-heading">-->
+                        <!--<h3 class="panel-title">{{ post.title }}</h3>-->
+                    <!--</div>-->
+                    <!--<div class="panel-body">-->
+                        <!--<a href="#" class="thumbnail">-->
+                            <!--<img src="{{ post.photo }}"></a>-->
+                        <!--{{ post.text }}-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>

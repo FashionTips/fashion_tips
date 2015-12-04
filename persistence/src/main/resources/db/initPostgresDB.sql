@@ -1,0 +1,41 @@
+DROP TABLE IF EXISTS posts;
+DROP INDEX IF EXISTS category_index;
+DROP TABLE IF EXISTS category;
+DROP INDEX IF EXISTS email;
+DROP INDEX IF EXISTS login;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS users ;
+
+CREATE TABLE users (
+  id BIGSERIAL,
+  login VARCHAR,
+  email VARCHAR,
+  password VARCHAR,
+  CONSTRAINT "user_id" PRIMARY KEY (id)
+);
+
+CREATE UNIQUE INDEX login ON users (login);
+
+CREATE UNIQUE INDEX email ON users (email);
+
+
+CREATE TABLE posts (
+  id BIGSERIAL,
+  user_id BIGINT NOT NULL,
+  image_path VARCHAR,
+  title VARCHAR NOT NULL ,
+  user_post VARCHAR,
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  category VARCHAR(64) NOT NULL ,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "post_id" PRIMARY KEY (id)
+);
+
+CREATE TABLE roles (
+  id BIGSERIAL,
+  role VARCHAR NOT NULL,
+  description VARCHAR DEFAULT NULL,
+  user_id BIGINT NOT NULL,
+  CONSTRAINT "role_id" PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
