@@ -4,11 +4,10 @@ package com.bionicuniversity.edu.fashiontips.api;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 
 /**
  * Class to handle exceptions in global app scope.
@@ -50,18 +49,18 @@ public class GlobalExceptionHandler {
      * @param e exception
      * @return response entity
      */
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorInformation> processValidationException(ConstraintViolationException e) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorInformation> processValidationException(MethodArgumentNotValidException e) {
 
         StringBuilder stringBuilder = new StringBuilder();
 
         /* build message with all validation errors */
-        e.getConstraintViolations()
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .map(str -> str + " ")
+        e.getBindingResult().getAllErrors().stream()
+                .map(ObjectError::getDefaultMessage)
+                .map(s -> s + " ")
                 .forEach(stringBuilder::append);
-        ErrorInformation error = new ErrorInformation(e.getClass().toString(), stringBuilder.toString());
+
+        ErrorInformation error = new ErrorInformation(e.getClass().toString(), stringBuilder.toString().trim());
         return ResponseEntity.unprocessableEntity().body(error);
     }
 }
