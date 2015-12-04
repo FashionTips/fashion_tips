@@ -1,5 +1,5 @@
-var PostController = ['$rootScope', '$scope', '$resource', '$http', '$location', '$routeParams',
-    function ($rootScope, $scope, $resource, $http, $location, $routeParams) {
+var PostController = ['$rootScope', '$scope', '$resource', '$http', '$location', '$routeParams', '$route',
+    function ($rootScope, $scope, $resource, $http, $location, $routeParams, $route) {
 
         /* get post id from route provider */
         var postId = $routeParams.id;
@@ -22,6 +22,8 @@ var PostController = ['$rootScope', '$scope', '$resource', '$http', '$location',
             /* upload post by id */
             $scope.post = Posts.get({id: postId});
         }
+
+        $scope.authUser = $rootScope.$storage.user;
 
         $scope.newPostUrl;
         $scope.error = false;
@@ -55,5 +57,42 @@ var PostController = ['$rootScope', '$scope', '$resource', '$http', '$location',
                 /* error occurred */
                 $scope.error = true;
             });
+        };
+
+        /**
+         * Tags as raw user's input string, not split yet.
+         * @type {string}
+         */
+        $scope.strTags = "";
+
+        /**
+         * Flag to define whether there is error while attempt to add new tags.
+         */
+        $scope.addTagsError = false;
+
+        /**
+         * Add tags to post from user input via sending them to API.
+         */
+        $scope.addTags = function () {
+
+            /* split string to get array of tags */
+            var tags = $scope.strTags.split(/\s*,\s*/);
+
+            /* send tags to remote api */
+            $http
+                .post(urlApi + "/posts/" + postId + "/tags", tags)
+                .then(
+                    function (data) {
+
+                        /* success */
+                        $scope.addTagsError = false;
+                        $scope.post.tags = data.data;
+                        $route.reload();
+                    }, function () {
+
+                        /* error */
+                        $scope.addTagsError = true;
+                    }
+                );
         };
     }];
