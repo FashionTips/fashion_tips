@@ -15,6 +15,7 @@ import java.util.Set;
  * Entity Class Post whish mapped on post table in DB
  *
  * @author Alexandr
+ * @author Volodymyr Portianko
  * @since 25.11.2015
  */
 @Entity
@@ -69,6 +70,18 @@ public class Post extends BaseEntity<Long> {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private Set<Tag> tags;
+
+    /*
+* List of posts images
+* Relationships store in separate table
+* */
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinTable(
+            name = "post_images",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "img_id")
+    )
+    private Set<Image> images;
 
     /**
      * Default Constructor
@@ -136,6 +149,15 @@ public class Post extends BaseEntity<Long> {
         this.tags = tags;
     }
 
+    public Set<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<Image> images) {
+        this.images = images;
+    }
+
+
     @Override
     public String toString() {
         return "Post{" +
@@ -146,6 +168,7 @@ public class Post extends BaseEntity<Long> {
                 ", textMessage='" + textMessage + '\'' +
                 ", category=" + category +
                 ", tags=" + tags +
+                ", images=" + images +
                 '}';
     }
 

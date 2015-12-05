@@ -1,5 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
+import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import com.bionicuniversity.edu.fashiontips.entity.User;
@@ -15,19 +16,21 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.bionicuniversity.edu.fashiontips.ImageTestData.*;
 import static org.junit.Assert.*;
 
 /**
  * Class for testing PostDao
  */
 
-@ActiveProfiles("production")
+@ActiveProfiles("dev")
 @ContextConfiguration("classpath:spring/spring-persistence.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@Sql(scripts = {"classpath:db/filloutDB.sql"},
+@Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         config = @SqlConfig(encoding = "UTF-8"))
 public class PostDaoTest {
@@ -55,6 +58,9 @@ public class PostDaoTest {
         System.out.println(user);
         Post post = new Post(user, "title4", "How my glasses fits me?", Post.Category.QUESTION);
         post.setTags(new HashSet<>());
+        Set<Image> images = new HashSet<>();
+        images.addAll(Arrays.asList(IMAGE4, IMAGE5));
+        post.setImages(images);
         post = postDao.save(post);
         System.out.println(post);
         Post expected = postDao.getById(7L);
@@ -92,6 +98,9 @@ public class PostDaoTest {
             tags.add(tag);
         }
         post.setTags(tags);
+        Set<Image> images = new HashSet<>();
+        images.addAll(Arrays.asList(IMAGE1, IMAGE2, IMAGE3));
+        post.setImages(images);
         Post expected = postDao.getById(1L);
         post.setCreated(expected.getCreated());
 

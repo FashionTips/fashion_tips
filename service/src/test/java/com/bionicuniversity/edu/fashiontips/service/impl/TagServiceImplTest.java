@@ -21,12 +21,12 @@ import static org.junit.Assert.assertEquals;
  * Created by Sergiy on 04.12.2015
  * Project: fashion-tips
  */
-@ActiveProfiles("production")
+@ActiveProfiles("dev")
 @ContextConfiguration(locations = {
         "classpath:spring/spring-service.xml",
         "classpath:spring/spring-persistence.xml"
 })
-@Sql(scripts = {"classpath:db/filloutDB.sql"},
+@Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         config = @SqlConfig(encoding = "UTF-8"))
 /*Execute tests ordering by method name*/

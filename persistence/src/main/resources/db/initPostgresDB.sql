@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS post_images;
+DROP TABLE IF EXISTS images;
 DROP TABLE IF EXISTS posts_tags;
 DROP TABLE IF EXISTS tags;
 DROP TABLE IF EXISTS roles;
@@ -11,15 +13,12 @@ CREATE TABLE users (
   password VARCHAR,
   CONSTRAINT "user_id" PRIMARY KEY (id)
 );
-
 CREATE UNIQUE INDEX login ON users (login);
-
 CREATE UNIQUE INDEX email ON users (email);
 
 CREATE TABLE posts (
   id BIGSERIAL,
   user_id BIGINT NOT NULL,
-  image_path VARCHAR,
   title VARCHAR NOT NULL ,
   user_post VARCHAR,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -51,6 +50,20 @@ CREATE TABLE posts_tags (
   FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT posts_tags_idx UNIQUE (post_id, tag_id)
+);
+
+CREATE TABLE images (
+  id BIGSERIAL,
+  img_name VARCHAR NOT NULL,
+  CONSTRAINT "img_id" PRIMARY KEY (id)
+);
+
+CREATE TABLE post_images (
+  post_id BIGINT NOT NULL,
+  img_id BIGINT NOT NULL,
+  FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
+  FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE,
+  CONSTRAINT post_pictures_idx UNIQUE (post_id, img_id)
 );
 
 

@@ -29,21 +29,32 @@ var PostController = ['$rootScope', '$scope', '$resource', '$http', '$location',
         $scope.error = false;
 
         /* Function to upload file from post */
-        $scope.uploadFile = function (files) {
-            var fd = new FormData();
-            //Take the first selected file
-            fd.append("file", files[0]);
+        $scope.uploadFile = function(){
+            var file = $scope.myFile;
 
-            $http.post("some upload url", fd, {
-                withCredentials: true,
+            console.log('file is ' );
+            console.dir(file);
+
+            var uploadUrl = urlApi + "/images/upload";
+            var fd = new FormData();
+            fd.append('file', file);
+
+            $http.post(uploadUrl, fd, {
+                transformRequest: angular.identity,
                 headers: {'Content-Type': undefined},
-                transformRequest: angular.identity
-            }).success(/*...all right!... */).
-            error(/*..damn!  ... */);
+            })
+
+                .success(function(data){
+                    $scope.postForm.images.push(data);
+                })
+
+                .error(function(){
+                });
         };
 
         /* data from post form */
         $scope.postForm = {};
+        $scope.postForm.images = [];
 
         $scope.submit = function () {
             Posts.save($scope.postForm, function (data) {
