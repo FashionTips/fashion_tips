@@ -2,7 +2,6 @@ package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.dao.PostDao;
 import com.bionicuniversity.edu.fashiontips.dao.UserDao;
-import com.bionicuniversity.edu.fashiontips.entity.Category;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -141,7 +140,7 @@ public class PostControllerTest {
 
     @Test
     public void testSaveNewPostWithValidDataUserAuthorised() throws Exception {
-        Post post = new Post(user, "Some title", "what fits me with these pants?", Category.QUESTION);
+        Post post = new Post(user, "Some title", "what fits me with these pants?", Post.Category.QUESTION);
         post.setCreated(LocalDateTime.now());
 
         mockMvc.perform(post("/posts").with(httpBasic(user.getLogin(), "1111")).contentType(contentType).content(json(post)))
@@ -151,7 +150,7 @@ public class PostControllerTest {
 
     @Test
     public void testSaveNewPostWithNotValidDataUserAuthorised() throws Exception {
-        Post post = new Post(user, "", "", Category.QUESTION);
+        Post post = new Post(user, "", "", Post.Category.QUESTION);
 
         mockMvc.perform(post("/posts").with(httpBasic(user.getLogin(), "1111")).contentType(contentType).content(json(post)))
                 .andExpect(status().isUnprocessableEntity());
@@ -160,7 +159,7 @@ public class PostControllerTest {
     @Test
     public void testSaveNewPostUserUnauthorised() throws Exception {
         Post post = new Post();
-        post.setCategory(Category.QUESTION);
+        post.setCategory(Post.Category.QUESTION);
         post.setCreated(LocalDateTime.now());
         post.setTextMessage("what fits me with these pants?");
         post.setTitle("Some title");
@@ -196,7 +195,7 @@ public class PostControllerTest {
     @Ignore("Need to implement check for nonexistent values. See FT12-27")
     @Test
     public void testUpdateNonexistentPost() throws Exception {
-        Post post = new Post(user, "Some title", "what fits me with these pants?", Category.QUESTION);
+        Post post = new Post(user, "Some title", "what fits me with these pants?", Post.Category.QUESTION);
         post.setCreated(LocalDateTime.now());
 
         mockMvc.perform(put("/posts/-1").with(httpBasic(user.getLogin(), user.getPassword()))

@@ -32,7 +32,7 @@ public class TagController {
     }
     /*Save tags for POst with ID = {id} and update post*/
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity saveTags(@PathVariable long id, @RequestParam("tags") List<String> tagsNames) {
+    public ResponseEntity saveTags(@PathVariable long id, @RequestBody List<String> tagsNames) {
         Set<Tag> tags = tagService.saveTags(tagsNames);
         Post post = postService.get(id);
         post.setTags(tags);
