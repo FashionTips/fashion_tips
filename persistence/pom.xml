@@ -105,6 +105,7 @@
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>
             <version>${javax.el-api.version}</version>
+            <scope>provided, test</scope>
         </dependency>
         <!--Testing-->
         <dependency>

@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Entity Class Post whish mapped on post table in DB
@@ -53,23 +53,35 @@ public class Post extends BaseEntity<Long> {
     private String title;
 
     /**
-     * Column Category reffered on Category enum with post's categories
+     * Column Category referred on Category enum with post's categories
      * Auto convert by CategoryConverter
      */
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = true, insertable = true)
     private Category category;
 
+    /**
+     * Set of tags which used in this post
+     */
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "posts_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags;
+
     /*
-    * List of posts images
-    * Relationships store in separate table
-    * */
+* List of posts images
+* Relationships store in separate table
+* */
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "post_images",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "img_id")
     )
-    private List<Image> images;
+    private Set<Image> images;
 
     /**
      * Default Constructor
@@ -129,11 +141,19 @@ public class Post extends BaseEntity<Long> {
         this.title = title;
     }
 
-    public List<Image> getImages() {
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public Set<Image> getImages() {
         return images;
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(Set<Image> images) {
         this.images = images;
     }
 
@@ -147,7 +167,22 @@ public class Post extends BaseEntity<Long> {
                 ", title=" + title +
                 ", textMessage='" + textMessage + '\'' +
                 ", category=" + category +
+                ", tags=" + tags +
                 ", images=" + images +
                 '}';
+    }
+
+
+    /**
+     * Enum Category represent categories of user's posts.
+     * It can be Question about user's outfit,
+     * or typically user post with some images
+     *
+     * @author Alexandr
+     * @author Maksym Dolia
+     * @since 28.11.2015
+     */
+    public enum Category {
+        POST, QUESTION
     }
 }

@@ -1,7 +1,8 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
-import com.bionicuniversity.edu.fashiontips.entity.Category;
+import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
+import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,9 +16,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
-
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.bionicuniversity.edu.fashiontips.ImageTestData.*;
 import static org.junit.Assert.*;
@@ -35,7 +36,7 @@ import static org.junit.Assert.*;
 public class PostDaoTest {
 
     private static User user1 = new User("login4", "email4@example.com", "1111");
-    private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Category.QUESTION);
+    private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Post.Category.QUESTION);
     static {
         user1.setId(4L);
     }
@@ -55,8 +56,11 @@ public class PostDaoTest {
         User user = new User("login4", "email4@example.com", "1111");
         user = userDao.save(user);
         System.out.println(user);
-        Post post = new Post(user, "title4", "How my glasses fits me?", Category.QUESTION);
-        post.setImages(Arrays.asList(IMAGE4, IMAGE5));
+        Post post = new Post(user, "title4", "How my glasses fits me?", Post.Category.QUESTION);
+        post.setTags(new HashSet<>());
+        Set<Image> images = new HashSet<>();
+        images.addAll(Arrays.asList(IMAGE4, IMAGE5));
+        post.setImages(images);
         post = postDao.save(post);
         System.out.println(post);
         Post expected = postDao.getById(7L);
@@ -67,7 +71,7 @@ public class PostDaoTest {
     @Test
     public void testAddNotValidPost() {
         thrown.expect(ConstraintViolationException.class);
-        Post post = new Post(user1, "", "", Category.POST);
+        Post post = new Post(user1, "", "", Post.Category.POST);
         postDao.save(post);
         fail("Should not save not valid entities.");
     }
@@ -86,10 +90,20 @@ public class PostDaoTest {
         post.setUser(user);
         post.setTitle("title1");
         post.setTextMessage("what fits me with these pants?");
-        post.setCategory(Category.QUESTION);
-        post.setImages(Arrays.asList(IMAGE1, IMAGE2, IMAGE3));
+        post.setCategory(Post.Category.QUESTION);
+        Set<Tag> tags = new HashSet<>();
+        for(Long i = 1L; i < 4; i++) {
+            Tag tag = new Tag("tag" + i);
+            tag.setId(i);
+            tags.add(tag);
+        }
+        post.setTags(tags);
+        Set<Image> images = new HashSet<>();
+        images.addAll(Arrays.asList(IMAGE1, IMAGE2, IMAGE3));
+        post.setImages(images);
         Post expected = postDao.getById(1L);
         post.setCreated(expected.getCreated());
+
         post.setId(1L);
         assertEquals(post.toString(), expected.toString());
     }

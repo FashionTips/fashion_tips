@@ -1,8 +1,10 @@
 DROP TABLE IF EXISTS post_images;
 DROP TABLE IF EXISTS images;
-DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS posts_tags;
+DROP TABLE IF EXISTS tags;
 DROP TABLE IF EXISTS roles;
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS users ;
 
 CREATE TABLE users (
   id BIGSERIAL,
@@ -14,15 +16,6 @@ CREATE TABLE users (
 CREATE UNIQUE INDEX login ON users (login);
 CREATE UNIQUE INDEX email ON users (email);
 
-CREATE TABLE roles (
-  id BIGSERIAL,
-  role VARCHAR NOT NULL,
-  description VARCHAR DEFAULT NULL,
-  user_id BIGINT NOT NULL,
-  CONSTRAINT "role_id" PRIMARY KEY (id),
-  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
 CREATE TABLE posts (
   id BIGSERIAL,
   user_id BIGINT NOT NULL,
@@ -32,6 +25,31 @@ CREATE TABLE posts (
   category VARCHAR(64) NOT NULL ,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "post_id" PRIMARY KEY (id)
+);
+
+CREATE TABLE roles (
+  id BIGSERIAL,
+  role VARCHAR NOT NULL,
+  description VARCHAR DEFAULT NULL,
+  user_id BIGINT NOT NULL,
+  CONSTRAINT "role_id" PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE tags (
+  id BIGSERIAL,
+  name VARCHAR,
+  CONSTRAINT "tag_id" PRIMARY KEY (id)
+);
+CREATE UNIQUE INDEX name ON tags (name);
+
+CREATE TABLE posts_tags (
+  post_id BIGINT NOT NULL,
+  tag_id BIGINT NOT NULL,
+  FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT posts_tags_idx UNIQUE (post_id, tag_id)
 );
 
 CREATE TABLE images (
@@ -47,3 +65,11 @@ CREATE TABLE post_images (
   FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE,
   CONSTRAINT post_pictures_idx UNIQUE (post_id, img_id)
 );
+
+
+
+
+
+
+
+
