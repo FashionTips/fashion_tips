@@ -21,6 +21,10 @@ app.config(['$routeProvider', '$httpProvider',
                 templateUrl: "components/post/addPost.html",
                 controller: 'PostController'
             })
+            .when("/post/:id", {
+                templateUrl: "components/post/post.html",
+                controller: 'PostController'
+            })
             .otherwise({
                 redirectTo: "/"
             });
@@ -36,3 +40,23 @@ app.controller('MenuController', MenuController);
 app.controller('MainController', MainController);
 app.controller('PostController', PostController);
 app.controller('ProfileController', ProfileController);
+
+/* Directives */
+
+/* Directive for input file object */
+/* It maps chosen file to angular model object */
+app.directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+
+            element.bind('change', function(){
+                scope.$apply(function(){
+                    modelSetter(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
+}]);

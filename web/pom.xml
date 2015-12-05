@@ -32,6 +32,7 @@
                     <systemProperties>
                         <file.encoding>UTF-8</file.encoding>
                     </systemProperties>
+                    <contextReloadable>true</contextReloadable>
                 </configuration>
             </plugin>
         </plugins>

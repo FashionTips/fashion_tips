@@ -1,6 +1,5 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
-import com.bionicuniversity.edu.fashiontips.entity.Category;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -65,8 +65,7 @@ public class PostController {
      * @return response with status 201 (CREATED) and post's data in body
      */
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> saveNewPost(@RequestBody Post post, Principal principal) {
-        post.setCategory(Category.POST);    // temporary workaround
+    public ResponseEntity<?> saveNewPost(@Valid @RequestBody Post post, Principal principal) {
         post.setUser(userService.getByLogin(principal.getName()));
         Post savedPost = postService.save(post);
         HttpHeaders headers = new HttpHeaders();
@@ -91,11 +90,11 @@ public class PostController {
     /**
      * Updates post with given data.
      *
-     * @param id post's id
+     * @param id   post's id
      * @param post new post data
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public void updatePost(@PathVariable long id, @RequestBody Post post) {
+    public void updatePost(@PathVariable long id, @Valid @RequestBody Post post) {
         post.setId(id);
         postService.save(post);
     }

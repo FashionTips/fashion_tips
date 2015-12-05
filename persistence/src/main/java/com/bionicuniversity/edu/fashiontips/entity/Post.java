@@ -4,14 +4,18 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * Entity Class Post whish mapped on post table in DB
  *
  * @author Alexandr
+ * @author Volodymyr Portianko
  * @since 25.11.2015
  */
 @Entity
@@ -38,18 +42,46 @@ public class Post extends BaseEntity<Long> {
     /**
      * Column TextMessage which represent user's ext-message
      */
+    @NotBlank(message = "Post body could not be empty.")
+    @Size(max = 1000, message = "Post body may not has more than 1000 characters.")
     @Column(name = "user_post")
     private String textMessage;
 
+    @NotBlank(message = "Title could not be empty.")
+    @Size(max = 100, message = "Title may not has more than 100 characters.")
     @Column(name = "title")
     private String title;
 
     /**
-     * Column Category reffered on Category enum with post's categories
+     * Column Category referred on Category enum with post's categories
      * Auto convert by CategoryConverter
      */
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = true, insertable = true)
     private Category category;
+
+    /**
+     * Set of tags which used in this post
+     */
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "posts_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags;
+
+    /*
+* List of posts images
+* Relationships store in separate table
+* */
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinTable(
+            name = "post_images",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "img_id")
+    )
+    private Set<Image> images;
 
     /**
      * Default Constructor
@@ -109,6 +141,22 @@ public class Post extends BaseEntity<Long> {
         this.title = title;
     }
 
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public Set<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<Image> images) {
+        this.images = images;
+    }
+
 
     @Override
     public String toString() {
@@ -119,6 +167,22 @@ public class Post extends BaseEntity<Long> {
                 ", title=" + title +
                 ", textMessage='" + textMessage + '\'' +
                 ", category=" + category +
+                ", tags=" + tags +
+                ", images=" + images +
                 '}';
+    }
+
+
+    /**
+     * Enum Category represent categories of user's posts.
+     * It can be Question about user's outfit,
+     * or typically user post with some images
+     *
+     * @author Alexandr
+     * @author Maksym Dolia
+     * @since 28.11.2015
+     */
+    public enum Category {
+        POST, QUESTION
     }
 }

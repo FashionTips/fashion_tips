@@ -2,7 +2,6 @@ package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.dao.PostDao;
 import com.bionicuniversity.edu.fashiontips.dao.UserDao;
-import com.bionicuniversity.edu.fashiontips.entity.Category;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,8 +10,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.MediaType;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,10 +23,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
-import javax.servlet.Filter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -41,11 +42,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {
-        "classpath:spring/spring-mvc.xml",
-        "classpath:spring/spring-service.xml",
-        "classpath:spring/spring-persistence.xml",
-        "classpath:spring/spring-security.xml"
+@ContextHierarchy({
+        @ContextConfiguration(name = "parent", locations = {
+                "classpath:spring/spring-service.xml",
+                "classpath:spring/spring-persistence.xml",
+                "classpath:spring/spring-security.xml"
+        }) ,
+        @ContextConfiguration(name = "child", locations = {
+                "classpath:spring/spring-mvc.xml"
+        })
 })
 @Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
@@ -63,7 +68,7 @@ public class PostControllerTest {
     private UserDao userDao;
 
     @Inject
-    private Filter springSecurityFilterChain;
+    private FilterChainProxy springSecurityFilterChain;
 
     private MockMvc mockMvc;
 
@@ -91,7 +96,7 @@ public class PostControllerTest {
 
     @Test
     public void testGetPostUserAuthorised() throws Exception {
-        mockMvc.perform(get("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), user.getPassword())))
+        mockMvc.perform(get("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.id", is(post1.getId().intValue())))
@@ -103,18 +108,23 @@ public class PostControllerTest {
     @Test
     public void testGetPostUserUnauthorised() throws Exception {
         mockMvc.perform(get("/posts/" + post1.getId()))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.id", is(post1.getId().intValue())))
+                .andExpect(jsonPath("$.title", is(post1.getTitle())))
+                .andExpect(jsonPath("$.textMessage", is(post1.getTextMessage())))
+                .andExpect(jsonPath("$.category", is(post1.getCategory().name())));
     }
 
     @Test
     public void testGetNonexistentPost() throws Exception {
-        mockMvc.perform(get("/posts/-1").with(httpBasic(user.getLogin(), user.getPassword())))
+        mockMvc.perform(get("/posts/-1").with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void testGetPostsUserAuthorised() throws Exception {
-        mockMvc.perform(get("/posts").with(httpBasic(user.getLogin(), user.getPassword())))
+        mockMvc.perform(get("/posts").with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -135,19 +145,27 @@ public class PostControllerTest {
     }
 
     @Test
-    public void testSaveNewPostUserAuthorised() throws Exception {
-        Post post = new Post(user, "Some title", "what fits me with these pants?", Category.QUESTION);
+    public void testSaveNewPostWithValidDataUserAuthorised() throws Exception {
+        Post post = new Post(user, "Some title", "what fits me with these pants?", Post.Category.QUESTION);
         post.setCreated(LocalDateTime.now());
 
-        mockMvc.perform(post("/posts").with(httpBasic(user.getLogin(), user.getPassword())).contentType(contentType).content(json(post)))
+        mockMvc.perform(post("/posts").with(httpBasic(user.getLogin(), "1111")).contentType(contentType).content(json(post)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", notNullValue()));
     }
 
     @Test
+    public void testSaveNewPostWithNotValidDataUserAuthorised() throws Exception {
+        Post post = new Post(user, "", "", Post.Category.QUESTION);
+
+        mockMvc.perform(post("/posts").with(httpBasic(user.getLogin(), "1111")).contentType(contentType).content(json(post)))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     public void testSaveNewPostUserUnauthorised() throws Exception {
         Post post = new Post();
-        post.setCategory(Category.QUESTION);
+        post.setCategory(Post.Category.QUESTION);
         post.setCreated(LocalDateTime.now());
         post.setTextMessage("what fits me with these pants?");
         post.setTitle("Some title");
@@ -159,13 +177,13 @@ public class PostControllerTest {
 
     @Test
     public void testDeleteExistingPostUserAuthorised() throws Exception {
-        mockMvc.perform(delete("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), user.getPassword())))
+        mockMvc.perform(delete("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void testDeleteNonexistentPost() throws Exception {
-        mockMvc.perform(delete("/posts/-1").with(httpBasic(user.getLogin(), user.getPassword())))
+        mockMvc.perform(delete("/posts/-1").with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isNotFound());
     }
 
@@ -183,7 +201,7 @@ public class PostControllerTest {
     @Ignore("Need to implement check for nonexistent values. See FT12-27")
     @Test
     public void testUpdateNonexistentPost() throws Exception {
-        Post post = new Post(user, "Some title", "what fits me with these pants?", Category.QUESTION);
+        Post post = new Post(user, "Some title", "what fits me with these pants?", Post.Category.QUESTION);
         post.setCreated(LocalDateTime.now());
 
         mockMvc.perform(put("/posts/-1").with(httpBasic(user.getLogin(), user.getPassword()))

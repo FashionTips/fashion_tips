@@ -4,6 +4,8 @@ package com.bionicuniversity.edu.fashiontips.api;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -39,5 +41,26 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorInformation> processUnspecifiedException(Exception e) {
         ErrorInformation error = new ErrorInformation(e.getClass().toString(), e.getMessage());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Handles validation exceptions.
+     *
+     * @param e exception
+     * @return response entity
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorInformation> processValidationException(MethodArgumentNotValidException e) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        /* build message with all validation errors */
+        e.getBindingResult().getAllErrors().stream()
+                .map(ObjectError::getDefaultMessage)
+                .map(s -> s + " ")
+                .forEach(stringBuilder::append);
+
+        ErrorInformation error = new ErrorInformation(e.getClass().toString(), stringBuilder.toString().trim());
+        return ResponseEntity.unprocessableEntity().body(error);
     }
 }

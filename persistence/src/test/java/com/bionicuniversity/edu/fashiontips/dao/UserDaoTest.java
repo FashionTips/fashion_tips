@@ -1,6 +1,5 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
-import com.bionicuniversity.edu.fashiontips.entity.Category;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Rule;
@@ -30,9 +29,9 @@ import static org.junit.Assert.assertNull;
         config = @SqlConfig(encoding = "UTF-8"))
 public class UserDaoTest {
     private static User user1 = new User("login4", "email4@example.com", "1111");
-    private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Category.QUESTION);
+    private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Post.Category.QUESTION);
     private static User user2 = new User("login1", "email1@example.com", "1111");
-    private static Post post2 = new Post(user2, "title1", "what fits me with these pants?", Category.QUESTION);
+    private static Post post2 = new Post(user2, "title1", "what fits me with these pants?", Post.Category.QUESTION);
     static {
         user1.setId(4L);
         user2.setId(1L);
@@ -66,7 +65,7 @@ public class UserDaoTest {
     public void testGetUserById() {
         User user = new User();
         user.setId(1L);
-        user.setPassword("1111");
+        user.setPassword("$2a$10$nMaTdVApgGyalfxJdehKM.7/vfJznBdMqois3Ppw2sarqHpfHSZy6");
         user.setEmail("email1@example.com");
         user.setLogin("login1");
         User expected = userDao.getById(1L);
