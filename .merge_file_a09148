@@ -9,7 +9,6 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 /**
  * Entity Class Post whish mapped on post table in DB
@@ -52,23 +51,11 @@ public class Post extends BaseEntity<Long> {
     private String title;
 
     /**
-     * Column Category referred on Category enum with post's categories
+     * Column Category reffered on Category enum with post's categories
      * Auto convert by CategoryConverter
      */
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = true, insertable = true)
     private Category category;
-
-    /**
-     * Set of tags which used in this post
-     */
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "posts_tags",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags;
 
     /**
      * Default Constructor
@@ -128,13 +115,6 @@ public class Post extends BaseEntity<Long> {
         this.title = title;
     }
 
-    public Set<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
-    }
 
     @Override
     public String toString() {
@@ -145,21 +125,6 @@ public class Post extends BaseEntity<Long> {
                 ", title=" + title +
                 ", textMessage='" + textMessage + '\'' +
                 ", category=" + category +
-                ", tags=" + tags +
                 '}';
-    }
-
-
-    /**
-     * Enum Category represent categories of user's posts.
-     * It can be Question about user's outfit,
-     * or typically user post with some images
-     *
-     * @author Alexandr
-     * @author Maksym Dolia
-     * @since 28.11.2015
-     */
-    public enum Category {
-        POST, QUESTION
     }
 }
