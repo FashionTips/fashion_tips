@@ -21,10 +21,10 @@ import static org.junit.Assert.assertNull;
  * Calss for testing UserDao
  */
 
-@ActiveProfiles("dev")
+@ActiveProfiles("production")
 @ContextConfiguration("classpath:spring/spring-persistence.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
+@Sql(scripts = {"classpath:db/filloutDB.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         config = @SqlConfig(encoding = "UTF-8"))
 public class UserDaoTest {

@@ -1,9 +1,7 @@
-DROP TABLE IF EXISTS posts;
-DROP INDEX IF EXISTS category_index;
-DROP TABLE IF EXISTS category;
-DROP INDEX IF EXISTS email;
-DROP INDEX IF EXISTS login;
+DROP TABLE IF EXISTS posts_tags;
+DROP TABLE IF EXISTS tags;
 DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS users ;
 
 CREATE TABLE users (
@@ -17,7 +15,6 @@ CREATE TABLE users (
 CREATE UNIQUE INDEX login ON users (login);
 
 CREATE UNIQUE INDEX email ON users (email);
-
 
 CREATE TABLE posts (
   id BIGSERIAL,
@@ -39,3 +36,27 @@ CREATE TABLE roles (
   CONSTRAINT "role_id" PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
+CREATE TABLE tags (
+  id BIGSERIAL,
+  name VARCHAR,
+  CONSTRAINT "tag_id" PRIMARY KEY (id)
+);
+CREATE UNIQUE INDEX name ON tags (name);
+
+CREATE TABLE posts_tags (
+  post_id BIGINT NOT NULL,
+  tag_id BIGINT NOT NULL,
+  FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT posts_tags_idx UNIQUE (post_id, tag_id)
+);
+
+
+
+
+
+
+
+
