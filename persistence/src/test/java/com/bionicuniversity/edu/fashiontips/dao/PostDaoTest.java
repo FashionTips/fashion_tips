@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.dao;
 
 import com.bionicuniversity.edu.fashiontips.entity.Category;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
+import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -82,8 +85,16 @@ public class PostDaoTest {
         post.setTitle("title1");
         post.setTextMessage("what fits me with these pants?");
         post.setCategory(Category.QUESTION);
+        Set<Tag> tags = new HashSet<>();
+        for(Long i = 1L; i < 4; i++) {
+            Tag tag = new Tag("tag" + i);
+            tag.setId(i);
+            tags.add(tag);
+        }
+        post.setTags(tags);
         Post expected = postDao.getById(1L);
         post.setCreated(expected.getCreated());
+
         post.setId(1L);
         assertEquals(post.toString(), expected.toString());
     }

@@ -13,6 +13,12 @@ import java.util.List;
 @Repository
 public class TagDaoImpl extends GenericDaoImpl<Tag, Long> implements TagDao {
 
+    /**
+     * Returns the Tag entity with name = "name" from DB. If it not exist, returned null.
+     *
+     * @param name the name of Tag
+     * @return the value of the "name" for the required Tag
+     */
     @Override
     public Tag getByName(String name) {
 
