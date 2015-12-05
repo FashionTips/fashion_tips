@@ -1,6 +1,5 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
-import com.bionicuniversity.edu.fashiontips.entity.Category;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
@@ -67,7 +66,6 @@ public class PostController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> saveNewPost(@Valid @RequestBody Post post, Principal principal) {
-        post.setCategory(Category.POST);    // temporary workaround
         post.setUser(userService.getByLogin(principal.getName()));
         Post savedPost = postService.save(post);
         HttpHeaders headers = new HttpHeaders();

@@ -1,6 +1,5 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
-import com.bionicuniversity.edu.fashiontips.entity.Category;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Rule;
@@ -22,17 +21,17 @@ import static org.junit.Assert.assertNull;
  * Calss for testing UserDao
  */
 
-@ActiveProfiles("dev")
+@ActiveProfiles("production")
 @ContextConfiguration("classpath:spring/spring-persistence.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
+@Sql(scripts = {"classpath:db/filloutDB.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         config = @SqlConfig(encoding = "UTF-8"))
 public class UserDaoTest {
     private static User user1 = new User("login4", "email4@example.com", "1111");
-    private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Category.QUESTION);
+    private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Post.Category.QUESTION);
     private static User user2 = new User("login1", "email1@example.com", "1111");
-    private static Post post2 = new Post(user2, "title1", "what fits me with these pants?", Category.QUESTION);
+    private static Post post2 = new Post(user2, "title1", "what fits me with these pants?", Post.Category.QUESTION);
     static {
         user1.setId(4L);
         user2.setId(1L);
