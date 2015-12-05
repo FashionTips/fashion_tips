@@ -51,9 +51,10 @@ public class Post extends BaseEntity<Long> {
     private String title;
 
     /**
-     * Column Category reffered on Category enum with post's categories
+     * Column Category referred on Category enum with post's categories
      * Auto convert by CategoryConverter
      */
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = true, insertable = true)
     private Category category;
 
@@ -126,5 +127,19 @@ public class Post extends BaseEntity<Long> {
                 ", textMessage='" + textMessage + '\'' +
                 ", category=" + category +
                 '}';
+    }
+
+
+    /**
+     * Enum Category represent categories of user's posts.
+     * It can be Question about user's outfit,
+     * or typically user post with some images
+     *
+     * @author Alexandr
+     * @author Maksym Dolia
+     * @since 28.11.2015
+     */
+    public enum Category {
+        POST, QUESTION
     }
 }

@@ -1,6 +1,5 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
-import com.bionicuniversity.edu.fashiontips.entity.Category;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Rule;
@@ -31,7 +30,7 @@ import static org.junit.Assert.*;
 public class PostDaoTest {
 
     private static User user1 = new User("login4", "email4@example.com", "1111");
-    private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Category.QUESTION);
+    private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Post.Category.QUESTION);
     static {
         user1.setId(4L);
     }
@@ -51,7 +50,7 @@ public class PostDaoTest {
         User user = new User("login4", "email4@example.com", "1111");
         user = userDao.save(user);
         System.out.println(user);
-        Post post = new Post(user, "title4", "How my glasses fits me?", Category.QUESTION);
+        Post post = new Post(user, "title4", "How my glasses fits me?", Post.Category.QUESTION);
         post = postDao.save(post);
         System.out.println(post);
         Post expected = postDao.getById(7L);
@@ -62,7 +61,7 @@ public class PostDaoTest {
     @Test
     public void testAddNotValidPost() {
         thrown.expect(ConstraintViolationException.class);
-        Post post = new Post(user1, "", "", Category.POST);
+        Post post = new Post(user1, "", "", Post.Category.POST);
         postDao.save(post);
         fail("Should not save not valid entities.");
     }
@@ -81,7 +80,7 @@ public class PostDaoTest {
         post.setUser(user);
         post.setTitle("title1");
         post.setTextMessage("what fits me with these pants?");
-        post.setCategory(Category.QUESTION);
+        post.setCategory(Post.Category.QUESTION);
         Post expected = postDao.getById(1L);
         post.setCreated(expected.getCreated());
         post.setId(1L);
