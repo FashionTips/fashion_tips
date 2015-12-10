@@ -1,3 +1,4 @@
+DELETE FROM comments;
 DELETE FROM post_images;
 DELETE FROM images;
 DELETE FROM posts_tags;
@@ -12,6 +13,7 @@ ALTER SEQUENCE posts_id_seq RESTART WITH 1;
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
 ALTER SEQUENCE roles_id_seq RESTART WITH 1;
 ALTER SEQUENCE tags_id_seq RESTART WITH 1;
+ALTER SEQUENCE comments_id_seq RESTART WITH 1;
 
 INSERT INTO users (login, email, password) VALUES ('login1', 'email1@example.com', '$2a$10$nMaTdVApgGyalfxJdehKM.7/vfJznBdMqois3Ppw2sarqHpfHSZy6');
 INSERT INTO users (login, email, password) VALUES ('login2', 'email2@example.com', '$2a$10$nMaTdVApgGyalfxJdehKM.7/vfJznBdMqois3Ppw2sarqHpfHSZy6');
@@ -53,3 +55,7 @@ INSERT INTO post_images (post_id, img_id) VALUES (1,3);
 INSERT INTO post_images (post_id, img_id) VALUES (2,4);
 INSERT INTO post_images (post_id, img_id) VALUES (2,5);
 INSERT INTO post_images (post_id, img_id) VALUES (3,6);
+
+INSERT INTO comments (text, post_id) VALUES ('cool!', 1);
+INSERT INTO comments (text, post_id) VALUES ('amazing!!', 2);
+INSERT INTO comments (text, post_id) VALUES ('perfect!!!', 3);

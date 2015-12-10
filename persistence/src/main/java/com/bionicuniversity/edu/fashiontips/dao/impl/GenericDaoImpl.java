@@ -53,7 +53,7 @@ public abstract class GenericDaoImpl<T extends BaseEntity, PK extends Serializab
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void delete(PK id) {
         em.remove(getById(id));
     }

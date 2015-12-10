@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS images;
 DROP TABLE IF EXISTS posts_tags;
 DROP TABLE IF EXISTS tags;
 DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS comments ;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS users ;
 
@@ -40,6 +41,7 @@ CREATE TABLE roles (
 CREATE TABLE tags (
   id BIGSERIAL,
   name VARCHAR,
+  parent_tag_id BIGINT DEFAULT NULL,
   CONSTRAINT "tag_id" PRIMARY KEY (id)
 );
 CREATE UNIQUE INDEX name ON tags (name);
@@ -64,6 +66,15 @@ CREATE TABLE post_images (
   FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
   FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE,
   CONSTRAINT post_pictures_idx UNIQUE (post_id, img_id)
+);
+
+CREATE TABLE comments (
+  id BIGSERIAL,
+  text VARCHAR(256) NOT NULL, /*type TEXT unlimited*/
+  post_id BIGINT NOT NULL,
+  created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "comment_id" PRIMARY KEY (id),
+  FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE
 );
 
 

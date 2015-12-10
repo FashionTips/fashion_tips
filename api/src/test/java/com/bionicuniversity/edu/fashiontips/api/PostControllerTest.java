@@ -20,13 +20,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -95,6 +95,7 @@ public class PostControllerTest {
     }
 
     @Test
+    @Transactional
     public void testGetPostUserAuthorised() throws Exception {
         mockMvc.perform(get("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isOk())
@@ -106,6 +107,7 @@ public class PostControllerTest {
     }
 
     @Test
+    @Transactional
     public void testGetPostUserUnauthorised() throws Exception {
         mockMvc.perform(get("/posts/" + post1.getId()))
                 .andExpect(status().isOk())
@@ -123,6 +125,7 @@ public class PostControllerTest {
     }
 
     @Test
+    @Transactional
     public void testGetPostsUserAuthorised() throws Exception {
         mockMvc.perform(get("/posts").with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isOk())

@@ -1,3 +1,4 @@
+DELETE FROM comments;
 DELETE FROM post_images;
 DELETE FROM images;
 DELETE FROM posts_tags;
@@ -6,6 +7,7 @@ DELETE FROM roles;
 DELETE FROM posts;
 DELETE FROM users;
 
+ALTER TABLE comments ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE images ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE users ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE posts ALTER COLUMN id RESTART WITH 1;
@@ -52,3 +54,7 @@ INSERT INTO post_images (post_id, img_id) VALUES (1,3);
 INSERT INTO post_images (post_id, img_id) VALUES (2,4);
 INSERT INTO post_images (post_id, img_id) VALUES (2,5);
 INSERT INTO post_images (post_id, img_id) VALUES (3,6);
+
+INSERT INTO comments (text, post_id) VALUES ('cool!', 1);
+INSERT INTO comments (text, post_id) VALUES ('amazing!!', 2);
+INSERT INTO comments (text, post_id) VALUES ('perfect!!!', 3);

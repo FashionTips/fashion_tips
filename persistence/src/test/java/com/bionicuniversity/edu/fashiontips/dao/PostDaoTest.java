@@ -1,9 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
-import com.bionicuniversity.edu.fashiontips.entity.Image;
-import com.bionicuniversity.edu.fashiontips.entity.Post;
-import com.bionicuniversity.edu.fashiontips.entity.Tag;
-import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.entity.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -13,12 +10,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static com.bionicuniversity.edu.fashiontips.ImageTestData.*;
 import static org.junit.Assert.*;
@@ -48,10 +44,14 @@ public class PostDaoTest {
     @Inject
     private UserDao userDao;
 
+    @Inject
+    private CommentDao commentDao;
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
+    @Transactional
     public void testAddValidPost() {
         User user = new User("login4", "email4@example.com", "1111");
         user = userDao.save(user);
@@ -77,6 +77,7 @@ public class PostDaoTest {
     }
 
     @Test
+    @Transactional
     public void testDeletePost() {
         postDao.delete(1L);
         Post post = postDao.getById(1L);
@@ -84,6 +85,7 @@ public class PostDaoTest {
     }
 
     @Test
+    @Transactional
     public void testGetPostById() {
         User user = userDao.getById(1L);
         Post post = new Post();
@@ -106,5 +108,27 @@ public class PostDaoTest {
 
         post.setId(1L);
         assertEquals(post.toString(), expected.toString());
+    }
+
+    @Test
+    @Transactional
+    public void savePostWithCommentCascadedTest() {
+        User user = userDao.getById(1L);
+        List<Post> befor = postDao.getAllByUser(user);
+        Post newPost = new Post(user, "title4", "How my glasses fits me?", Post.Category.QUESTION);
+        Comment newComment = new Comment("Super!", newPost);
+        Set<Comment> coms = new HashSet<>();
+        coms.add(newComment);
+        newPost.setComments(coms);
+        postDao.save(newPost);
+        List<Comment> commentsAfter = commentDao.getCommentsByPost(newPost);
+        List<Comment> expectedComments = new ArrayList<>();
+        Comment expectebleComment = new Comment("Super!", newPost);
+        expectebleComment.setId(4L);
+        expectedComments.add(expectebleComment);
+        befor.add(newPost);
+        List<Post> expected = postDao.getAllByUser(user);
+        assertArrayEquals(expected.toArray(new Post[0]), befor.toArray(new Post[0]));
+        assertArrayEquals(expectedComments.toArray(new Comment[0]), commentsAfter.toArray(new Comment[0]));
     }
 }
