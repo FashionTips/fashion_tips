@@ -1,6 +1,5 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
-import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,9 +12,11 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
 
+import static com.bionicuniversity.edu.fashiontips.DaoTestData.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * Calss for testing UserDao
@@ -28,17 +29,6 @@ import static org.junit.Assert.assertNull;
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         config = @SqlConfig(encoding = "UTF-8"))
 public class UserDaoTest {
-    private static User user1 = new User("login4", "email4@example.com", "1111");
-    private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Post.Category.QUESTION);
-    private static User user2 = new User("login1", "email1@example.com", "1111");
-    private static Post post2 = new Post(user2, "title1", "what fits me with these pants?", Post.Category.QUESTION);
-    static {
-        user1.setId(4L);
-        user2.setId(1L);
-    }
-
-    @Inject
-    private PostDao postDao;
 
     @Inject
     private UserDao userDao;
@@ -48,40 +38,49 @@ public class UserDaoTest {
 
     @Test
     public void testSaveUser() {
-        User user = new User("login4", "email4@example.com", "1111");
-        user = userDao.save(user);
-        System.out.println(user);
-        assertEquals(user1, userDao.getById(4L));
+        User testUser = new User("login4", "email4@example.com", "$2a$10$nMaTdVApgGyalfxJdehKM.7/vfJznBdMqois3Ppw2sarqHpfHSZy6");
+
+        testUser = userDao.save(testUser);
+
+        /*Check that the method Save returns correct value */
+        assertEquals(USER4.toString(), testUser.toString());
+
+        List<User> testList = userDao.getAll();
+
+        assertEquals(Arrays.asList(USER1, USER2, USER3, USER4).toString(), testList.toString());
     }
 
     @Test
     public void testDeleteUser() {
+       /*Delete User(ID = 1) from DB*/
         userDao.delete(1L);
-        User user = userDao.getById(1L);
-        assertNull(user);
+
+        List<User> testList = userDao.getAll();
+
+        assertEquals(Arrays.asList(USER2, USER3).toString(), testList.toString());
     }
 
     @Test
     public void testGetUserById() {
-        User user = new User();
-        user.setId(1L);
-        user.setPassword("$2a$10$nMaTdVApgGyalfxJdehKM.7/vfJznBdMqois3Ppw2sarqHpfHSZy6");
-        user.setEmail("email1@example.com");
-        user.setLogin("login1");
-        User expected = userDao.getById(1L);
-        assertEquals(user.toString(), expected.toString());
+        User testUser = userDao.getById(1L);
+
+        assertEquals(USER1.toString(), testUser.toString());
     }
 
-//    @Test
-//    public void testGetPostsOfUser() {
-//        User user = userDao.getById(1L);
-//        Post[] posts = new Post[2];
-//        Post post1 = new Post(user2, "title1", "what fits me with these pants?", Category.QUESTION);
-//        Post post2 = new Post(user2, "title1", "what fits me with these pants? Again", Category.POST);
-//        post1.setId(user.getPosts().toArray(new Post[0])[0].getId());
-//        post2.setId(user.getPosts().toArray(new Post[0])[1].getId());
-//        posts[0] = post1;
-//        posts[1] = post2;
-//        assertArrayEquals(posts, user.getPosts().toArray(new Post[0]));
-//    }
+    @Test
+    public void testGetAll() throws Exception {
+
+        /*Get list of all Users from DB*/
+        List<User> testList = userDao.getAll();
+
+        assertEquals(USERS.toString(), testList.toString());
+    }
+
+    @Test
+    public void testGetByLogin() throws Exception {
+        /*Get User(login = "login2") from DB*/
+        User testUser = userDao.getByLogin("login2");
+
+        assertEquals(USER2.toString(), testUser.toString());
+    }
 }

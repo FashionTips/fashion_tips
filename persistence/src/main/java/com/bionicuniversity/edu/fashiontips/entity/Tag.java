@@ -1,8 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Entity Class Tag
@@ -12,12 +10,19 @@ import javax.persistence.Table;
 public class Tag extends BaseEntity<Long> {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+
     public Tag() {
     }
 
     public Tag(String name) {
+       this(null, name);
+    }
+
+    public Tag(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
+
 
     @Override
     public String toString() {

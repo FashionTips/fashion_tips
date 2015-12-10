@@ -1,9 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
-import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
-import com.bionicuniversity.edu.fashiontips.entity.Tag;
-import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -18,10 +15,11 @@ import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-import static com.bionicuniversity.edu.fashiontips.ImageTestData.*;
-import static org.junit.Assert.*;
+import static com.bionicuniversity.edu.fashiontips.DaoTestData.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Class for testing PostDao
@@ -35,13 +33,6 @@ import static org.junit.Assert.*;
         config = @SqlConfig(encoding = "UTF-8"))
 public class PostDaoTest {
 
-    private static User user1 = new User("login4", "email4@example.com", "1111");
-    private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Post.Category.QUESTION);
-    static {
-        user1.setId(4L);
-    }
-
-
     @Inject
     private PostDao postDao;
 
@@ -53,58 +44,50 @@ public class PostDaoTest {
 
     @Test
     public void testAddValidPost() {
-        User user = new User("login4", "email4@example.com", "1111");
-        user = userDao.save(user);
-        System.out.println(user);
-        Post post = new Post(user, "title4", "How my glasses fits me?", Post.Category.QUESTION);
-        post.setTags(new HashSet<>());
-        Set<Image> images = new HashSet<>();
-        images.addAll(Arrays.asList(IMAGE4, IMAGE5));
-        post.setImages(images);
-        post = postDao.save(post);
-        System.out.println(post);
-        Post expected = postDao.getById(7L);
-        post.setCreated(expected.getCreated());
-        assertEquals(post.toString(), postDao.getById(7L).toString());
+        Post post = new Post(null, USER1, "title4", "How my glasses fits me?", Post.Category.POST, new HashSet<>(), new HashSet<>(Arrays.asList(IMAGE4, IMAGE5)));
+        postDao.save(post);
+        post = postDao.getById(7L);
+
+        assertEquals(POST7.toString(), post.toString());
     }
 
     @Test
     public void testAddNotValidPost() {
         thrown.expect(ConstraintViolationException.class);
-        Post post = new Post(user1, "", "", Post.Category.POST);
+        Post post = new Post(USER1, "", "", Post.Category.POST);
         postDao.save(post);
         fail("Should not save not valid entities.");
     }
 
     @Test
     public void testDeletePost() {
+        /*Delete Post(ID = 1) from DB*/
         postDao.delete(1L);
-        Post post = postDao.getById(1L);
-        assertNull(post);
+        List<Post> testList = postDao.getAll();
+
+        assertEquals(Arrays.asList(POST2, POST3, POST4, POST5, POST6).toString(), testList.toString());
     }
 
     @Test
     public void testGetPostById() {
-        User user = userDao.getById(1L);
-        Post post = new Post();
-        post.setUser(user);
-        post.setTitle("title1");
-        post.setTextMessage("what fits me with these pants?");
-        post.setCategory(Post.Category.QUESTION);
-        Set<Tag> tags = new HashSet<>();
-        for(Long i = 1L; i < 4; i++) {
-            Tag tag = new Tag("tag" + i);
-            tag.setId(i);
-            tags.add(tag);
-        }
-        post.setTags(tags);
-        Set<Image> images = new HashSet<>();
-        images.addAll(Arrays.asList(IMAGE1, IMAGE2, IMAGE3));
-        post.setImages(images);
-        Post expected = postDao.getById(1L);
-        post.setCreated(expected.getCreated());
+        Post testPost = postDao.getById(1L);
+        assertEquals(POST1.toString(), testPost.toString());
+    }
 
-        post.setId(1L);
-        assertEquals(post.toString(), expected.toString());
+    @Test
+    public void testGetAll() throws Exception {
+        /*Get list of all Posts from DB*/
+        List<Post> testList = postDao.getAll();
+
+        assertEquals(POSTS.toString(), testList.toString());
+    }
+
+    @Test
+    public void testGetAllByUser() throws Exception {
+
+        /*Get Posts(User ID =1) from DB*/
+        List<Post> testList = postDao.getAllByUser(USER1);
+
+        assertEquals(Arrays.asList(POST1, POST4).toString(), testList.toString());
     }
 }

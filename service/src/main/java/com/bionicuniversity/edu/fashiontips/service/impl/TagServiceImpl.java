@@ -3,6 +3,7 @@ package com.bionicuniversity.edu.fashiontips.service.impl;
 import com.bionicuniversity.edu.fashiontips.dao.TagDao;
 import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import com.bionicuniversity.edu.fashiontips.service.TagService;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,6 +18,14 @@ import java.util.Set;
 public class TagServiceImpl implements TagService {
     @Inject
     private TagDao repository;
+
+    @Override
+    public Tag getByName(String tagName) {
+        Tag tag = (repository).getByName(tagName);
+        if (tag == null) throw new NotFoundException(String.format(
+                "User with login %s is not found.", tagName));
+        return repository.getByName(tagName);
+    }
 
     /**
      * For a given list of tag names returns a set of Tags.
