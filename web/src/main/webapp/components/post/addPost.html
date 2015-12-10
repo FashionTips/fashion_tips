@@ -27,14 +27,14 @@
                 <label class="radio-inline">
                     <input type="radio" name="category" value="QUESTION" data-ng-model="postForm.category"> QUESTION
                 </label>
-                <div class="form-group">
+                <div class="form-group" ng-controller="PostImagesController">
+                    <label>Photos</label>
+                    <div>
+                        <input type = "file" file-model = "myFiles" multiple/>
+                        <button type="button" ng-click = "uploadFiles()">Upload</button>
+                    </div>
                     <img data-ng-src="{{image.imgUrl}}" ng-repeat="image in postForm.images" height="100"/>
                 </div>
-                <div class="form-group">
-                    <input type = "file" file-model = "myFile"/>
-                    <button type="button" ng-click = "uploadFile()">Upload image</button>
-                </div>
-
                 <div class="form-group">
                     <button type="submit" class="btn btn-default">Submit</button>
                 </div>

@@ -39,6 +39,7 @@ app.config(['$routeProvider', '$httpProvider',
 app.controller('MenuController', MenuController);
 app.controller('MainController', MainController);
 app.controller('PostController', PostController);
+app.controller('PostImagesController', PostImagesController);
 app.controller('ProfileController', ProfileController);
 
 /* Directives */
@@ -54,7 +55,7 @@ app.directive('fileModel', ['$parse', function ($parse) {
 
             element.bind('change', function(){
                 scope.$apply(function(){
-                    modelSetter(scope, element[0].files[0]);
+                    modelSetter(scope, element[0].files);
                 });
             });
         }
