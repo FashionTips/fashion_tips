@@ -9,6 +9,9 @@ import java.util.Set;
  * Tag Service interface
  */
 public interface TagService {
+
+    Tag getByName(String tagName);
+
     /*Takes list of tags names, returned set of Tags*/
     Set<Tag> saveTags(List<String> tagsNames);
 }
