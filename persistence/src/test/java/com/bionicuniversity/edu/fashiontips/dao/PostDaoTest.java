@@ -44,7 +44,7 @@ public class PostDaoTest {
 
     @Test
     public void testAddValidPost() {
-        Post post = new Post(null, USER1, "title4", "How my glasses fits me?", Post.Category.POST, new HashSet<>(), new HashSet<>(Arrays.asList(IMAGE4, IMAGE5)));
+        Post post = new Post(null, USER1, "title4", "How my glasses fits me?", Post.Category.POST, new HashSet<>(Arrays.asList(IMAGE4, IMAGE5)));
         postDao.save(post);
         post = postDao.getById(7L);
 

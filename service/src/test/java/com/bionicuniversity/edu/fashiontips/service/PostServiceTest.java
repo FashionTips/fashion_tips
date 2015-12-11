@@ -40,7 +40,7 @@ public class PostServiceTest {
     @Test
     public void testUpdate() throws Exception {
         /*Create checkPost */
-        Post checkPost = new Post(4L, userService.get(1L), "new title1", "lalalala!?", Category.POST, new HashSet<>(), new HashSet<>());
+        Post checkPost = new Post(4L, userService.get(1L), "new title1", "lalalala!?", Category.POST, new HashSet<>());
 
         /*Make some changes in Post(ID = 4)*/
         Post testPost = postService.get(4L);

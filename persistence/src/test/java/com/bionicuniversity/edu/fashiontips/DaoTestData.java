@@ -2,7 +2,6 @@ package com.bionicuniversity.edu.fashiontips;
 
 import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
-import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 
 import java.util.*;
@@ -21,11 +20,6 @@ public final class DaoTestData {
 
     public static final List<User> USERS = Arrays.asList(USER1, USER2, USER3);
 
-    /*existing tags*/
-    public static final Tag TAG1 = new Tag(1L, "tag1");
-    public static final Tag TAG2 = new Tag(2L, "tag2");
-    public static final Tag TAG3 = new Tag(3L, "tag3");
-
     /* Default images, which stored in ${application.images.path} */
     public static final Image IMAGE1 = new Image(1L,"1-1kurtka.jpg");
     public static final Image IMAGE2 = new Image(2L,"2-13235_huge_weman_shoes_0.jpg");
@@ -40,14 +34,14 @@ public final class DaoTestData {
     public static final Image IMAGE_NEW = new Image(null, "newImage.jpg");
 
     /*existing posts*/
-    public static final Post POST1 = new Post(1L, USER1, "title1", "what fits me with these pants?", Post.Category.QUESTION, new HashSet<>(Arrays.asList(TAG1, TAG2, TAG3)), new HashSet<>(Arrays.asList(IMAGE1, IMAGE2, IMAGE3)));
-    public static final Post POST2 = new Post(2L, USER2, "title2", "what hat does put on?", Post.Category.QUESTION, new HashSet<>(Arrays.asList(TAG1, TAG2)), new HashSet<>(Arrays.asList(IMAGE4, IMAGE5)));
-    public static final Post POST3 = new Post(3L, USER3, "title3", "red is cool?", Post.Category.QUESTION, new HashSet<>(Collections.singletonList(TAG1)), new HashSet<>(Collections.singletonList(IMAGE6)));
-    public static final Post POST4 = new Post(4L, USER1, "title1", "what fits me with these pants? Again", Post.Category.POST, new HashSet<>(), new HashSet<>());
-    public static final Post POST5 = new Post(5L, USER2, "title2", "what hat does put on? Again", Post.Category.POST, new HashSet<>(), new HashSet<>());
-    public static final Post POST6 = new Post(6L, USER3, "title3", "red is cool? Again", Post.Category.POST, new HashSet<>(), new HashSet<>());
+    public static final Post POST1 = new Post(1L, USER1, "title1", "what fits me with these pants?", Post.Category.QUESTION, new HashSet<>(Arrays.asList(IMAGE1, IMAGE2, IMAGE3)));
+    public static final Post POST2 = new Post(2L, USER2, "title2", "what hat does put on?", Post.Category.QUESTION, new HashSet<>(Arrays.asList(IMAGE4, IMAGE5)));
+    public static final Post POST3 = new Post(3L, USER3, "title3", "red is cool?", Post.Category.QUESTION, new HashSet<>(Collections.singletonList(IMAGE6)));
+    public static final Post POST4 = new Post(4L, USER1, "title1", "what fits me with these pants? Again", Post.Category.POST, new HashSet<>());
+    public static final Post POST5 = new Post(5L, USER2, "title2", "what hat does put on? Again", Post.Category.POST, new HashSet<>());
+    public static final Post POST6 = new Post(6L, USER3, "title3", "red is cool? Again", Post.Category.POST, new HashSet<>());
     /*new post*/
-    public static final Post POST7 = new Post(7L, USER1, "title4", "How my glasses fits me?", Post.Category.POST, new HashSet<>(), new HashSet<>(Arrays.asList(IMAGE4, IMAGE5)));
+    public static final Post POST7 = new Post(7L, USER1, "title4", "How my glasses fits me?", Post.Category.POST, new HashSet<>(Arrays.asList(IMAGE4, IMAGE5)));
 
     public static final List<Post> POSTS = Arrays.asList(POST1, POST2, POST3, POST4, POST5, POST6);
 
