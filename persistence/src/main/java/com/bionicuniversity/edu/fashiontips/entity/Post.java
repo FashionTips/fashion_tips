@@ -27,7 +27,7 @@ public class Post extends BaseEntity<Long> {
      */
     @JsonProperty("author")
     @JsonIgnoreProperties(value = {"id", "email", "password"})
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
@@ -60,6 +60,7 @@ public class Post extends BaseEntity<Long> {
     @Column(nullable = false, updatable = true, insertable = true)
     private Category category;
 
+
     /*
 * List of posts images
 * Relationships store in separate table
@@ -83,10 +84,15 @@ public class Post extends BaseEntity<Long> {
      * @param message - consists user's message
      */
     public Post(User user, String title, String message, Category category) {
+        this(null, user, title, message, category, null);
+    }
+    public Post(Long id, User user, String title, String message, Category category, Set<Image> images) {
+        this.id = id;
         this.user = user;
         this.title = title;
         this.textMessage = message;
         this.category = category;
+        this.images = images;
     }
 
     public User getUser() {
