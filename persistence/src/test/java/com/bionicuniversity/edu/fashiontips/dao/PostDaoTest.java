@@ -2,7 +2,6 @@ package com.bionicuniversity.edu.fashiontips.dao;
 
 import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
-import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Rule;
 import org.junit.Test;
@@ -57,7 +56,6 @@ public class PostDaoTest {
         user = userDao.save(user);
         System.out.println(user);
         Post post = new Post(user, "title4", "How my glasses fits me?", Post.Category.QUESTION);
-        post.setTags(new HashSet<>());
         Set<Image> images = new HashSet<>();
         images.addAll(Arrays.asList(IMAGE4, IMAGE5));
         post.setImages(images);
@@ -91,13 +89,6 @@ public class PostDaoTest {
         post.setTitle("title1");
         post.setTextMessage("what fits me with these pants?");
         post.setCategory(Post.Category.QUESTION);
-        Set<Tag> tags = new HashSet<>();
-        for(Long i = 1L; i < 4; i++) {
-            Tag tag = new Tag("tag" + i);
-            tag.setId(i);
-            tags.add(tag);
-        }
-        post.setTags(tags);
         Set<Image> images = new HashSet<>();
         images.addAll(Arrays.asList(IMAGE1, IMAGE2, IMAGE3));
         post.setImages(images);
