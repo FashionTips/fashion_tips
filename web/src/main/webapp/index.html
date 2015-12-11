@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="fashion-tips-web">
+<head>
+    <meta charset="UTF-8">
+    <title>Fashion Tips - Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+</head>
+<body data-ng-cloak class="ng-cloak">
+
+<data-ng-include src="'components/header.html'"></data-ng-include>
+
+<div data-ng-view></div>
+
+<!-- lib's js -->
+<script src="js/lib/jquery-1.11.3.min.js"></script>
+<script src="js/lib/bootstrap.min.js"></script>
+<script src="js/lib/angular.min.js"></script>
+<script src="js/lib/angular-route.min.js"></script>
+<script src="js/lib/angular-messages.min.js"></script>
+<script src="js/lib/angular-resource.min.js"></script>
+<script src="js/lib/ngStorage.min.js"></script>
+
+<!-- Custom scripts-->
+<script src="components/main/MainController.js"></script>
+<script src="components/profile/ProfileController.js"></script>
+<script src="components/post/PostController.js"></script>
+<script src="components/post/PostImagesController.js"></script>
+<script src="components/MenuController.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

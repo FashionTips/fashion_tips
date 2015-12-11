@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- Enable default servlet to handle static resources -->
+    <mvc:default-servlet-handler/>
+
+    <!-- Redirect all initial requests to view -->
+    <mvc:view-controller path="/" view-name="index"/>
+
+    <!-- Set jsp view resolver to show html page -->
+    <mvc:view-resolvers>
+        <mvc:jsp prefix="/" suffix=".html"/>
+    </mvc:view-resolvers>
+
+</beans>
