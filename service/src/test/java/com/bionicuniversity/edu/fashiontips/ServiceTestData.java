@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 /**
  * Class for testing PostService
- * @author Sergiy
+ *
  */
 public class ServiceTestData {
     public static final Post NOT_EXISTING_POST = new Post(-1L, new User(), "", "?????", Post.Category.POST, new HashSet<>());
