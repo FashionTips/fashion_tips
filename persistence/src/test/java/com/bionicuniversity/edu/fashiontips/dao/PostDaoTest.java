@@ -111,7 +111,6 @@ public class PostDaoTest {
     }
 
     @Test
-    @Transactional
     public void savePostWithCommentCascadedTest() {
         User user = userDao.getById(1L);
         List<Post> befor = postDao.getAllByUser(user);
@@ -130,5 +129,25 @@ public class PostDaoTest {
         List<Post> expected = postDao.getAllByUser(user);
         assertArrayEquals(expected.toArray(new Post[0]), befor.toArray(new Post[0]));
         assertArrayEquals(expectedComments.toArray(new Comment[0]), commentsAfter.toArray(new Comment[0]));
+    }
+
+    @Test
+
+    public void savePostWithCommentCascadeTest() {
+        Post post = postDao.getById(1L);
+        Comment newComment = new Comment("Super!", post);
+        newComment.setId(4L);
+        Comment newComment2 = new Comment("Super2!", post);
+        newComment2.setId(5L);
+        Set<Comment> comments = new HashSet<>();
+        comments.add(newComment);
+        comments.add(newComment2);
+        post.setComments(comments);
+        newComment.setPost(post);
+        newComment2.setPost(post);
+        postDao.save(post);
+        List<Comment> given = commentDao.getCommentsByPost(post);
+        boolean added = given.size() > 1;
+        assertTrue(added);
     }
 }

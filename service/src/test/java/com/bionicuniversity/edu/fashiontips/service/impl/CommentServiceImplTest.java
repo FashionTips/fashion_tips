@@ -7,6 +7,7 @@ import com.bionicuniversity.edu.fashiontips.service.CommentService;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,6 +17,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  * @author alaktionov aka slav9nin
@@ -53,17 +58,18 @@ public class CommentServiceImplTest {
     public static void setup() {
         for (int i = 1; i <= 5; i++) {
             Comment comment = new Comment("OK", post1);
-            comment.setId(Long.valueOf(""+i));
+//            comment.setId(Long.valueOf(""+i));
             comments.add(comment);
         }
     }
 
-//    @Test
-//    public void saveCommentsTest() {
-//        List<Comment> expected = commentService.getCommentsByPost(post1);
-//        post1.setComments(comments);
-//        postService.save(post1);
-//        expected.addAll(post1.getComments().stream().collect(Collectors.toList()));
-//        assertArrayEquals(expected.toArray(new Comment[0]), post1.getComments().toArray(new Comment[0]));
-//    }
+    @Test
+    public void saveCommentsTest() {
+        List<Comment> expected = commentService.getCommentsByPost(post1);
+        post1.setComments(new HashSet<>());
+        post1.getComments().addAll(comments);
+        postService.save(post1);
+        expected.addAll(post1.getComments().stream().collect(Collectors.toList()));
+        assertArrayEquals(expected.toArray(new Comment[0]), post1.getComments().toArray(new Comment[0]));
+    }
 }
