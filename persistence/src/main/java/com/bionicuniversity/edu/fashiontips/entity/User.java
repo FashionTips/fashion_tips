@@ -23,12 +23,16 @@ public class User extends BaseEntity<Long> {
     }
 
     /**
-     *
-     * @param login - Represent user login
-     * @param email - Represent user email
+     * @param login    - Represent user login
+     * @param email    - Represent user email
      * @param password - Represent user password
      */
     public User(final String login, final String email, final String password) {
+        this(null, login, email, password);
+    }
+
+    public User(final Long id, final String login, final String email, final String password) {
+        this.id = id;
         this.login = login;
         this.email = email;
         this.password = password;

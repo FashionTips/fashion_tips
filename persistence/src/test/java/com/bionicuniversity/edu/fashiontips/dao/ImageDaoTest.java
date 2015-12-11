@@ -15,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.bionicuniversity.edu.fashiontips.ImageTestData.*;
+import static com.bionicuniversity.edu.fashiontips.DaoTestData.*;
 
 
 /**
