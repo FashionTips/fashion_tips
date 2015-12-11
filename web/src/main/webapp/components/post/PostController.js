@@ -45,41 +45,4 @@ var PostController = ['$rootScope', '$scope', '$resource', '$http', '$location',
                 $scope.error = true;
             });
         };
-
-        /**
-         * Tags as raw user's input string, not split yet.
-         * @type {string}
-         */
-        $scope.strTags = "";
-
-        /**
-         * Flag to define whether there is error while attempt to add new tags.
-         */
-        $scope.addTagsError = false;
-
-        /**
-         * Add tags to post from user input via sending them to API.
-         */
-        $scope.addTags = function () {
-
-            /* split string to get array of tags */
-            var tags = $scope.strTags.split(/\s*,\s*/);
-
-            /* send tags to remote api */
-            $http
-                .post(urlApi + "/posts/" + postId + "/tags", tags)
-                .then(
-                    function (data) {
-
-                        /* success */
-                        $scope.addTagsError = false;
-                        $scope.post.tags = data.data;
-                        $route.reload();
-                    }, function () {
-
-                        /* error */
-                        $scope.addTagsError = true;
-                    }
-                );
-        };
     }];

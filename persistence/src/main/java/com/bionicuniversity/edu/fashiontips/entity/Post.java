@@ -60,17 +60,6 @@ public class Post extends BaseEntity<Long> {
     @Column(nullable = false, updatable = true, insertable = true)
     private Category category;
 
-    /**
-     * Set of tags which used in this post
-     */
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "posts_tags",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags;
-
     /*
 * List of posts images
 * Relationships store in separate table
@@ -141,14 +130,6 @@ public class Post extends BaseEntity<Long> {
         this.title = title;
     }
 
-    public Set<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
-    }
-
     public Set<Image> getImages() {
         return images;
     }
@@ -167,7 +148,6 @@ public class Post extends BaseEntity<Long> {
                 ", title=" + title +
                 ", textMessage='" + textMessage + '\'' +
                 ", category=" + category +
-                ", tags=" + tags +
                 ", images=" + images +
                 '}';
     }
