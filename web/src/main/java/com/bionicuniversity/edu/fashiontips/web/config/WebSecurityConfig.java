@@ -59,11 +59,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .formLogin()
+                .authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/profile").authenticated()
+                .antMatchers("/post").authenticated()
+                .antMatchers("/post/*").permitAll()
+                .and()
+                .formLogin().loginPage("/login")
                 .failureHandler(customAuthenticationFailureHandler())
                 .successHandler(customAuthenticationSuccessHandler())
                 .and()
                 .logout().logoutSuccessHandler(customLogoutSuccessHandler())
+                .deleteCookies("username", "fashionTipsAppToken")
                 .and()
                 .csrf().disable();
     }

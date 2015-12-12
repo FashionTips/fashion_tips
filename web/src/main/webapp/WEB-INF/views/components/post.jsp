@@ -1,4 +1,5 @@
-<div class="container">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<div class="container" data-ng-controller="PostController">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="page-header">
@@ -25,7 +26,7 @@
             <hr/>
 
             <!--<div class="alert alert-danger" role="alert" data-ng-show="addTagsError">-->
-                <!--Error occurred. Please check your internet connection.-->
+            <!--Error occurred. Please check your internet connection.-->
             <!--</div>-->
 
             <!--<p data-ng-show="post.tags">Filled under:</p>-->
@@ -33,19 +34,19 @@
             <!--<p data-ng-repeat="tag in post.tags"><a>{{ tag.name }}</a>&nbsp;</p>-->
 
             <!--<div data-ng-show="username === post.author.login">-->
-                <!--<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#tags-input"-->
-                        <!--aria-expanded="false" aria-controls="tags-input">Add tags-->
-                <!--</button>-->
-                <!--<div class="collapse" id="tags-input">-->
-                    <!--<div class="form-group">-->
-                        <!--<label>Comma separated, please:-->
-                            <!--<input name="tags" type="text" data-ng-model="strTags">-->
-                        <!--</label>-->
-                    <!--</div>-->
-                    <!--<div class="form-group">-->
-                        <!--<button type="submit" class="btn btn-default" data-ng-click="addTags()">Submit</button>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#tags-input"-->
+            <!--aria-expanded="false" aria-controls="tags-input">Add tags-->
+            <!--</button>-->
+            <!--<div class="collapse" id="tags-input">-->
+            <!--<div class="form-group">-->
+            <!--<label>Comma separated, please:-->
+            <!--<input name="tags" type="text" data-ng-model="strTags">-->
+            <!--</label>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+            <!--<button type="submit" class="btn btn-default" data-ng-click="addTags()">Submit</button>-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
 
         </div>

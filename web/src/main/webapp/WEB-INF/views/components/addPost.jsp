@@ -1,11 +1,12 @@
-<div class="container">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<div class="container" data-ng-controller="PostController">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <div class="alert alert-success" role="alert" data-ng-show="newPostUrl && !error">
+            <div class="alert alert-success" role="alert" data-ng-show="newPostUrl && !showAddPostErrorMessage">
                 <strong>Well done!</strong> You have been successfully add the post, and now it sits
-                <a href="{{ newPostUrl }}">here</a>
+                <a href="{{ newPostUrl }}" target="_self">here</a>
             </div>
-            <div class="alert alert-danger" role="alert" data-ng-show="error">
+            <div class="alert alert-danger" role="alert" data-ng-show="showAddPostErrorMessage">
                 Error occurred, post was not stored :-(
             </div>
             <div class="page-header">
@@ -30,8 +31,8 @@
                 <div class="form-group">
                     <label>Photos</label>
                     <div>
-                        <input type = "file" data-file-model = "postImages" multiple/>
-                        <button type="button" data-ng-click = "uploadImages()">Upload</button>
+                        <input id="images-input" type="file" data-file-model="postImages" multiple/>
+                        <button type="button" data-ng-click="uploadImages()">Upload</button>
                     </div>
                     <img data-ng-src="{{image.imgUrl}}" data-ng-repeat="image in postForm.images" height="100"/>
                 </div>
