@@ -1,27 +1,22 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
+import javax.servlet.http.HttpSession;
 
 /**
- *  Controller which handles authenticate requests
+ * Controller which handles authenticate requests
  */
 @CrossOrigin
 @RestController
 public class AuthController {
 
-    @RequestMapping(value = "/me", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> login(Principal principal) {
-        return new ResponseEntity<>(principal.getName(), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    @ResponseStatus(value = HttpStatus.OK)
-    public void logout() {
-        /* Realization of this method handled by Spring Security */
+    @RequestMapping(value = "/token", method = RequestMethod.GET)
+    public ResponseEntity<?> login(HttpSession session) {
+        return ResponseEntity.ok().header("Token", session.getId()).build();
     }
 }

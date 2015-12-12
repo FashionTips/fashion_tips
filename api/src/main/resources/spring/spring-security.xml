@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/security"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
     <http>
@@ -18,31 +18,21 @@
         <intercept-url pattern="/posts/*" method="GET" access="permitAll"/>
 
         <!-- Only authenticated users can access the api methods -->
-        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <intercept-url pattern="/**" access="isAuthenticated()"/>
+        <logout success-handler-ref="logoutSuccessHandler"/>
         <csrf disabled="true"/>
-        <custom-filter ref="restLogoutFilter" position="LOGOUT_FILTER"/>
     </http>
 
-    <!--Initialize custom entry point for HTTP Basic Auth-->
-    <beans:bean id="entryPoint" class="com.bionicuniversity.edu.fashiontips.security.CustomBasicAuthenticationEntryPoint">
-        <beans:constructor-arg name="realmName" value="Fashion Tips Application"/>
-    </beans:bean>
+    <!-- Entry point returns 403 Forbidden to start security negotiations -->
+    <beans:bean id="entryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
 
-    <!-- Initialize custom logout filter for REST interface -->
-    <beans:bean id="restLogoutFilter" class="com.bionicuniversity.edu.fashiontips.security.CustomLogoutFilter">
-        <beans:constructor-arg>
-            <beans:bean class="org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler" />
-        </beans:constructor-arg>
-        <beans:constructor-arg>
-            <beans:list>
-                <beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
-            </beans:list>
-        </beans:constructor-arg>
-    </beans:bean>
+    <!-- Logout Success Handler, which respond with http status code OK (200) -->
+    <beans:bean id="logoutSuccessHandler"
+                class="org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler"/>
 
     <authentication-manager>
         <authentication-provider>
-            <password-encoder hash="bcrypt" />
+            <password-encoder hash="bcrypt"/>
             <jdbc-user-service
                     data-source-ref="dataSource"
                     users-by-username-query="select login, password, 1 from users where login = ?"

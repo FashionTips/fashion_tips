@@ -18,9 +18,9 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
                         <!--Dropdown menu for authenticated users.-->
-                        <li class="dropdown"  data-ng-show="authenticated">
+                        <li class="dropdown" data-ng-show="loggedIn()">
                             <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                               aria-expanded="false">{{ $storage.user.login }} <span class="caret"></span></a>
+                               aria-expanded="false">{{ username }} <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#/profile">Profile</a></li>
                                 <li><a href="#/profile/post">Add new post</a></li>
@@ -29,15 +29,20 @@
                             </ul>
                         </li>
                         <!--Dropdown menu for non-authenticated users.-->
-                        <li class="dropdown" data-ng-show="!authenticated">
-                            <a href="/" class="dropdown-toggle" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
+                        <li class="dropdown" data-ng-show="!loggedIn()">
+                            <a href="/" class="dropdown-toggle" data-toggle="dropdown">Sign In <strong
+                                    class="caret"></strong></a>
                             <div class="dropdown-menu">
                                 <form name="signinForm" accept-charset="UTF-8" data-ng-submit="login()">
-                                    <div class="form-group has-feedback" data-ng-class="{ 'has-error': signinForm.username.$invalid }">
-                                        <input class="form-control" type="text" placeholder="Username" name="username" data-ng-model="credentials.username" required autofocus>
+                                    <div class="form-group has-feedback"
+                                         data-ng-class="{ 'has-error': signinForm.username.$invalid }">
+                                        <input class="form-control" type="text" placeholder="Username" name="username"
+                                               data-ng-model="credentials.username" required autofocus>
                                     </div>
-                                    <div class="form-group has-feedback" data-ng-class="{ 'has-error': signinForm.password.$invalid }">
-                                        <input class="form-control" placeholder="Password" id="password" name="password" data-ng-model="credentials.password" required>
+                                    <div class="form-group has-feedback"
+                                         data-ng-class="{ 'has-error': signinForm.password.$invalid }">
+                                        <input class="form-control" placeholder="Password" id="password" name="password"
+                                               data-ng-model="credentials.password" required>
                                     </div>
                                     <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Sign In">
                                 </form>
@@ -47,5 +52,14 @@
                 </div>
             </div>
         </nav>
+    </div>
+    <div class="container">
+        <!-- Alert messages -->
+        <div class="alert alert-danger" data-ng-show="error">
+            There was a problem logging in. Please try again.
+        </div>
+        <div class="alert alert-success" ng-show="loggedIn()">
+            Congratulations! {{username}} has logged!
+        </div>
     </div>
 </header>

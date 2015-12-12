@@ -1,5 +1,5 @@
 /* MODULE */
-var app = angular.module('fashion-tips-web', ['ngRoute', 'ngMessages', 'ngResource', 'ngStorage']);
+var app = angular.module('fashion-tips-web', ['ngRoute', 'ngMessages', 'ngResource', 'ngStorage', 'ngCookies']);
 
 /* App constants */
 var urlApi = "http://localhost:8080"; // URL
@@ -35,11 +35,15 @@ app.config(['$routeProvider', '$httpProvider',
         $httpProvider.defaults.withCredentials = true;
     }]);
 
+/* Services */
+app.service('sessionService', sessionService);
+app.service('authService', authService);
+app.service('postService', postService);
+
 /* Controllers */
 app.controller('MenuController', MenuController);
 app.controller('MainController', MainController);
 app.controller('PostController', PostController);
-app.controller('PostImagesController', PostImagesController);
 app.controller('ProfileController', ProfileController);
 
 /* Directives */
@@ -49,12 +53,12 @@ app.controller('ProfileController', ProfileController);
 app.directive('fileModel', ['$parse', function ($parse) {
     return {
         restrict: 'A',
-        link: function(scope, element, attrs) {
+        link: function (scope, element, attrs) {
             var model = $parse(attrs.fileModel);
             var modelSetter = model.assign;
 
-            element.bind('change', function(){
-                scope.$apply(function(){
+            element.bind('change', function () {
+                scope.$apply(function () {
                     modelSetter(scope, element[0].files);
                 });
             });
