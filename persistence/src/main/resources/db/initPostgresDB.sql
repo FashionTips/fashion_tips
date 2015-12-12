@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS post_images;
 DROP TABLE IF EXISTS images;
+DROP TABLE IF EXISTS posts_hashtags;
+DROP TABLE IF EXISTS hashTags;
 DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS users ;
@@ -34,6 +36,22 @@ CREATE TABLE roles (
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE hashTags (
+  id BIGSERIAL,
+  name VARCHAR,
+  CONSTRAINT "hashtags_id" PRIMARY KEY (id)
+);
+CREATE UNIQUE INDEX hashtagname ON hashTags (name);
+
+CREATE TABLE posts_hashtags (
+  post_id BIGINT NOT NULL,
+  hashtag_id BIGINT NOT NULL,
+  FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (hashtag_id) REFERENCES hashTags (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT posts_hashtags_idx UNIQUE (post_id, hashtag_id)
+);
+
+
 CREATE TABLE images (
   id BIGSERIAL,
   img_name VARCHAR NOT NULL,
@@ -47,9 +65,6 @@ CREATE TABLE post_images (
   FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE,
   CONSTRAINT post_pictures_idx UNIQUE (post_id, img_id)
 );
-
-
-
 
 
 

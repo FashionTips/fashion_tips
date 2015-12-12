@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.service.HashTagService;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +33,8 @@ public class PostController {
     @Inject
     private UserService userService;
 
+    @Inject
+    private HashTagService hashTagService;
 
     /**
      * Returns post from database by given id. Or throws {@code PostNotFoundException} if there is not post
@@ -67,6 +70,7 @@ public class PostController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> saveNewPost(@Valid @RequestBody Post post, Principal principal) {
         post.setUser(userService.getByLogin(principal.getName()));
+        post.setHashTags(hashTagService.saveHashTags(post.getTextMessage()));
         Post savedPost = postService.save(post);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder
