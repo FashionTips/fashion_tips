@@ -27,7 +27,7 @@ public class Post extends BaseEntity<Long> {
      */
     @JsonProperty("author")
     @JsonIgnoreProperties(value = {"id", "email", "password"})
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
@@ -60,6 +60,16 @@ public class Post extends BaseEntity<Long> {
     @Column(nullable = false, updatable = true, insertable = true)
     private Category category;
 
+    /**
+     * Set of hashTags which used in this post
+     */
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "posts_hashtags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "hashtag_id")
+    )
+    private Set<HashTag> hashTags;
     /*
 * List of posts images
 * Relationships store in separate table
@@ -83,10 +93,17 @@ public class Post extends BaseEntity<Long> {
      * @param message - consists user's message
      */
     public Post(User user, String title, String message, Category category) {
+        this(null, user, title, message, category, null, null);
+    }
+
+    public Post(Long id, User user, String title, String message, Category category, Set<HashTag> hashTags, Set<Image> images) {
+        this.id = id;
         this.user = user;
         this.title = title;
         this.textMessage = message;
         this.category = category;
+        this.hashTags = hashTags;
+        this.images = images;
     }
 
     public User getUser() {
@@ -130,6 +147,7 @@ public class Post extends BaseEntity<Long> {
         this.title = title;
     }
 
+
     public Set<Image> getImages() {
         return images;
     }
@@ -138,6 +156,13 @@ public class Post extends BaseEntity<Long> {
         this.images = images;
     }
 
+    public Set<HashTag> getHashTags() {
+        return hashTags;
+    }
+
+    public void setHashTags(Set<HashTag> hashTags) {
+        this.hashTags = hashTags;
+    }
 
     @Override
     public String toString() {
@@ -148,6 +173,7 @@ public class Post extends BaseEntity<Long> {
                 ", title=" + title +
                 ", textMessage='" + textMessage + '\'' +
                 ", category=" + category +
+                ", hashtags=" + hashTags +
                 ", images=" + images +
                 '}';
     }
