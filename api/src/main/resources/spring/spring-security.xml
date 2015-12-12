@@ -23,8 +23,10 @@
         <csrf disabled="true"/>
     </http>
 
-    <!-- Entry point returns 403 Forbidden to start security negotiations -->
-    <beans:bean id="entryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
+    <!-- Entry point returns 401 UNAUTHORIZED to start security negotiations -->
+    <beans:bean id="entryPoint" class="org.springframework.security.web.authentication.HttpStatusEntryPoint">
+        <beans:constructor-arg name="httpStatus" value="UNAUTHORIZED"/>
+    </beans:bean>
 
     <!-- Logout Success Handler, which respond with http status code OK (200) -->
     <beans:bean id="logoutSuccessHandler"
