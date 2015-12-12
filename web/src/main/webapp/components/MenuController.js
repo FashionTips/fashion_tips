@@ -1,62 +1,41 @@
-var MenuController = ['$rootScope', '$scope', '$http', '$location', '$localStorage',
-    function ($rootScope, $scope, $http, $location, $localStorage) {
+var MenuController = ['$scope', '$location', 'sessionService', 'authService',
+    function ($scope, $location, sessionService, authService) {
 
-        /* Define function which will grab credentials, if exist, and try to authenticate on server */
-        var authenticate = function (credentials, callback) {
-            var headers = credentials ? {
-                authorization: "Basic "
-                + btoa(credentials.username + ":" + credentials.password)
-            } : {};
+        /* Define variable for credential object which will be filled from inputs in Login form */
+        $scope.credentials = {};
 
-            $http.get(urlApi + "/me", {headers: headers}).
-            success(function (data) {
-                $rootScope.authenticated = true;
-                callback && callback(data);
-            }).
-            error(function () {
-                $rootScope.authenticated = false;
-                callback && callback();
-            });
+        $scope.error = false;
 
+        /* authorised user's name */
+        $scope.username = sessionService.getUsername();
+
+        /* is user logged in */
+        $scope.loggedIn = function () {
+            return sessionService.getToken() !== undefined;
         };
 
-        /* Define function for login action through login form */
+        /* Define function which will grab credentials, if exist, and try to authenticate on server */
         $scope.login = function () {
-            authenticate($scope.credentials, function (login) {
-                if ($rootScope.authenticated) {
-                    $location.path("/profile");
-                    $http.get(urlApi + "/users/by?login=" + login).
-                    success(function (data) {
-                        $rootScope.$storage.user = data;
-                    });
-                    $scope.error = false;
-                } else {
-                    $location.path("/");
-                    $scope.error = true;
-                }
+
+            var login = authService.login($scope.credentials.username, $scope.credentials.password);
+
+            login.then(function () {
+                $scope.error = false;
+                $scope.credentials = {};
+                $scope.$watch(function () {
+                    $scope.username = sessionService.getUsername();
+                });
+                $location.path("/profile");
+            }, function () {
+                $scope.error = true;
             });
         };
 
         /* Define function for logout action */
         $scope.logout = function () {
-            /* Error will be returned in any case due to realization Spring Web CORS + Spring Security */
-            $http.post(urlApi + "/logout", {}).error(function () {
-                $rootScope.authenticated = false;
-                delete $rootScope.$storage.user;
-                $location.path("/");
-            });
+            authService.logout()
+                .then(function () {
+                    $location.path("/")
+                });
         };
-
-        /* Try authenticate and get auth principals while controller initializing */
-        authenticate();
-
-        /* Define variable for credential object which will be filled from inputs in Login form */
-        $scope.credentials = {};
-
-        /* Define variable for user object which will be loaded in login() function */
-        $rootScope.$storage = $localStorage.$default({
-            user: null
-        });
-
-        $rootScope.authenticated = $rootScope.$storage.user != null;
     }];

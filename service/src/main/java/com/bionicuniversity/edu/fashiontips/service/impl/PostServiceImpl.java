@@ -1,17 +1,14 @@
 package com.bionicuniversity.edu.fashiontips.service.impl;
 
 import com.bionicuniversity.edu.fashiontips.dao.PostDao;
-import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.util.ImageUtil;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Post Service Implementation.
@@ -27,14 +24,19 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
 
     @Override
     public List<Post> getAllByUser(User user) {
-        return ((PostDao) repository).getAllByUser(user);
+        List<Post> posts = ((PostDao) repository).getAllByUser(user);
+        posts.forEach(this::addImageUrl);
+        return posts;
     }
 
     @Override
     public Post get(Long id) {
-        Post post =  super.get(id);
-        post.getImages().stream().
-                forEach(imageUtil::createUrlName);
+        Post post = super.get(id);
+        addImageUrl(post);
         return post;
+    }
+
+    private void addImageUrl(Post post) {
+        post.getImages().stream().forEach(imageUtil::createUrlName);
     }
 }
