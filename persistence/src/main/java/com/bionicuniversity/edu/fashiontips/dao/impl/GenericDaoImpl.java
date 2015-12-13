@@ -63,4 +63,9 @@ public abstract class GenericDaoImpl<T extends BaseEntity, PK extends Serializab
     public void deleteAll() {
         em.createQuery(String.format("DELETE FROM %s", templateClass.getSimpleName())).executeUpdate();
     }
+
+    @Override
+    public T getReference(PK id) {
+        return em.getReference(templateClass, id);
+    }
 }

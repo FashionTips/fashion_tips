@@ -28,7 +28,7 @@ public class Post extends BaseEntity<Long> {
      * Column user, which consists User Entity
      */
     @JsonProperty("author")
-    @JsonIgnoreProperties(value = {"id", "email", "password"})
+    @JsonIgnoreProperties(value = {"id", "email"})
     @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
@@ -46,12 +46,12 @@ public class Post extends BaseEntity<Long> {
      */
     @NotBlank(message = "Post body could not be empty.")
     @Size(max = 1000, message = "Post body may not has more than 1000 characters.")
-    @Column(name = "user_post")
+    @Column(name = "user_post", length = 1000)
     private String textMessage;
 
     @NotBlank(message = "Title could not be empty.")
     @Size(max = 100, message = "Title may not has more than 100 characters.")
-    @Column(name = "title")
+    @Column(name = "title", length = 100)
     private String title;
 
     /**
@@ -74,6 +74,18 @@ public class Post extends BaseEntity<Long> {
     )
     @Fetch(FetchMode.SELECT)
     private List<Image> images;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private List<Comment> comments;
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     /**
      * Default Constructor
      */

@@ -18,12 +18,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
 import java.nio.charset.Charset;
-import static org.hamcrest.Matchers.*;
+
+import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 /**
  * Test cases to test {@code UsersController} class.
  *
@@ -78,8 +77,7 @@ public class UsersControllerTest {
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.id", is(user.getId().intValue())))
                 .andExpect(jsonPath("$.login", is(user.getLogin())))
-                .andExpect(jsonPath("$.email", is(user.getEmail())))
-                .andExpect(jsonPath("$.password", is(nullValue())));
+                .andExpect(jsonPath("$.email", is(user.getEmail())));
     }
     @Test
     public void testGetUserUnauthorised() throws Exception {

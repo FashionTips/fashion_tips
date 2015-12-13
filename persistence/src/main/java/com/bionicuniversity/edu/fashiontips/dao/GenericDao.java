@@ -21,4 +21,6 @@ public interface GenericDao<T extends BaseEntity, PK extends Serializable> {
      * Deletes all records.
      */
     void deleteAll();
+
+    public T getReference(PK id);
 }
