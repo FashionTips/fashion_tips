@@ -1,4 +1,5 @@
-<div class="container">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<div class="container" data-ng-controller="ProfileController">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="jumbotron">
@@ -6,7 +7,7 @@
 
                 <p>Email: {{ user.email }}</p>
 
-                <p><a class="btn btn-primary btn-lg" href="#/profile/post" role="button">Add post</a></p>
+                <p><a class="btn btn-primary btn-lg" href="/post" target="_self" role="button">Add post</a></p>
             </div>
 
             <div class="page-header">

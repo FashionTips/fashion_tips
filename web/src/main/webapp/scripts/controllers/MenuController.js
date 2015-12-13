@@ -1,10 +1,10 @@
-var MenuController = ['$scope', '$location', 'sessionService', 'authService',
-    function ($scope, $location, sessionService, authService) {
+var MenuController = ['$scope', 'sessionService', 'authService',
+    function ($scope, sessionService, authService) {
 
         /* Define variable for credential object which will be filled from inputs in Login form */
         $scope.credentials = {};
 
-        $scope.error = false;
+        $scope.showLoginErrorMessage = false;
 
         /* authorised user's name */
         $scope.username = sessionService.getUsername();
@@ -20,14 +20,14 @@ var MenuController = ['$scope', '$location', 'sessionService', 'authService',
             var login = authService.login($scope.credentials.username, $scope.credentials.password);
 
             login.then(function () {
-                $scope.error = false;
+                $scope.showLoginErrorMessage = false;
                 $scope.credentials = {};
                 $scope.$watch(function () {
                     $scope.username = sessionService.getUsername();
                 });
-                $location.path("/profile");
+                window.location.href = "/profile";
             }, function () {
-                $scope.error = true;
+                $scope.showLoginErrorMessage = true;
             });
         };
 
@@ -35,7 +35,7 @@ var MenuController = ['$scope', '$location', 'sessionService', 'authService',
         $scope.logout = function () {
             authService.logout()
                 .then(function () {
-                    $location.path("/")
+                    window.location.href = "/";
                 });
         };
     }];

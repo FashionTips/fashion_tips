@@ -1,7 +1,9 @@
 package com.bionicuniversity.edu.fashiontips.web.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 
 /**
  * Spring MVC configuration.
@@ -18,15 +20,26 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         configurer.enable();
     }
 
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
+        registry.addViewController("/").setViewName("homepage");
+        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/profile").setViewName("profile");
+        registry.addViewController("/post").setViewName("post.add");
+        registry.addViewController("/post/*").setViewName("post.view");
     }
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-        registry.jsp("/", ".html");
+        registry.tiles();
     }
 
-
+    @Bean
+    public TilesConfigurer tilesConfigurer() {
+        TilesConfigurer configurer = new TilesConfigurer();
+        configurer.setDefinitions("/WEB-INF/defs/app-tiles.xml");
+        configurer.setCheckRefresh(true);
+        return configurer;
+    }
 }
