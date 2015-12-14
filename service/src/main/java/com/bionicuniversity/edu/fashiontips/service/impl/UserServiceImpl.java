@@ -16,8 +16,9 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
     @Override
     public User getByLogin(String login) {
         User user = ((UserDao) repository).getByLogin(login);
-        if (user == null) throw new NotFoundException(String.format(
-                "User with login %s is not found.", login));
-        return user;
+        if (user != null) {
+            return user;
+        }
+        throw new NotFoundException(String.format("User with login %s is not found.", login));
     }
 }

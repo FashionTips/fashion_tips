@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS comments ;
 DROP TABLE IF EXISTS post_images;
 DROP TABLE IF EXISTS images;
 DROP TABLE IF EXISTS roles;
@@ -48,6 +49,16 @@ CREATE TABLE post_images (
   CONSTRAINT post_pictures_idx UNIQUE (post_id, img_id)
 );
 
+CREATE TABLE comments (
+  id BIGSERIAL,
+  text VARCHAR(256) NOT NULL, /*type TEXT unlimited*/
+  post_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "comment_id" PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE
+);
 
 
 

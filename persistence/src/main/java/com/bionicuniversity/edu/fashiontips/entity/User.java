@@ -1,5 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -50,6 +52,7 @@ public class User extends BaseEntity<Long> {
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

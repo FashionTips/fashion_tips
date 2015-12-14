@@ -24,14 +24,12 @@ public class UsersController {
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) throws NotFoundException {
         User user = userService.get(id);
-        user.setPassword(null);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/by")
     public ResponseEntity<User> getUserByLogin(@RequestParam(value = "login")String login) {
         User user = userService.getByLogin(login);
-        user.setPassword(null);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
