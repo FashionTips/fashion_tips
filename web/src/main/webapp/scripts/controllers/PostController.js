@@ -2,7 +2,9 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
     function ($scope, $routeParams, $route, postService, sessionService, $location) {
 
         /* if postId is present, then upload post by id */
-        var postId = $location.path().replace('/post/', '');
+        var absUrl = $location.absUrl();
+        var postId = absUrl.slice(absUrl.lastIndexOf('/') + 1);
+
         if (!isNaN(postId)) {
             $scope.post = postService.get(postId);
         }
@@ -84,5 +86,32 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
             for (var i = 0; i < images.length; i++) {
                 $scope.uploadImage(images[i]);
             }
+        };
+
+        /**
+         * Check if user is logged in.
+         * @returns {boolean}
+         */
+        $scope.loggedIn = function () {
+            return sessionService.getToken() !== undefined;
+        };
+
+        /**
+         * Stores data form add comment form.
+         * @type {string}
+         */
+        $scope.commentText = "";
+
+        /**
+         * Adds comment to post.
+         */
+        $scope.addComment = function () {
+
+            var result = postService.addComment(postId, $scope.commentText);
+
+            result.then(function (data) {
+                $scope.post.comments.push(data);
+                $scope.commentText = "";
+            });
         };
     }];

@@ -107,4 +107,24 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
 
         return result.promise;
     };
+
+    /**
+     * Sends comment to api.
+     *
+     * @param postId
+     * @param text
+     * @returns {d.promise|*|promise}
+     */
+    this.addComment = function (postId, text) {
+
+        var result = $q.defer();
+
+        /* Define resource for post comments */
+        var Comment = $resource(urlApi + '/posts/:postId/comments', {postId: postId});
+
+        var newComment = new Comment({text: text});
+        newComment.$save(function(data) {result.resolve(data)});
+
+        return result.promise;
+    };
 }];
