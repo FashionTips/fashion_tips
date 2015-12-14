@@ -25,9 +25,9 @@
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Get link</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Delete</a></li>
+                            <li><a href="/post/{{ post.id }}">To post</a></li>
+                            <%--<li role="separator" class="divider"></li>--%>
+                            <%--<li><a href="#">Delete</a></li>--%>
                         </ul>
                     </div>
                     <div class="panel-heading">

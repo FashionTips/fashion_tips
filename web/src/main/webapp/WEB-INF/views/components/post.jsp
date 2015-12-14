@@ -10,7 +10,8 @@
             <div id="post-gallery" class="carousel slide" data-ride="carousel">
                 <!-- Indicators -->
                 <ol class="carousel-indicators">
-                    <li data-target="#post-gallery" data-slide-to="{{$index}}" ng-class='{active:$first}' data-ng-repeat="num in post.images"></li>
+                    <li data-target="#post-gallery" data-slide-to="{{$index}}" ng-class='{active:$first}'
+                        data-ng-repeat="num in post.images"></li>
                 </ol>
 
                 <!-- Wrapper for slides -->
@@ -25,29 +26,23 @@
 
             <hr/>
 
-            <!--<div class="alert alert-danger" role="alert" data-ng-show="addTagsError">-->
-            <!--Error occurred. Please check your internet connection.-->
-            <!--</div>-->
+            <div data-ng-repeat="comment in post.comments">
+                <p class="col-md-6 text-left">{{ comment.author.login }}</p>
+                <p class="col-md-6 text-right">{{ comment.created }}</p>
+                <p class="text-primary">{{ comment.text }}</p>
+                <hr/>
+            </div>
 
-            <!--<p data-ng-show="post.tags">Filled under:</p>-->
-
-            <!--<p data-ng-repeat="tag in post.tags"><a>{{ tag.name }}</a>&nbsp;</p>-->
-
-            <!--<div data-ng-show="username === post.author.login">-->
-            <!--<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#tags-input"-->
-            <!--aria-expanded="false" aria-controls="tags-input">Add tags-->
-            <!--</button>-->
-            <!--<div class="collapse" id="tags-input">-->
-            <!--<div class="form-group">-->
-            <!--<label>Comma separated, please:-->
-            <!--<input name="tags" type="text" data-ng-model="strTags">-->
-            <!--</label>-->
-            <!--</div>-->
-            <!--<div class="form-group">-->
-            <!--<button type="submit" class="btn btn-default" data-ng-click="addTags()">Submit</button>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
+            <div data-ng-show="loggedIn()">
+                <form data-ng-submit="addComment()">
+                    <div class="form-group">
+                        <label for="inputCommentText">Have thoughts? Type them here:</label>
+                        <textarea id="inputCommentText" class="form-control" rows="3"
+                                  data-ng-model="commentText"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
 
         </div>
     </div>

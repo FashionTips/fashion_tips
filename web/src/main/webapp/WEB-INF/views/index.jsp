@@ -10,10 +10,30 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/custom.css">
+
+    <!-- JS scripts here to hide angular code shows on preload -->
+    <!-- lib's js -->
+    <script src="/scripts/lib/jquery-1.11.3.min.js"></script>
+    <script src="/scripts/lib/bootstrap.min.js"></script>
+    <script src="/scripts/lib/angular.min.js"></script>
+    <script src="/scripts/lib/angular-route.min.js"></script>
+    <script src="/scripts/lib/angular-messages.min.js"></script>
+    <script src="/scripts/lib/angular-resource.min.js"></script>
+    <script src="/scripts/lib/angular-cookies.min.js"></script>
+
+    <!-- Custom scripts-->
+    <script src="/scripts/services/SessionService.js"></script>
+    <script src="/scripts/services/AuthService.js"></script>
+    <script src="/scripts/services/PostService.js"></script>
+    <script src="/scripts/controllers/MainController.js"></script>
+    <script src="/scripts/controllers/ProfileController.js"></script>
+    <script src="/scripts/controllers/PostController.js"></script>
+    <script src="/scripts/controllers/MenuController.js"></script>
+    <script src="/scripts/app.js"></script>
 </head>
 <body data-ng-app="fashion-tips-web">
 
-<header data-ng-controller="MenuController">
+<header>
     <div class="container">
         <nav class="navbar navbar-default">
             <div class="container-fluid">
@@ -30,7 +50,7 @@
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" data-ng-controller="MenuController">
                     <ul class="nav navbar-nav navbar-right">
                         <!--Dropdown menu for authenticated users.-->
                         <li class="dropdown" data-ng-show="loggedIn()">
@@ -81,25 +101,5 @@
         <p class="text-center">Fashion Tips &copy; 2015 - 2016</p>
     </div>
 </footer>
-
-<!-- JS scripts here to load html page faster -->
-<!-- lib's js -->
-<script src="/scripts/lib/jquery-1.11.3.min.js"></script>
-<script src="/scripts/lib/bootstrap.min.js"></script>
-<script src="/scripts/lib/angular.min.js"></script>
-<script src="/scripts/lib/angular-route.min.js"></script>
-<script src="/scripts/lib/angular-messages.min.js"></script>
-<script src="/scripts/lib/angular-resource.min.js"></script>
-<script src="/scripts/lib/angular-cookies.min.js"></script>
-
-<!-- Custom scripts-->
-<script src="/scripts/services/SessionService.js"></script>
-<script src="/scripts/services/AuthService.js"></script>
-<script src="/scripts/services/PostService.js"></script>
-<script src="/scripts/controllers/MainController.js"></script>
-<script src="/scripts/controllers/ProfileController.js"></script>
-<script src="/scripts/controllers/PostController.js"></script>
-<script src="/scripts/controllers/MenuController.js"></script>
-<script src="/scripts/app.js"></script>
 </body>
 </html>
