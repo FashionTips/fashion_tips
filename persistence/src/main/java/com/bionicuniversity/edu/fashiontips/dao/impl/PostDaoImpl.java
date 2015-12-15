@@ -6,6 +6,7 @@ import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 /**
@@ -19,8 +20,22 @@ import java.util.List;
 public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
 
     @Override
-    public List<Post> getAllByUser(User user) {
-        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :user", Post.class);
+    public List<Post> findByUser(User user) {
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :user ORDER BY p.created DESC", Post.class);
         return query.setParameter("user", user).getResultList();
+    }
+
+    @Override
+    public List<Post> findByWord(String word) {
+        TypedQuery<Post> query =
+                em.createQuery("SELECT p FROM Post p WHERE p.textMessage LIKE :pattern ORDER BY p.created DESC", Post.class);
+
+        return query.setParameter("pattern", "%" + word + "%").getResultList();
+    }
+
+    @Override
+    public List<Post> findAll() {
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p ORDER BY p.created DESC", Post.class);
+        return query.getResultList();
     }
 }

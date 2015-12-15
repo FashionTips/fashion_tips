@@ -8,7 +8,9 @@ import com.bionicuniversity.edu.fashiontips.service.util.ImageUtil;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Post Service Implementation.
@@ -23,8 +25,26 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     private ImageUtil imageUtil;
 
     @Override
-    public List<Post> getAllByUser(User user) {
-        List<Post> posts = ((PostDao) repository).getAllByUser(user);
+    public List<Post> findByUser(User user) {
+        List<Post> posts = ((PostDao) repository).findByUser(user);
+        posts.forEach(this::addImageUrl);
+        return posts;
+    }
+
+    @Override
+    public List<Post> findByHashTag(String hashTag) {
+        List<Post> posts = ((PostDao) repository).findByWord(hashTag).stream().filter(post -> {
+            String text = post.getTextMessage();
+            return Arrays.asList(text.split("\\s")).stream().anyMatch(s -> s.matches(hashTag + "\\W*"));
+        }).collect(Collectors.toList());
+
+        posts.forEach(this::addImageUrl);
+        return posts;
+    }
+
+    @Override
+    public List<Post> findAll() {
+        List<Post> posts = ((PostDao) repository).findAll();
         posts.forEach(this::addImageUrl);
         return posts;
     }
