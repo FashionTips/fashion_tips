@@ -31,38 +31,11 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
                 $scope.postForm = {};
                 $scope.postForm.images = [];
                 angular.element("#images-input").val(null); // clear file form input
+                window.location.href = $scope.newPostUrl;
             }, function () {
                 $scope.showAddPostErrorMessage = true;
             });
         };
-
-        ///**
-        // * Tags as raw user's input string, not split yet.
-        // * @type {string}
-        // */
-        //$scope.strTags = "";
-        //
-        ///**
-        // * Flag to define whether there is error while attempt to add new tags.
-        // */
-        //$scope.addTagsError = false;
-        //
-        ///**
-        // * Add tags to post from user input via sending them to API.
-        // */
-        //$scope.addTags = function () {
-        //
-        //    /* send tags to remote api */
-        //    var addTags = postService.addTags($routeParams.id, $scope.strTags);
-        //
-        //    addTags.then(function (data) {   /* success */
-        //        $scope.addTagsError = false;
-        //        $scope.post.tags = data.data;
-        //        $route.reload();
-        //    }, function () {  /* error */
-        //        $scope.addTagsError = true;
-        //    });
-        //};
 
         /**
          * Upload image to api.

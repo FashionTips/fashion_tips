@@ -5,7 +5,7 @@ var ProfileController = ['$scope', 'sessionService', '$http', 'postService',
 
         $scope.posts = {};
 
-        postService.getAll()
+        postService.getAll(undefined, sessionService.getUsername())
             .then(function (posts) {
                 $scope.posts = posts;
             });

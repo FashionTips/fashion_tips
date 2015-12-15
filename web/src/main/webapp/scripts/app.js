@@ -1,5 +1,5 @@
 /* MODULE */
-var app = angular.module('fashion-tips-web', ['ngRoute', 'ngMessages', 'ngResource', 'ngCookies']);
+var app = angular.module('fashion-tips-web', ['ngRoute', 'ngMessages', 'ngResource', 'ngCookies', 'ngSanitize']);
 
 /* App constants */
 var urlApi = "http://localhost:8080"; // URL
@@ -25,7 +25,27 @@ app.controller('MainController', MainController);
 app.controller('PostController', PostController);
 app.controller('ProfileController', ProfileController);
 
+/* Filters */
+app.filter("hashtag", [function () {
+    return function (text) {
+
+        if (!text) {
+            return;
+        }
+
+        return text.replace(/(\B|^)#\w+/g, function (tag) {
+            return '<a href="/?q=' + tag.replace('#', '%23') + '">' + tag + '</a>';
+        });
+    };
+}]);
+
 /* Directives */
+app.directive('ftPost', [function () {
+    return {
+        restrict: 'E',
+        templateUrl: '/scripts/directives/post.html'
+    };
+}]);
 
 /* Directive for input file object */
 /* It maps chosen file to angular model object */

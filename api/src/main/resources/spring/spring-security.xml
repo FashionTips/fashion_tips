@@ -15,7 +15,7 @@
         <intercept-url pattern="/images/**" method="GET" access="permitAll"/>
 
         <!--Permit posts GET request for unauthorized users.-->
-        <intercept-url pattern="/posts/*" method="GET" access="permitAll"/>
+        <intercept-url pattern="/posts/**" method="GET" access="permitAll"/>
 
         <!-- Only authenticated users can access the api methods -->
         <intercept-url pattern="/**" access="isAuthenticated()"/>

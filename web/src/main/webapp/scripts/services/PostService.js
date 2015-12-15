@@ -1,4 +1,4 @@
-var postService = ['$resource', '$http', '$q', 'sessionService', function ($resource, $http, $q, sessionService) {
+var postService = ['$resource', '$http', '$q', 'sessionService', function ($resource, $http, $q) {
 
     /* Define Posts resource */
     var Posts = $resource(urlApi + '/posts/:id', {}, {
@@ -14,11 +14,11 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
         }
     });
 
-    this.getAll = function () {
+    this.getAll = function (q, username) {
 
         var result = $q.defer();
 
-        $http.get(urlApi + '/posts')
+        $http.get(urlApi + '/posts', {params: {hashtag: q, author: username}})
             .then(function (data) {
                 result.resolve(data.data);
             }, function () {
@@ -123,7 +123,9 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
         var Comment = $resource(urlApi + '/posts/:postId/comments', {postId: postId});
 
         var newComment = new Comment({text: text});
-        newComment.$save(function(data) {result.resolve(data)});
+        newComment.$save(function (data) {
+            result.resolve(data)
+        });
 
         return result.promise;
     };
