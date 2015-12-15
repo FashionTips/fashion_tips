@@ -1,7 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.entity.Post;
-import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import org.springframework.http.HttpHeaders;
@@ -45,16 +44,25 @@ public class PostController {
         return postService.get(id);
     }
 
+
     /**
-     * Returns all user's posts.
+     * Without parameters returned all posts.
      *
-     * @param principal authenticated user
-     * @return list of posts
+     * @param login   optional parameter. If present then returned list user's (login = "login") posts
+     * @param hashTag optional parameter. If present then returned list of posts with this hashtag
+     * @return list of all posts with such parameters
      */
     @RequestMapping(method = RequestMethod.GET)
-    public List<Post> getPosts(Principal principal) {
-        User user = userService.getByLogin(principal.getName());
-        return postService.getAllByUser(user);
+    public List<Post> findPosts(@RequestParam(value = "author", required = false) String login,
+                                @RequestParam(value = "hashtag", required = false) String hashTag) {
+
+        if (login != null) {
+            return postService.findByUser(userService.getByLogin(login));
+        } else if (hashTag != null) {
+            return postService.findByHashTag(hashTag);
+        }
+        return postService.findAll();
+
     }
 
     /**

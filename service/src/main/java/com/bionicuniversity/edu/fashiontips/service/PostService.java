@@ -20,5 +20,7 @@ public interface PostService extends GenericService<Post, Long> {
      * @param user user
      * @return list of posts
      */
-    List<Post> getAllByUser(User user);
+    List<Post> findByUser(User user);
+    List<Post> findByHashTag(String hashTag);
+    List<Post> findAll();
 }
