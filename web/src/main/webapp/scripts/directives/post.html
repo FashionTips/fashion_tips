@@ -1,0 +1,24 @@
+<div>
+    <span class="label label-info">{{ post.category }}</span>
+    <div class="page-header">
+        <h2><a href="/post/{{ post.id }}">{{ post.title }}</a>
+            <small>by {{ post.author.login }}</small>
+        </h2>
+        <p class="text-muted">{{ post.created }}</p>
+    </div>
+    <div id="post-gallery" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#post-gallery" data-slide-to="{{$index}}" data-ng-class='{active:$first}'
+                data-ng-repeat="num in post.images"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+            <div class="item" ng-class='{active:$first}' data-ng-repeat="image in post.images">
+                <img data-ng-src="{{image.imgUrl}}">
+            </div>
+        </div>
+    </div>
+    <p data-ng-bind-html="(post.textMessage | hashtagWrapper)"></p>
+</div>

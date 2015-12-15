@@ -1,4 +1,4 @@
-var postService = ['$resource', '$http', '$q', 'sessionService', function ($resource, $http, $q, sessionService) {
+var postService = ['$resource', '$http', '$q', 'sessionService', function ($resource, $http, $q) {
 
     /* Define Posts resource */
     var Posts = $resource(urlApi + '/posts/:id', {}, {
@@ -14,11 +14,11 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
         }
     });
 
-    this.getAll = function () {
+    this.getAll = function (q) {
 
         var result = $q.defer();
 
-        $http.get(urlApi + '/posts')
+        $http.get(urlApi + '/posts', {params: {hashtag: q}})
             .then(function (data) {
                 result.resolve(data.data);
             }, function () {

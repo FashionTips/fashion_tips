@@ -15,30 +15,7 @@
             </div>
 
             <div data-ng-repeat="post in posts">
-                <span class="label label-primary">{{ post.category }}</span>
-                <div class="panel panel-default post-menu">
-                    <div class="btn-group pull-right">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="/post/{{ post.id }}">To post</a></li>
-                            <%--<li role="separator" class="divider"></li>--%>
-                            <%--<li><a href="#">Delete</a></li>--%>
-                        </ul>
-                    </div>
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ post.title }}</h3>
-                    </div>
-                    <div class="panel-body">
-                        <p>{{ post.textMessage }}</p>
-                        <a href="#" class="thumbnail" data-ng-repeat="image in post.images">
-                            <img data-ng-src="{{ image.imgUrl }}" /></a>
-                    </div>
-                </div>
+                <data-ft-post></data-ft-post>
             </div>
         </div>
     </div>
