@@ -114,4 +114,20 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
                 $scope.commentText = "";
             });
         };
+
+        $scope.toggleLike = function () {
+            var result = postService.toggleLike(postId)
+
+            result.then(function () {
+                if ($scope.post.isLikedByAuthUser) {
+                    $scope.post.isLikedByAuthUser = false;
+                    $scope.post.likes--;
+                } else {
+                    $scope.post.isLikedByAuthUser = true;
+                    $scope.post.likes++;
+                }
+            }, function () {
+
+            });
+        }
     }];

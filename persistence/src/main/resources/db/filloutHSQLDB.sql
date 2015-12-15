@@ -1,3 +1,4 @@
+DELETE FROM post_user_likes;
 DELETE FROM comments;
 DELETE FROM post_images;
 DELETE FROM images;
@@ -44,3 +45,9 @@ INSERT INTO post_images (post_id, img_id) VALUES (3,6);
 INSERT INTO comments (text, post_id, user_id) VALUES ('cool!', 1, 1);
 INSERT INTO comments (text, post_id, user_id) VALUES ('amazing!!', 2, 1);
 INSERT INTO comments (text, post_id, user_id) VALUES ('perfect!!!', 3, 2);
+
+INSERT INTO post_user_likes (post_id, user_id) VALUES (1,2);
+INSERT INTO post_user_likes (post_id, user_id) VALUES (1,3);
+INSERT INTO post_user_likes (post_id, user_id) VALUES (2,3);
+INSERT INTO post_user_likes (post_id, user_id) VALUES (3,1);
+INSERT INTO post_user_likes (post_id, user_id) VALUES (3,2);

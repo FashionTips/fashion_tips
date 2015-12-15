@@ -5,6 +5,7 @@ import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.util.ImageUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -30,10 +31,28 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     }
 
     @Override
-    public Post get(Long id) {
+    @Transactional
+    public Post get(Long id, User loggedUser) {
         Post post = super.get(id);
         addImageUrl(post);
+        post.setLikes((long) post.getLikedByUsers().size());
+        if (loggedUser != null)
+            if (!post.getUser().equals(loggedUser))
+                post.setIsLikedByAuthUser(post.getLikedByUsers().contains(loggedUser) ?
+                    Boolean.TRUE : Boolean.FALSE);
         return post;
+    }
+
+    @Override
+    @Transactional
+    public void toggleLike(Long id, User loggedUser) {
+        Post post = super.get(id);
+        if (post.getUser().equals(loggedUser))
+            throw new RuntimeException();
+        if (post.getLikedByUsers().contains(loggedUser))
+            post.getLikedByUsers().remove(loggedUser);
+        else
+            post.getLikedByUsers().add(loggedUser);
     }
 
     private void addImageUrl(Post post) {
