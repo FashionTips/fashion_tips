@@ -127,4 +127,21 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
 
         return result.promise;
     };
+
+    this.toggleLike = function (postId) {
+        var result = $q.defer();
+
+        var likeUrl = urlApi + "/posts/" + postId + "/liked";
+
+        $http.post(likeUrl, {})
+            .then(
+                function () {
+                    result.resolve();
+                }, function () {
+                    result.reject();
+                }
+             );
+
+        return result.promise;
+    };
 }];

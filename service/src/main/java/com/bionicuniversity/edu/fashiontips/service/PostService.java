@@ -15,6 +15,15 @@ import java.util.List;
 public interface PostService extends GenericService<Post, Long> {
 
     /**
+     * Returns entity with given id from persistence.
+     *
+     * @param id entity's id
+     * @param loggedUser entity of logged user
+     * @return retrieved entity
+     */
+    Post get(Long id, User loggedUser);
+
+    /**
      * Returns all user's posts.
      *
      * @param user user
@@ -23,4 +32,7 @@ public interface PostService extends GenericService<Post, Long> {
     List<Post> findByUser(User user);
     List<Post> findByHashTag(String hashTag);
     List<Post> findAll();
+
+    void toggleLike(Long id, User loggedUser);
+
 }

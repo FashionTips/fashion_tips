@@ -1,3 +1,7 @@
 .dropdown-menu {
     padding: 15px;
 }
+
+.liked {
+    background-color: lightgray;
+}

@@ -40,8 +40,9 @@ public class PostController {
      * @return post instance
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Post getPost(@PathVariable long id) {
-        return postService.get(id);
+    public Post getPost(@PathVariable long id, Principal principal) {
+        User user = principal == null ? null : userService.getByLogin(principal.getName());
+        return postService.get(id, user);
     }
 
 
@@ -105,5 +106,11 @@ public class PostController {
     public void updatePost(@PathVariable long id, @Valid @RequestBody Post post) {
         post.setId(id);
         postService.save(post);
+    }
+
+    @RequestMapping(value = "/{id}/liked", method = RequestMethod.POST)
+    public void toggleLike(@PathVariable long id, Principal principal) {
+        User user = userService.getByLogin(principal.getName());
+        postService.toggleLike(id, user);
     }
 }
