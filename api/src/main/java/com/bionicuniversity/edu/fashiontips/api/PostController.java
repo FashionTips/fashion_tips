@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.entity.Post;
+import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import org.springframework.http.HttpHeaders;

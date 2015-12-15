@@ -31,10 +31,10 @@ import static org.junit.Assert.*;
  * Class for testing PostDao
  */
 
-@ActiveProfiles("production")
+@ActiveProfiles("dev")
 @ContextConfiguration("classpath:spring/spring-persistence.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
-@Sql(scripts = {"classpath:db/filloutDB.sql"},
+@Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         config = @SqlConfig(encoding = "UTF-8"))
 public class PostDaoTest {
