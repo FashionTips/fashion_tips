@@ -127,4 +127,27 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
 
         return result.promise;
     };
+
+    /**
+     * Toggles liked status of post on api
+     *
+     * @param postId
+     * @returns {d.promise|Function|*|promise}
+     */
+    this.toggleLikedStatus = function (postId) {
+        var result = $q.defer();
+
+        var likedUrl = urlApi + "/posts/" + postId + "/liked";
+
+        $http.post(likedUrl, {})
+            .then(
+                function () {
+                    result.resolve();
+                }, function () {
+                    result.reject();
+                }
+             );
+
+        return result.promise;
+    };
 }];

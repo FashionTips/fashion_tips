@@ -32,6 +32,18 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handles exceptions when requests have to be ended with http status 403 (FORBIDDEN)
+     *
+     * @param e exception
+     * @return response entity
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorInformation> processForbidden(Exception e) {
+        ErrorInformation error = new ErrorInformation(e.getClass().toString(), e.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
+
+    /**
      * Handler for all unspecified exceptions.
      *
      * @param e exception

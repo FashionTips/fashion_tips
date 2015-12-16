@@ -4,17 +4,20 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.*;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Entity Class Post whish mapped on post table in DB
+ * Entity Class Post which mapped on post table in DB
  *
  * @author Alexandr
  * @author Volodymyr Portianko
@@ -63,9 +66,9 @@ public class Post extends BaseEntity<Long> {
     private Category category;
 
     /*
-* List of posts images
-* Relationships store in separate table
-* */
+    * List of posts images
+    * Relationships store in separate table
+    * */
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "post_images",
@@ -78,13 +81,32 @@ public class Post extends BaseEntity<Long> {
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Comment> comments;
 
-    public List<Comment> getComments() {
-        return comments;
-    }
+    /*
+    * Set of users that liked post
+    * */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "post_user_likes",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @JsonIgnore
+    private Set<User> likedByUsers;
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
+    /*
+    * Sum of users that liked post
+    * Used for transferring amount of likes to clients
+    * */
+    @Transient
+    private Long likes;
+
+    /*
+    * Flag that shows whether the post is liked by authenticated user
+    * Used for transferring status of post for current logged user
+     * */
+    @Transient
+    private Boolean isLikedByAuthUser;
 
     /**
      * Default Constructor
@@ -152,6 +174,37 @@ public class Post extends BaseEntity<Long> {
         this.images = images;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Set<User> getLikedByUsers() {
+        return likedByUsers;
+    }
+
+    public void setLikedByUsers(Set<User> likedByUsers) {
+        this.likedByUsers = likedByUsers;
+    }
+
+    public Long getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Long likes) {
+        this.likes = likes;
+    }
+
+    public Boolean getIsLikedByAuthUser() {
+        return isLikedByAuthUser;
+    }
+
+    public void setIsLikedByAuthUser(Boolean isLikedByAuthUser) {
+        this.isLikedByAuthUser = isLikedByAuthUser;
+    }
 
     @Override
     public String toString() {
@@ -163,6 +216,8 @@ public class Post extends BaseEntity<Long> {
                 ", textMessage='" + textMessage + '\'' +
                 ", category=" + category +
                 ", images=" + images +
+                ", likes=" + likes +
+                ", isLikedByAuthUser=" + isLikedByAuthUser +
                 '}';
     }
 
