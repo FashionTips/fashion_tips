@@ -5,6 +5,11 @@
             <small>by {{ post.author.login }}</small>
         </h2>
         <p class="text-muted">{{ post.created }}</p>
+        <h4 class="text-right">
+            Likes:{{post.likes}}
+                    <span data-ng-show="post.isLikedByAuthUser !== null" class="glyphicon glyphicon-thumbs-up"
+                          data-ng-class="{liked:post.isLikedByAuthUser}" data-ng-click="toggleLikedStatus(post.id)"></span>
+        </h4>
     </div>
     <div id="post-gallery" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->

@@ -87,4 +87,23 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
                 $scope.commentText = "";
             });
         };
+
+        /**
+         * Change "liked" status of post
+         */
+        $scope.toggleLikedStatus = function () {
+            var result = postService.toggleLikedStatus(postId);
+
+            result.then(function () {
+                if ($scope.post.isLikedByAuthUser) {
+                    $scope.post.isLikedByAuthUser = false;
+                    $scope.post.likes--;
+                } else {
+                    $scope.post.isLikedByAuthUser = true;
+                    $scope.post.likes++;
+                }
+            }, function () {
+
+            });
+        }
     }];

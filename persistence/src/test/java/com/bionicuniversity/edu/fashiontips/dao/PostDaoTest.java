@@ -11,12 +11,17 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.bionicuniversity.edu.fashiontips.ImageTestData.*;
+import static com.bionicuniversity.edu.fashiontips.UserTestData.*;
 import static org.junit.Assert.*;
 
 /**
@@ -48,12 +53,14 @@ public class PostDaoTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
+    @Transactional
     public void testAddValidPost() {
         User user = new User("login4", "email4@example.com", "1111");
         user = userDao.save(user);
         System.out.println(user);
         Post post = new Post(user, "title4", "How my glasses fits me?", Post.Category.QUESTION);
         post.setImages(Arrays.asList(IMAGE4, IMAGE5));
+        post.setLikedByUsers(Stream.of(USER1, USER2, USER3).collect(Collectors.toSet()));
         post = postDao.save(post);
         System.out.println(post);
         Post expected = postDao.getById(7L);
@@ -77,6 +84,7 @@ public class PostDaoTest {
     }
 
     @Test
+    @Transactional
     public void testGetPostById() {
         User user = userDao.getById(1L);
         Post post = new Post();
@@ -85,9 +93,10 @@ public class PostDaoTest {
         post.setTextMessage("what fits me with these pants?");
         post.setCategory(Post.Category.QUESTION);
         post.setImages(Arrays.asList(IMAGE1, IMAGE2, IMAGE3));
+        post.setLikedByUsers(Stream.of(USER2,USER3).collect(Collectors.toSet()));
         Post expected = postDao.getById(1L);
-        post.setCreated(expected.getCreated());
 
+        post.setCreated(expected.getCreated());
         post.setId(1L);
         assertEquals(post.toString(), expected.toString());
     }
