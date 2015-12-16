@@ -2,35 +2,27 @@
 <div class="container" data-ng-controller="PostController">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <div class="page-header">
-                <h2>{{ post.title }}
-                    <small>by {{ post.author.login }}</small>
-                </h2>
-            </div>
-            <div id="post-gallery" class="carousel slide" data-ride="carousel">
-                <!-- Indicators -->
-                <ol class="carousel-indicators">
-                    <li data-target="#post-gallery" data-slide-to="{{$index}}" ng-class='{active:$first}'
-                        data-ng-repeat="num in post.images"></li>
-                </ol>
-
-                <!-- Wrapper for slides -->
-                <div class="carousel-inner" role="listbox">
-                    <div class="item" ng-class='{active:$first}' data-ng-repeat="image in post.images">
-                        <img data-ng-src="{{image.imgUrl}}">
-                    </div>
-                </div>
-            </div>
-
-            <p>{{ post.textMessage }}</p>
+            <data-ft-post></data-ft-post>
 
             <hr/>
+            <h4 class="text-capitalize text-center">COMMENTS ({{ post.comments.length }})</h4>
+            <hr/>
 
-            <div data-ng-repeat="comment in post.comments">
-                <p class="col-md-6 text-left">{{ comment.author.login }}</p>
-                <p class="col-md-6 text-right">{{ comment.created }}</p>
-                <p class="text-primary">{{ comment.text }}</p>
-                <hr/>
+            <div class="list-group" data-ng-repeat="comment in post.comments">
+                <div class="list-group-item">
+                    <div class="media">
+                        <div class="media-left">
+                            <img class="media-object" src="http://placehold.it/64x64" alt="Avatar">
+                        </div>
+                        <div class="media-body">
+                            <div class="media-heading">
+                                <p class="col-md-6">{{ comment.author.login }}</p>
+                                <p class="col-md-6 text-right">{{ comment.created }}</p>
+                            </div>
+                            {{ comment.text }}
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div data-ng-show="loggedIn()">

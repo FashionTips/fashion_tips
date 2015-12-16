@@ -1,7 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Fetch;
@@ -111,7 +110,6 @@ public class Post extends BaseEntity<Long> {
         this.user = user;
     }
 
-    @JsonIgnore
     public LocalDateTime getCreated() {
         return created;
     }
