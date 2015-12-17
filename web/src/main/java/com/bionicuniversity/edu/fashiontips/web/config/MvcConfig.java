@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.web.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
  */
 @Configuration
 @EnableWebMvc
+@ComponentScan(basePackages = "com.bionicuniversity.edu.fashiontips.web.controllers")
 public class MvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
@@ -24,7 +26,6 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("homepage");
-        registry.addViewController("/login").setViewName("login");
         registry.addViewController("/profile").setViewName("profile");
         registry.addViewController("/post").setViewName("post.add");
         registry.addViewController("/post/*").setViewName("post.view");

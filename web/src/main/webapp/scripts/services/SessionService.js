@@ -42,8 +42,8 @@ var sessionService = ['$cookies', function ($cookies) {
     this.setUserData = function (username, token) {
         this.token = token;
         this.username = username;
-        $cookies.put('fashionTipsAppToken', token);
-        $cookies.put('username', username);
+        $cookies.put('fashionTipsAppToken', token, {path: "/"});
+        $cookies.put('username', username, {path: "/"});
     };
 
     /**

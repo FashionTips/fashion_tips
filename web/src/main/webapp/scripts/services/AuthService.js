@@ -13,15 +13,14 @@ var authService = ['$http', 'sessionService', '$q', function ($http, sessionServ
 
         var data = "username=" + username + "&password=" + password;
 
-        $http.post("/login", data, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).
-        success(function (data, status, headers) {
-            var token = headers('Token');
-            sessionService.setUserData(username, token);
-            result.resolve();
-        }).
-        error(function () {
-            result.reject();
-        });
+        $http.post("/login", data, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+            .then(function (response) {
+                var token = response.headers('Token');
+                sessionService.setUserData(username, token);
+                result.resolve();
+            }, function () {
+                result.reject();
+            });
 
         return result.promise;
     };
@@ -37,12 +36,28 @@ var authService = ['$http', 'sessionService', '$q', function ($http, sessionServ
 
         sessionService.deleteUserData();
         $http.post("/logout", {})
-            .success(function () {
+            .then(function () {
                 result.resolve();
-            })
-            .error(function () {
+            }, function () {
                 result.reject();
             });
+
+        return result.promise;
+    };
+
+
+    this.register = function (username, email, password) {
+
+        var result = $q.defer();
+
+        $http.post(urlApi + "/users", {login: username, email: email, password: password})
+            .then(
+                function () {
+                    result.resolve();
+                }, function (response) {
+                    result.reject(response.data);
+                }
+            );
 
         return result.promise;
     };

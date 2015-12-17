@@ -8,27 +8,32 @@
     </definition>
 
     <definition name="homepage" extends="common">
-        <put-attribute name="title" value="Homepage | Fashion Tips"/>
+        <put-attribute name="title" value="Homepage"/>
         <put-attribute name="body" value="/WEB-INF/views/components/homepage.jsp"/>
     </definition>
 
     <definition name="login" extends="common">
-        <put-attribute name="title" value="Login | Fashion Tips"/>
+        <put-attribute name="title" value="Login"/>
         <put-attribute name="body" value="/WEB-INF/views/components/login.jsp"/>
     </definition>
 
+    <definition name="register" extends="common">
+        <put-attribute name="title" value="Register"/>
+        <put-attribute name="body" value="/WEB-INF/views/components/register.jsp"/>
+    </definition>
+
     <definition name="profile" extends="common">
-        <put-attribute name="title" value="Profile | Fashion Tips"/>
+        <put-attribute name="title" value="Profile"/>
         <put-attribute name="body" value="/WEB-INF/views/components/profile.jsp"/>
     </definition>
 
     <definition name="post.add" extends="common">
-        <put-attribute name="title" value="Post a Look | Fashion Tips"/>
+        <put-attribute name="title" value="Post a Look"/>
         <put-attribute name="body" value="/WEB-INF/views/components/addPost.jsp"/>
     </definition>
 
     <definition name="post.view" extends="common">
-        <put-attribute name="title" value="Post | Fashion Tips"/>
+        <put-attribute name="title" value="Post"/>
         <put-attribute name="body" value="/WEB-INF/views/components/post.jsp"/>
     </definition>
 

@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><tiles:getAsString name="title"/></title>
+    <title><tiles:getAsString name="title"/> | Fashion Tips</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -15,6 +15,9 @@
     <!-- lib's js -->
     <script src="/scripts/lib/jquery-1.11.3.min.js"></script>
     <script src="/scripts/lib/bootstrap.min.js"></script>
+    <script>$(function () {
+        $('[data-toggle="tooltip"]').tooltip()  // initialize tooltips
+    })</script>
     <script src="/scripts/lib/angular.min.js"></script>
     <script src="/scripts/lib/angular-route.min.js"></script>
     <script src="/scripts/lib/angular-messages.min.js"></script>
@@ -55,7 +58,7 @@
                      data-ng-controller="MenuController">
                     <ul class="nav navbar-nav navbar-right">
                         <li data-ng-show="loggedIn()">
-                            <a href="/post" title="New Post">
+                            <a href="/post" data-toggle="tooltip" data-placement="bottom" title="New Post">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             </a>
                         </li>
@@ -103,6 +106,11 @@
                                     <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Sign In">
                                 </form>
                             </div>
+                        </li>
+                        <li data-ng-show="!loggedIn()">
+                            <p class="navbar-btn">
+                                <a href="/register" class="btn btn-default">Join</a>
+                            </p>
                         </li>
                     </ul>
                 </div>
