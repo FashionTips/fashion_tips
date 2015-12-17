@@ -1,9 +1,12 @@
 package com.bionicuniversity.edu.fashiontips.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.bionicuniversity.edu.fashiontips.dao.util.LocalDateTimeDeserializer;
+import com.bionicuniversity.edu.fashiontips.dao.util.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
@@ -40,7 +43,9 @@ public class Post extends BaseEntity<Long> {
      * Column created which represent creating date of post
      * Auto convert by LocalDateTimeConverter
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "created", nullable = false, insertable = false)
     private LocalDateTime created;
 
