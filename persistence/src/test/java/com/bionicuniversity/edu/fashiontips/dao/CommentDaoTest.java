@@ -1,9 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
-import com.bionicuniversity.edu.fashiontips.CommentTestData;
+
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
-import com.bionicuniversity.edu.fashiontips.entity.Post;
-import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
@@ -11,11 +9,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static com.bionicuniversity.edu.fashiontips.PostAndCommentTestData.*;
 
 /**
  * @author alaktionov aka slav9nin
@@ -27,70 +27,58 @@ import static org.junit.Assert.*;
 @Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         config = @SqlConfig(encoding = "UTF-8"))
+@Transactional
 public class CommentDaoTest {
-
-
-    @Inject
-    private PostDao postDao;
 
     @Inject
     private CommentDao commentDao;
 
-    @Inject
-    private UserDao userDao;
-
     @Test
-    public void addCommentTest() {
+    public void testAddComment() {
+        Comment testComment = commentDao.save(COMMENT_MATCHER.deepClone(NEW_COMMENT_BEFORE_SAVE));
 
-        Comment comment = commentDao.save(CommentTestData.comment4);
-        assertEquals(CommentTestData.comment4, comment);
+        COMMENT_MATCHER.assertEquals(NEW_COMMENT_AFTER_SAVE, testComment);
 
+        List<Comment> testList = commentDao.getAll();
+        COMMENT_MATCHER.assertListEquals(LIST_WITH_NEW_COMMENT, testList);
     }
 
     @Test
-    public void getCommentByIdTest() {
-        Comment comment = commentDao.getById(1L);
-        assertEquals(CommentTestData.comment1, comment);
+    public void testDeleteComment() {
+        commentDao.delete(1L);
+        List<Comment> testList = commentDao.getAll();
+        COMMENT_MATCHER.assertListEquals(LIST_IF_DELETE_FIRST_COMMENT, testList);
     }
 
     @Test
-    public void deleteCommentTest() {
-        List<Comment> commentsBefore = commentDao.getAll();
-        Comment comment3 = commentDao.getById(3L);
-        commentDao.delete(3L);
-        Comment comment = commentDao.getById(3L);
-        assertNull(comment);
-        List<Comment> commentsAfter = commentDao.getAll();
-        assertFalse(commentsAfter.contains(comment3));
+    public void testGetCommentById() {
+        Comment testComment = commentDao.getById(1L);
+        COMMENT_MATCHER.assertEquals(COMMENT1, testComment);
     }
 
     @Test
-    public void updateCommentTest() {
-        Comment comment = commentDao.getById(2L);
-        comment.setText("UpdateFromTest");
-        comment = commentDao.save(comment);
+    public void testGetAll() {
+        List<Comment> testList = commentDao.getAll();
+        COMMENT_MATCHER.assertListEquals(LIST_OF_COMMENTS, testList);
+    }
+
+
+    @Test
+    public void testUpdateComment() {
+        Comment testComment = commentDao.getById(2L);
+        testComment.setText("UpdateFromTest");
+        commentDao.save(testComment);
         Comment updatedComment = commentDao.getById(2L);
-        assertEquals(comment,updatedComment);
+
+        COMMENT_MATCHER.assertEquals(UPDATE_COMMENT2, updatedComment);
+
+        List<Comment> testList = commentDao.getAll();
+        COMMENT_MATCHER.assertListEquals(LIST_IF_UPDATE_COMMENT2, testList);
     }
 
     @Test
-    public void getCommentByPostTest() {
-        List<Comment> comments = commentDao.findAllByPost(CommentTestData.post1);
-        Comment[] expected = {commentDao.getById(1L)};
-        assertArrayEquals(comments.toArray(new Comment[0]), expected);
-    }
-
-    @Test
-    public void saveCommentTest() {
-        User user3 = userDao.getByLogin("login3");
-        Post post = postDao.getById(3L);
-        Comment newComment = new Comment("Yeah!:)", post, user3);
-        post.getComments().add(newComment);
-        List<Comment> commentsBefore = commentDao.findAllByPost(post);
-        commentDao.save(newComment);
-        List<Comment> commentsAfter = commentDao.findAllByPost(post);
-        boolean savedComment = commentDao.findAllByPost(post).contains(newComment);
-        List<Comment> comments = postDao.getById(3L).getComments();
-        assertTrue(savedComment);
+    public void testGetCommentByPost() {
+        List<Comment> testList = commentDao.findAllByPost(POST1);
+        COMMENT_MATCHER.assertListEquals(Arrays.asList(COMMENT1), testList);
     }
 }
