@@ -16,6 +16,9 @@
 
     <context:component-scan base-package="com.bionicuniversity.edu.fashiontips.**.dao"/>
 
+    <!-- Configure a default Validator as a Spring bean to make custom validation constraints work -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
     <bean id="dataSource"
       class="org.springframework.jdbc.datasource.DriverManagerDataSource"
       p:driverClassName="${database.driverClassName}"

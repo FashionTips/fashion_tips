@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,13 +56,12 @@ public class PostDaoTest {
     @Transactional
     public void testAddValidPost() {
         User user = new User("login4", "email4@example.com", "1111");
+        user.setRoles(Collections.emptyList());
         user = userDao.save(user);
-        System.out.println(user);
         Post post = new Post(user, "title4", "How my glasses fits me?", Post.Category.QUESTION);
         post.setImages(Arrays.asList(IMAGE4, IMAGE5));
         post.setLikedByUsers(Stream.of(USER1, USER2, USER3).collect(Collectors.toSet()));
         post = postDao.save(post);
-        System.out.println(post);
         Post expected = postDao.getById(7L);
         post.setCreated(expected.getCreated());
         assertEquals(post.toString(), postDao.getById(7L).toString());

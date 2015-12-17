@@ -2,7 +2,6 @@ package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.dao.CommentDao;
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,10 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.format.DateTimeFormatter;
 
+import static com.bionicuniversity.edu.fashiontips.util.TestUtil.json;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -110,17 +109,5 @@ public class PostCommentControllerTest {
                         comment1.getCreated().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))))
                 )
                 .andExpect(jsonPath("$[0].author.login", is(comment1.getUser().getLogin())));
-    }
-
-    /**
-     * Convert Comment to JSON.
-     *
-     * @param comment comment to be converted
-     * @return JSON as string
-     * @throws IOException
-     */
-    protected String json(Comment comment) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(comment);
     }
 }
