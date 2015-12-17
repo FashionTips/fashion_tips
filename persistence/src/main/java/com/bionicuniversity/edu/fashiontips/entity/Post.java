@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,7 +31,7 @@ public class Post extends BaseEntity<Long> {
      * Column user, which consists User Entity
      */
     @JsonProperty("author")
-    @JsonIgnoreProperties(value = {"id", "email"})
+    @JsonIgnoreProperties(value = {"id", "email", "roles"})
     @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
@@ -133,10 +133,12 @@ public class Post extends BaseEntity<Long> {
         this.user = user;
     }
 
+    @JsonProperty
     public LocalDateTime getCreated() {
         return created;
     }
 
+    @JsonIgnore
     public void setCreated(LocalDateTime created) {
         this.created = created;
     }

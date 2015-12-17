@@ -42,7 +42,7 @@ public class PostController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Post getPost(@PathVariable long id, Principal principal) {
-        User user = principal == null ? null : userService.getByLogin(principal.getName());
+        User user = principal == null ? null : userService.findOne(principal.getName());
         return postService.get(id, user);
     }
 
@@ -58,11 +58,11 @@ public class PostController {
     public List<Post> findPosts(@RequestParam(value = "author", required = false) String login,
                                 @RequestParam(value = "hashtag", required = false) String hashTag,
                                 Principal principal) {
-        User user = principal == null ? null : userService.getByLogin(principal.getName());
+        User user = principal == null ? null : userService.findOne(principal.getName());
         if (login != null) {
-            return postService.findByUser(userService.getByLogin(login), user);
+            return postService.findAllByUser(userService.findOne(login), user);
         } else if (hashTag != null) {
-            return postService.findByHashTag(hashTag, user);
+            return postService.findAllByHashTag(hashTag, user);
         }
         return postService.findAll(user);
 
@@ -77,7 +77,7 @@ public class PostController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> saveNewPost(@Valid @RequestBody Post post, Principal principal) {
-        post.setUser(userService.getByLogin(principal.getName()));
+        post.setUser(userService.findOne(principal.getName()));
         Post savedPost = postService.save(post);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder
@@ -118,7 +118,7 @@ public class PostController {
      */
     @RequestMapping(value = "/{id}/liked", method = RequestMethod.POST)
     public void toggleLikedStatus(@PathVariable long id, Principal principal) {
-        User user = userService.getByLogin(principal.getName());
+        User user = userService.findOne(principal.getName());
         postService.toggleLikedStatus(id, user);
     }
 }

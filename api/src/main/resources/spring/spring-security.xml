@@ -14,8 +14,12 @@
         <!-- Permit unauth access to images -->
         <intercept-url pattern="/images/**" method="GET" access="permitAll"/>
 
-        <!--Permit posts GET request for unauthorized users.-->
+        <!-- Permit posts GET request for unauthorized users.-->
         <intercept-url pattern="/posts/**" method="GET" access="permitAll"/>
+
+        <!-- Let everybody can register a new user and check, whether the login is available -->
+        <intercept-url pattern="/users" method="POST" access="permitAll"/>
+        <intercept-url pattern="/users/available" method="GET" access="permitAll"/>
 
         <!-- Only authenticated users can access the api methods -->
         <intercept-url pattern="/**" access="isAuthenticated()"/>
@@ -38,8 +42,8 @@
             <jdbc-user-service
                     data-source-ref="dataSource"
                     users-by-username-query="select login, password, 1 from users where login = ?"
-                    authorities-by-username-query="select login, role from users
-                                                   join roles on users.id = roles.user_id
+                    authorities-by-username-query="select users.login, roles.name from users
+                                                   join user_role on users.id = user_role.user_id join roles on user_role.role_id = roles.id
                                                    where login = ?"/>
         </authentication-provider>
     </authentication-manager>

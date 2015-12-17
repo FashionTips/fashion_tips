@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
      * @return response entity
      */
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorInformation> processUserNotFoundEx(Exception e) {
+    public ResponseEntity<ErrorInformation> processNotFoundEx(Exception e) {
         ErrorInformation error = new ErrorInformation(e.getClass().toString(), e.getMessage());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorInformation> processUnspecifiedException(Exception e) {
         ErrorInformation error = new ErrorInformation(e.getClass().toString(), e.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
     /**

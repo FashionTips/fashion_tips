@@ -23,7 +23,7 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
 
     @Override
     @Transactional
-    public List<Post> findByUser(User user, User loggedUser) {
+    public List<Post> findAllByUser(User user, User loggedUser) {
         List<Post> posts = ((PostDao) repository).findByUser(user);
         PostUtil.normalizeForClient(posts, loggedUser);
         return posts;
@@ -31,7 +31,7 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
 
     @Override
     @Transactional
-    public List<Post> findByHashTag(String hashTag, User loggedUser) {
+    public List<Post> findAllByHashTag(String hashTag, User loggedUser) {
         List<Post> posts = ((PostDao) repository).findByWord(hashTag).stream().filter(post -> {
             String text = post.getTextMessage();
             return Arrays.asList(text.split("\\s")).stream().anyMatch(s -> s.matches(hashTag + "\\W*"));

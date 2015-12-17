@@ -44,7 +44,7 @@ public class PostCommentController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity save(@RequestBody Comment comment, @PathVariable long postId, Principal principal) {
-        comment.setUser(userService.getByLogin(principal.getName()));
+        comment.setUser(userService.findOne(principal.getName()));
         Comment savedComment = commentService.save(comment, postId);
 
         return ResponseEntity
