@@ -10,9 +10,19 @@ import java.util.List;
  *
  * @author Sergiy
  * @author Maksym Dolia
+ * @author Volodymyr Portianko
  * @since 25/11/2015
  */
 public interface PostService extends GenericService<Post, Long> {
+
+    /**
+     * Returns entity with given id from persistence.
+     *
+     * @param id entity's id
+     * @param loggedUser entity of logged user
+     * @return retrieved entity
+     */
+    Post get(Long id, User loggedUser);
 
     /**
      * Returns all user's posts.
@@ -20,7 +30,15 @@ public interface PostService extends GenericService<Post, Long> {
      * @param user user
      * @return list of posts
      */
-    List<Post> findByUser(User user);
-    List<Post> findByHashTag(String hashTag);
-    List<Post> findAll();
+    List<Post> findByUser(User user, User loggedUser);
+    List<Post> findByHashTag(String hashTag, User loggedUser);
+    List<Post> findAll(User loggedUser);
+
+    /**
+     * Handles requests for changing "like" status of post.
+     *
+     * @param id post id
+     * @param loggedUser logged user entity
+     **/
+    void toggleLikedStatus(Long id, User loggedUser);
 }

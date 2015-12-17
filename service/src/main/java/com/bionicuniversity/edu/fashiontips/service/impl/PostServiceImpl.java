@@ -4,9 +4,9 @@ import com.bionicuniversity.edu.fashiontips.dao.PostDao;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
-import com.bionicuniversity.edu.fashiontips.service.util.ImageUtil;
+import com.bionicuniversity.edu.fashiontips.service.util.PostUtil;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Arrays;
 import java.util.List;
@@ -21,42 +21,52 @@ import java.util.stream.Collectors;
 @Named
 public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements PostService {
 
-    @Inject
-    private ImageUtil imageUtil;
-
     @Override
-    public List<Post> findByUser(User user) {
+    @Transactional
+    public List<Post> findByUser(User user, User loggedUser) {
         List<Post> posts = ((PostDao) repository).findByUser(user);
-        posts.forEach(this::addImageUrl);
+        PostUtil.normalizeForClient(posts, loggedUser);
         return posts;
     }
 
     @Override
-    public List<Post> findByHashTag(String hashTag) {
+    @Transactional
+    public List<Post> findByHashTag(String hashTag, User loggedUser) {
         List<Post> posts = ((PostDao) repository).findByWord(hashTag).stream().filter(post -> {
             String text = post.getTextMessage();
             return Arrays.asList(text.split("\\s")).stream().anyMatch(s -> s.matches(hashTag + "\\W*"));
         }).collect(Collectors.toList());
-
-        posts.forEach(this::addImageUrl);
+        PostUtil.normalizeForClient(posts,loggedUser);
         return posts;
     }
 
     @Override
-    public List<Post> findAll() {
+    @Transactional
+    public List<Post> findAll(User loggedUser) {
         List<Post> posts = ((PostDao) repository).findAll();
-        posts.forEach(this::addImageUrl);
+        PostUtil.normalizeForClient(posts, loggedUser);
         return posts;
     }
 
     @Override
-    public Post get(Long id) {
+    @Transactional
+    public Post get(Long id, User loggedUser) {
         Post post = super.get(id);
-        addImageUrl(post);
+        PostUtil.normalizeForClient(post, loggedUser);
         return post;
     }
 
-    private void addImageUrl(Post post) {
-        post.getImages().stream().forEach(imageUtil::createUrlName);
+    @Override
+    @Transactional
+    public void toggleLikedStatus(Long id, User loggedUser) {
+        Post post = super.get(id);
+        if (!post.getUser().equals(loggedUser)) {
+            if (post.getLikedByUsers().contains(loggedUser))
+                post.getLikedByUsers().remove(loggedUser);
+            else
+                post.getLikedByUsers().add(loggedUser);
+        } else {
+            throw new IllegalArgumentException("Users can not 'liked' their own posts");
+        }
     }
 }

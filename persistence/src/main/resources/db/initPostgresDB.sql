@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS post_user_likes;
 DROP TABLE IF EXISTS comments ;
 DROP TABLE IF EXISTS post_images;
 DROP TABLE IF EXISTS images;
@@ -59,6 +60,14 @@ CREATE TABLE comments (
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
   FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE
 );
+
+CREATE TABLE post_user_likes (
+  post_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  CONSTRAINT post_user_likes_idx UNIQUE (post_id, user_id)
+)
 
 
 

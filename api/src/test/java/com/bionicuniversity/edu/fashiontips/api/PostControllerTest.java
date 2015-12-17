@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
@@ -95,6 +96,7 @@ public class PostControllerTest {
     }
 
     @Test
+    @Transactional
     public void testGetPostUserAuthorised() throws Exception {
         mockMvc.perform(get("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isOk())
@@ -102,10 +104,13 @@ public class PostControllerTest {
                 .andExpect(jsonPath("$.id", is(post1.getId().intValue())))
                 .andExpect(jsonPath("$.title", is(post1.getTitle())))
                 .andExpect(jsonPath("$.textMessage", is(post1.getTextMessage())))
-                .andExpect(jsonPath("$.category", is(post1.getCategory().name())));
+                .andExpect(jsonPath("$.category", is(post1.getCategory().name())))
+                .andExpect(jsonPath("$.likes", is(post1.getLikedByUsers().size())))
+                .andExpect(jsonPath("$.isLikedByAuthUser", is(nullValue())));
     }
 
     @Test
+    @Transactional
     public void testGetPostUserUnauthorised() throws Exception {
         mockMvc.perform(get("/posts/" + post1.getId()))
                 .andExpect(status().isOk())
@@ -113,7 +118,9 @@ public class PostControllerTest {
                 .andExpect(jsonPath("$.id", is(post1.getId().intValue())))
                 .andExpect(jsonPath("$.title", is(post1.getTitle())))
                 .andExpect(jsonPath("$.textMessage", is(post1.getTextMessage())))
-                .andExpect(jsonPath("$.category", is(post1.getCategory().name())));
+                .andExpect(jsonPath("$.category", is(post1.getCategory().name())))
+                .andExpect(jsonPath("$.likes", is(post1.getLikedByUsers().size())))
+                .andExpect(jsonPath("$.isLikedByAuthUser", is(nullValue())));
     }
 
     @Test
@@ -123,25 +130,30 @@ public class PostControllerTest {
     }
 
     @Test
+    @Transactional
     public void testGetPostsUserAuthorised() throws Exception {
         mockMvc.perform(get("/posts").with(httpBasic(user.getLogin(), "1111")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id", is(post1.getId().intValue())))
-                .andExpect(jsonPath("$[0].title", is(post1.getTitle())))
-                .andExpect(jsonPath("$[0].textMessage", is(post1.getTextMessage())))
-                .andExpect(jsonPath("$[0].category", is(post1.getCategory().name())))
-                .andExpect(jsonPath("$[1].id", is(post2.getId().intValue())))
-                .andExpect(jsonPath("$[1].title", is(post2.getTitle())))
-                .andExpect(jsonPath("$[1].textMessage", is(post2.getTextMessage())))
-                .andExpect(jsonPath("$[1].category", is(post2.getCategory().name())));
+                .andExpect(jsonPath("$", hasSize(6)))
+                .andExpect(jsonPath("$[5].id", is(post1.getId().intValue())))
+                .andExpect(jsonPath("$[5].title", is(post1.getTitle())))
+                .andExpect(jsonPath("$[5].textMessage", is(post1.getTextMessage())))
+                .andExpect(jsonPath("$[5].category", is(post1.getCategory().name())))
+                .andExpect(jsonPath("$[5].likes", is(post1.getLikedByUsers().size())))
+                .andExpect(jsonPath("$[5].isLikedByAuthUser", is(nullValue())))
+                .andExpect(jsonPath("$[2].id", is(post2.getId().intValue())))
+                .andExpect(jsonPath("$[2].title", is(post2.getTitle())))
+                .andExpect(jsonPath("$[2].textMessage", is(post2.getTextMessage())))
+                .andExpect(jsonPath("$[2].category", is(post2.getCategory().name())))
+                .andExpect(jsonPath("$[2].likes", is(post2.getLikedByUsers().size())))
+                .andExpect(jsonPath("$[2].isLikedByAuthUser", is(nullValue())));
     }
 
     @Test
     public void testGetPostsUserUnauthorised() throws Exception {
         mockMvc.perform(get("/posts"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -207,6 +219,18 @@ public class PostControllerTest {
         mockMvc.perform(put("/posts/-1").with(httpBasic(user.getLogin(), user.getPassword()))
                 .contentType(contentType).content(json(post)))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testToggleLikedStatusOwnPost() throws Exception {
+        mockMvc.perform(post("/posts/1/liked").with(httpBasic(user.getLogin(), "1111")))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testToggleLikedStatus() throws Exception {
+        mockMvc.perform(post("/posts/2/liked").with(httpBasic(user.getLogin(), "1111")))
+                .andExpect(status().isOk());
     }
 
     /**
