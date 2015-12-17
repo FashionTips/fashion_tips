@@ -41,6 +41,18 @@ public class Comment extends BaseEntity<Long> {
         this.user = user;
     }
 
+    public Comment(Long id, String text, Post post, User user) {
+        this(id, text, post, user, LocalDateTime.now());
+    }
+
+    public Comment(Long id, String text, Post post, User user, LocalDateTime created) {
+        this.id = id;
+        this.text = text;
+        this.post = post;
+        this.user = user;
+        this.created = created;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     @JsonIgnore
@@ -92,4 +104,17 @@ public class Comment extends BaseEntity<Long> {
     public void setText(String text) {
         this.text = text;
     }
+
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", text='" + text + '\'' +
+                ", post_id='" + post.getId() + '\'' +
+                ", user='" + user.getLogin() + '\'' +
+                ", created='" + created + '\'' +
+                '}';
+    }
+
 }

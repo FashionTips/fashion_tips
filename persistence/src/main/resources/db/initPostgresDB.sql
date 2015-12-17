@@ -73,10 +73,3 @@ CREATE TABLE post_user_likes (
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
   CONSTRAINT post_user_likes_idx UNIQUE (post_id, user_id)
 )
-
-
-
-
-
-
-

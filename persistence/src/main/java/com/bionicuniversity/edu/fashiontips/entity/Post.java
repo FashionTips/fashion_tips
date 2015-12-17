@@ -32,7 +32,7 @@ public class Post extends BaseEntity<Long> {
      */
     @JsonProperty("author")
     @JsonIgnoreProperties(value = {"id", "email", "roles"})
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
@@ -123,6 +123,20 @@ public class Post extends BaseEntity<Long> {
         this.title = title;
         this.textMessage = message;
         this.category = category;
+    }
+
+    public Post(Long id, User user, LocalDateTime created, String title, String textMessage, Category category, List<Image> images, List<Comment> comments, Set<User> likedByUsers, Long likes, Boolean isLikedByAuthUser) {
+        this.id = id;
+        this.user = user;
+        this.created = created;
+        this.textMessage = textMessage;
+        this.title = title;
+        this.category = category;
+        this.images = images;
+        this.comments = comments;
+        this.likedByUsers = likedByUsers;
+        this.likes = likes;
+        this.isLikedByAuthUser = isLikedByAuthUser;
     }
 
     public User getUser() {
@@ -217,6 +231,7 @@ public class Post extends BaseEntity<Long> {
                 ", textMessage='" + textMessage + '\'' +
                 ", category=" + category +
                 ", images=" + images +
+                ", comments=" + comments +
                 ", likes=" + likes +
                 ", isLikedByAuthUser=" + isLikedByAuthUser +
                 '}';

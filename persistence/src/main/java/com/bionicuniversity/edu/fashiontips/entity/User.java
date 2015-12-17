@@ -62,11 +62,12 @@ public class User extends BaseEntity<Long> {
         this.password = password;
     }
 
-    public User(final Long id, final String login, final String email, final String password) {
+    public User(final Long id, final String login, final String email, final String password, final List<Role> roles) {
         this.id = id;
         this.login = login;
         this.email = email;
         this.password = password;
+        this.roles = roles;
     }
 
     public List<Role> getRoles() {

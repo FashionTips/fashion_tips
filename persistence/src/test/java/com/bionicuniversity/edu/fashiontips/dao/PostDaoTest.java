@@ -1,7 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
 import com.bionicuniversity.edu.fashiontips.entity.Post;
-import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -15,14 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.io.IOException;
+import java.util.List;
 
-import static com.bionicuniversity.edu.fashiontips.ImageTestData.*;
-import static com.bionicuniversity.edu.fashiontips.UserTestData.*;
-import static org.junit.Assert.*;
+import static com.bionicuniversity.edu.fashiontips.PostAndCommentTestData.*;
+import static com.bionicuniversity.edu.fashiontips.UserTestData.USER3;
+import static org.junit.Assert.fail;
 
 /**
  * Class for testing PostDao
@@ -34,69 +31,83 @@ import static org.junit.Assert.*;
 @Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         config = @SqlConfig(encoding = "UTF-8"))
+@Transactional
 public class PostDaoTest {
-
-    private static User user1 = new User("login4", "email4@example.com", "1111");
-    private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Post.Category.QUESTION);
-    static {
-        user1.setId(4L);
-    }
-
 
     @Inject
     private PostDao postDao;
-
-    @Inject
-    private UserDao userDao;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    @Transactional
-    public void testAddValidPost() {
-        User user = new User("login4", "email4@example.com", "1111");
-        user.setRoles(Collections.emptyList());
-        user = userDao.save(user);
-        Post post = new Post(user, "title4", "How my glasses fits me?", Post.Category.QUESTION);
-        post.setImages(Arrays.asList(IMAGE4, IMAGE5));
-        post.setLikedByUsers(Stream.of(USER1, USER2, USER3).collect(Collectors.toSet()));
-        post = postDao.save(post);
-        Post expected = postDao.getById(7L);
-        post.setCreated(expected.getCreated());
-        assertEquals(post.toString(), postDao.getById(7L).toString());
+    public void testSavePost() {
+        Post testPost = postDao.save(POST_MATCHER.deepClone(NEW_POST_BEFORE_SAVE));
+        /*Check that the method Save returns correct value */
+        POST_MATCHER.assertEquals(NEW_POST_AFTER_SAVE, testPost);
+
+        List<Post> testList = postDao.getAll();
+        /*Check that the new Post added*/
+        POST_MATCHER.assertListEquals(LIST_WITH_NEW_POST, testList);
+    }
+
+    @Test
+    public void testUpdatePost() {
+        Post testPost = postDao.getById(1L);
+        testPost.setTitle("UPDATE title");
+        testPost.setTextMessage("UPDATE what fits me with these pants?");
+        postDao.save(testPost);
+        testPost = postDao.getById(1L);
+
+        POST_MATCHER.assertEquals(UPDATE_POST1, testPost);
+
+        List<Post> testList = postDao.getAll();
+        POST_MATCHER.assertListEquals(LIST_IF_UPDATE_FIRST_POST, testList);
+    }
+
+    @Test
+    public void testDeletePost() {
+        /*Delete Post(ID = 1) from DB*/
+        postDao.delete(1L);
+        List<Post> testList = postDao.getAll();
+
+        POST_MATCHER.assertListEquals(LIST_IF_DELETE_FIRST_POST, testList);
+    }
+
+    @Test
+    public void testGetPostById() throws IOException, ClassNotFoundException {
+        Post testPost = postDao.getById(1L);
+        POST_MATCHER.assertEquals(POST1, testPost);
+    }
+
+    @Test
+    public void testGetAll() {
+        List<Post> testList = postDao.getAll();
+        POST_MATCHER.assertListEquals(LIST_OF_POSTS, testList);
+    }
+
+    @Test
+    public void testFindByUser() {
+        List<Post> testFindByUser3 = postDao.findByUser(USER3);
+        POST_MATCHER.assertListEquals(FIND_BY_USER3_SORTED_BY_CREATED, testFindByUser3);
+    }
+
+    @Test
+    public void testFindByWord() {
+        List<Post> testFindByWordAgain = postDao.findByWord("Again");
+        POST_MATCHER.assertListEquals(FIND_BY_WORD_AGAIN_SORTED_BY_CREATED, testFindByWordAgain);
+    }
+
+    @Test
+    public void testFindAll() {
+        List<Post> testFindAll = postDao.findAll();
+        POST_MATCHER.assertListEquals(FIND_ALL_SORTED_BY_CREATED, testFindAll);
     }
 
     @Test
     public void testAddNotValidPost() {
         thrown.expect(ConstraintViolationException.class);
-        Post post = new Post(user1, "", "", Post.Category.POST);
-        postDao.save(post);
+        postDao.save(NOT_VALID_POST);
         fail("Should not save not valid entities.");
-    }
-
-    @Test
-    public void testDeletePost() {
-        postDao.delete(1L);
-        Post post = postDao.getById(1L);
-        assertNull(post);
-    }
-
-    @Test
-    @Transactional
-    public void testGetPostById() {
-        User user = userDao.getById(1L);
-        Post post = new Post();
-        post.setUser(user);
-        post.setTitle("title1");
-        post.setTextMessage("what fits me with these pants?");
-        post.setCategory(Post.Category.QUESTION);
-        post.setImages(Arrays.asList(IMAGE1, IMAGE2, IMAGE3));
-        post.setLikedByUsers(Stream.of(USER2,USER3).collect(Collectors.toSet()));
-        Post expected = postDao.getById(1L);
-
-        post.setCreated(expected.getCreated());
-        post.setId(1L);
-        assertEquals(post.toString(), expected.toString());
     }
 }

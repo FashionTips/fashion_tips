@@ -1,7 +1,5 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
-import com.bionicuniversity.edu.fashiontips.entity.Post;
-import com.bionicuniversity.edu.fashiontips.entity.Role;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,40 +10,27 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.Collections;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static com.bionicuniversity.edu.fashiontips.UserTestData.*;
 import static org.junit.Assert.assertNull;
+//import static org.junit.Assert.assertEquals;
 
 /**
- * Test cases for UserDao.
- *
- * @author Alexander Laktionov
- * @author Maksym Dolia
- * @since 30/11/2015
+ * Calss for testing UserDao
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+
+@ActiveProfiles("dev")
 @ContextConfiguration("classpath:spring/spring-persistence.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         config = @SqlConfig(encoding = "UTF-8"))
-@ActiveProfiles("dev")
+@Transactional
 public class UserDaoTest {
-
-    private static User user1 = new User("login4", "email4@example.com", "1111");
-    private static Post post1 = new Post(user1, "title4", "How my glasses fits me?", Post.Category.QUESTION);
-    private static User user2 = new User("login1", "email1@example.com", "1111");
-    private static Post post2 = new Post(user2, "title1", "what fits me with these pants?", Post.Category.QUESTION);
-    static {
-        user1.setId(4L);
-        user2.setId(1L);
-    }
-
-    @Inject
-    private PostDao postDao;
-
     @Inject
     private UserDao userDao;
 
@@ -54,44 +39,52 @@ public class UserDaoTest {
 
     @Test
     public void testSaveUser() {
-        User user = new User("login4", "email4@example.com", "1111");
-        user = userDao.save(user);
-        System.out.println(user);
-        assertEquals(user1, userDao.getById(4L));
+        User testUser = userDao.save(USER_MATCHER.deepClone(NEW_USER_BEFORE_SAVE));
+
+        /*Check that the method Save returns correct value */
+        USER_MATCHER.assertEquals(NEW_USER_AFTER_SAVE, testUser);
+
+        List<User> testList = userDao.getAll();
+        /*Check that the new User added*/
+        USER_MATCHER.assertListEquals(LIST_WITH_NEW_USER, testList);
     }
 
     @Test
     public void testDeleteUser() {
+        /*Delete User(ID = 1) from DB*/
         userDao.delete(1L);
-        User user = userDao.getById(1L);
-        assertNull(user);
+        List<User> testList = userDao.getAll();
+        USER_MATCHER.assertListEquals(LIST_IF_DELETE_FIRST_USER, testList);
     }
 
     @Test
     public void testGetUserById() {
-        User user = new User();
-        user.setId(1L);
-        user.setPassword("$2a$10$nMaTdVApgGyalfxJdehKM.7/vfJznBdMqois3Ppw2sarqHpfHSZy6");
-        user.setEmail("email1@example.com");
-        user.setLogin("login1");
-        Role role = new Role("ROLE_USER");
-        role.setId(1L);
-        user.setRoles(Collections.singletonList(role));
-        User expected = userDao.getById(1L);
-        assertEquals(user.toString(), expected.toString());
+        User testUser = userDao.getById(1L);
+        USER_MATCHER.assertEquals(USER1, testUser);
+    }
+
+    @Test
+    public void testGetAll() throws Exception {
+        /*Get list of all Users from DB*/
+        List<User> testList = userDao.getAll();
+        USER_MATCHER.assertListEquals(LIST_OF_USERS, testList);
+    }
+
+    @Test
+    public void testGetByLogin() throws Exception {
+        /*Get User(login = "login2") from DB*/
+        User testUser = userDao.getByLogin("login2");
+        USER_MATCHER.assertEquals(USER2, testUser);
     }
 
     @Test
     public void testFindByEmail_EmailExist() throws Exception {
-        User user = userDao.getById(1L);
-
-        assertEquals("Should find the same user by email.", 1L, userDao.findByEmail(user.getEmail()).getId().longValue());
+        USER_MATCHER.assertEquals("Should find the same user by email.", USER1, userDao.findByEmail("email1@example.com"));
     }
 
     @Test
     public void testFindByEmail_EmailDoesNotExist() throws Exception {
         String email = "hello@world.com";
-
         assertNull("Should find nothing due to email is not real.", userDao.findByEmail(email));
     }
 }
