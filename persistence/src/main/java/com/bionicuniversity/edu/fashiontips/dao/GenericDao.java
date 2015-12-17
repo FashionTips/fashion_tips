@@ -22,5 +22,5 @@ public interface GenericDao<T extends BaseEntity, PK extends Serializable> {
      */
     void deleteAll();
 
-    public T getReference(PK id);
+    T getReference(PK id);
 }

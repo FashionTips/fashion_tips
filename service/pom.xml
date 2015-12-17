@@ -10,10 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <!--    Tests  -->
-        <junit.version>4.12</junit.version>
-        <hamcrest.version>1.3</hamcrest.version>
-
         <spring-security-core.version>4.0.3.RELEASE</spring-security-core.version>
     </properties>
 
@@ -23,30 +19,6 @@
             <groupId>com.bionicuniversity.edu</groupId>
             <artifactId>fashion-tips-persistence</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <!--Testing-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>hamcrest-core</artifactId>
-                    <groupId>org.hamcrest</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>${hamcrest.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <!-- Spring Security Core -->
