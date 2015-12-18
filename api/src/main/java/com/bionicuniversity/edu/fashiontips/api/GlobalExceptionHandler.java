@@ -4,6 +4,7 @@ package com.bionicuniversity.edu.fashiontips.api;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,7 +27,7 @@ public class GlobalExceptionHandler {
      * @return response entity
      */
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorInformation> processNotFoundEx(Exception e) {
+    public ResponseEntity processNotFoundEx(Exception e) {
         ErrorInformation error = new ErrorInformation(e.getClass().toString(), e.getMessage());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
@@ -37,11 +38,12 @@ public class GlobalExceptionHandler {
      * @param e exception
      * @return response entity
      */
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorInformation> processForbidden(Exception e) {
+    @ExceptionHandler(value = {IllegalArgumentException.class, AccessDeniedException.class})
+    public ResponseEntity processForbidden(Exception e) {
         ErrorInformation error = new ErrorInformation(e.getClass().toString(), e.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
+
 
     /**
      * Handler for all unspecified exceptions.
@@ -50,7 +52,7 @@ public class GlobalExceptionHandler {
      * @return response entity
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorInformation> processUnspecifiedException(Exception e) {
+    public ResponseEntity processUnspecifiedException(Exception e) {
         ErrorInformation error = new ErrorInformation(e.getClass().toString(), e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }

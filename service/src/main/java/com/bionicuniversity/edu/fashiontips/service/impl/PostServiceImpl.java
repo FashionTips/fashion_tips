@@ -5,6 +5,8 @@ import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.util.PostUtil;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Named;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
  *
  * @author Sergiy
  * @author Volodymyr Portianko
+ * @author Maksym Dolia
+ * @since 25/11/2015
  */
 @Named
 public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements PostService {
@@ -36,7 +40,7 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
             String text = post.getTextMessage();
             return Arrays.asList(text.split("\\s")).stream().anyMatch(s -> s.matches(hashTag + "\\W*"));
         }).collect(Collectors.toList());
-        PostUtil.normalizeForClient(posts,loggedUser);
+        PostUtil.normalizeForClient(posts, loggedUser);
         return posts;
     }
 
@@ -54,6 +58,18 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
         Post post = super.get(id);
         PostUtil.normalizeForClient(post, loggedUser);
         return post;
+    }
+
+    @Override
+    @PreAuthorize("#post.user.login == authentication.name")
+    public void update(Post post) {
+        super.update(post);
+    }
+
+    @Override
+    @PreAuthorize("#post.user.login == authentication.name")
+    public void delete(@P("post") Post post) {
+        delete(post.getId());
     }
 
     @Override

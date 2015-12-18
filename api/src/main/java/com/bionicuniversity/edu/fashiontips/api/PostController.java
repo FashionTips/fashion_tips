@@ -1,5 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
+import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
@@ -95,19 +96,29 @@ public class PostController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deletePost(@PathVariable long id) {
-        postService.delete(id);
+        Post post = postService.get(id);
+        postService.delete(post);
     }
 
     /**
      * Updates post with given data.
      *
-     * @param id   post's id
-     * @param post new post data
+     * @param id       post's id
+     * @param postData new post data
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public void updatePost(@PathVariable long id, @Valid @RequestBody Post post) {
-        post.setId(id);
-        postService.save(post);
+    public void updatePost(@PathVariable long id, @Valid @RequestBody Post postData) {
+
+        Post post = postService.get(id);
+        String title = postData.getTitle();
+        if (title != null) post.setTitle(title);
+        String message = postData.getTextMessage();
+        if (message != null) post.setTextMessage(message);
+        Post.Category category = postData.getCategory();
+        if (category != null) post.setCategory(category);
+        List<Image> images = postData.getImages();
+        if (images != null) post.setImages(images);
+        postService.update(post);
     }
 
     /**

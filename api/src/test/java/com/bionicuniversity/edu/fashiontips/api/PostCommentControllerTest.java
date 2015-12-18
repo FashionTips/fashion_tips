@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
@@ -25,7 +26,7 @@ import java.time.format.DateTimeFormatter;
 import static com.bionicuniversity.edu.fashiontips.util.TestUtil.json;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -54,6 +55,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PostCommentControllerTest {
 
     private static final String COMMENTS_API_URL = "/posts/1/comments";
+    private static final String TEST_USER_LOGIN = "login1";
+    private static final String TEST_USER_PASSWORD = "1111";
 
     @Inject
     private CommentDao commentDao;
@@ -75,17 +78,21 @@ public class PostCommentControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilter(springSecurityFilterChain).build();
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .addFilter(springSecurityFilterChain)
+                .defaultRequest(get(COMMENTS_API_URL).with(testSecurityContext()))
+                .build();
 
         comment1 = commentDao.getById(1L);
     }
 
     @Test
+    @WithMockUser(TEST_USER_LOGIN)
     public void testSave() throws Exception {
         Comment testComment = new Comment("Test", comment1.getPost(), comment1.getUser());
 
         mockMvc.perform(post(COMMENTS_API_URL)
-                .with(user("login1"))
                 .content(json(testComment))
                 .contentType(contentType)
         )
@@ -99,14 +106,15 @@ public class PostCommentControllerTest {
     }
 
     @Test
+    @WithMockUser(TEST_USER_LOGIN)
     public void testGetAll() throws Exception {
-        mockMvc.perform(get(COMMENTS_API_URL).with(user("Login1")))
+        mockMvc.perform(get(COMMENTS_API_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$[0].id", is(comment1.getId().intValue())))
                 .andExpect(jsonPath("$[0].text", is(comment1.getText())))
                 .andExpect(jsonPath("$[0].created", is(
-                        comment1.getCreated().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))))
+                        comment1.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
                 )
                 .andExpect(jsonPath("$[0].author.login", is(comment1.getUser().getLogin())));
     }

@@ -41,4 +41,11 @@ public interface PostService extends GenericService<Post, Long> {
      * @param loggedUser logged user entity
      **/
     void toggleLikedStatus(Long id, User loggedUser);
+
+    /**
+     * Deletes given post from persistence.
+     *
+     * @param post post to delete
+     */
+    void delete(Post post);
 }
