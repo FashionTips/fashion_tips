@@ -15,10 +15,12 @@
             <form data-ng-submit="addPost()">
                 <div class="form-group">
                     <label>Title</label>
-                    <input type="text" class="form-control" placeholder="Title" data-ng-model="postForm.title"
+                    <input type="text" class="form-control" placeholder="Title"
+                           data-ng-model="postForm.title"
                            autofocus>
                 </div>
                 <div class="form-group">
+                    <label>Your thoughts:</label>
                 <textarea class="form-control" rows="3" data-ng-model="postForm.textMessage"
                           title="Textarea"></textarea>
                 </div>
@@ -26,7 +28,8 @@
                     <input type="radio" name="category" value="POST" data-ng-model="postForm.category"> POST
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="category" value="QUESTION" data-ng-model="postForm.category"> QUESTION
+                    <input type="radio" name="category" value="QUESTION" data-ng-model="postForm.category">
+                    QUESTION
                 </label>
                 <div class="form-group">
                     <label>Photos</label>
@@ -34,7 +37,12 @@
                         <input id="images-input" type="file" data-file-model="postImages" multiple/>
                         <button type="button" data-ng-click="uploadImages()">Upload</button>
                     </div>
-                    <img data-ng-src="{{image.imgUrl}}" data-ng-repeat="image in postForm.images" height="100"/>
+                    <div class="row">
+                        <div class="col-lg-2" data-ng-repeat="image in postForm.images">
+                            <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}"/>
+                            <a href="#" data-ng-click="removeImage(image.id)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-default">Submit</button>

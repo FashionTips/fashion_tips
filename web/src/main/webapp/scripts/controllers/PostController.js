@@ -62,6 +62,22 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
         };
 
         /**
+         * Remove image from post form.
+         * @param id
+         */
+        $scope.removeImage = function (id) {
+            var index = 0;
+
+            for (var i = 0; i < $scope.postForm.images.length; i++) {
+                if (id === $scope.postForm.images[i].id) {
+                    index = i;
+                    break;
+                }
+            }
+                $scope.postForm.images.splice(index, 1);
+        };
+
+        /**
          * Check if user is logged in.
          * @returns {boolean}
          */
@@ -105,5 +121,60 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
             }, function () {
 
             });
-        }
+        };
+
+        /**
+         * Saves updated post.
+         *
+         * @param id post's id
+         */
+        $scope.editPost = function (id) {
+
+            var result = postService.update(id, $scope.postForm);
+
+            result
+                .then(function (data) {
+                    $scope.showAddPostErrorMessage = false;
+                    $scope.postForm = {};
+                    $scope.postForm.images = [];
+                    angular.element("#images-input").val(null); // clear file form input
+                    angular.element("#postEditModal").modal('hide');
+                    $scope.post = data;
+                }, function (data) {
+                    $scope.postForm.errors = data.message;
+                    $scope.showAddPostErrorMessage = true;
+                });
+        };
+
+        /**
+         * Deletes post.
+         *
+         * @param id
+         */
+        $scope.deletePost = function (id) {
+
+            var result = postService.delete(id);
+
+            result
+                .then(function () {
+                    $scope.post = {};
+                    document.location.href = "/";
+                }, function () {
+                    alert('Error! Post was not deleted.');
+                });
+        };
+
+        /**
+         * Fills out post edit form with current post's data.
+         */
+        $scope.showEditPostForm = function () {
+            $scope.postForm = angular.copy($scope.post);    //copy object without references
+        };
+
+        /**
+         * Clears the post form.
+         */
+        $scope.clearPostForm = function () {
+            $scope.postForm = {};
+        };
     }];

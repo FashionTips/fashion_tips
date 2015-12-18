@@ -11,9 +11,18 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
                 response.data = JSON.parse(data);
                 return response;
             }
+        },
+        update: {
+            method: 'PUT'
         }
     });
 
+    /**
+     * Returns all post of user by given username and/or query.
+     * @param q query
+     * @param username
+     * @returns {d.promise|*|promise}
+     */
     this.getAll = function (q, username) {
 
         var result = $q.defer();
@@ -58,28 +67,40 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
     };
 
     /**
-     * Parse string with tags, and add them to post with given id.
+     * Updates post with given id by given data.
      *
-     * @param id post's id
-     * @param strTags tags as raw string
+     * @param id
+     * @param postData
      * @returns {d.promise|*|promise}
      */
-    this.addTags = function (id, strTags) {
+    this.update = function (id, postData) {
 
         var result = $q.defer();
 
-        /* split string to get array of tags */
-        var tags = strTags.split(/\s*,\s*/);
+        Posts.update({id: id}, postData, function (response) {
+            result.resolve(response);
+        }, function (response) {
+            result.reject(response.data);
+        });
 
-        $http
-            .post(urlApi + "/posts/" + id + "/tags", tags)
-            .then(
-                function (data) {
-                    result.resolve(data);
-                }, function () {
-                    result.reject();
-                }
-            );
+        return result.promise;
+    };
+
+    /**
+     * Deletes post with given id.
+     *
+     * @param id
+     * @returns {d.promise|*|promise}
+     */
+    this.delete = function (id) {
+
+        var result = $q.defer();
+
+        Posts.delete({id: id}, function () {
+            result.resolve();
+        }, function (response) {
+            result.reject(response);
+        });
 
         return result.promise;
     };
