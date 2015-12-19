@@ -26,5 +26,13 @@ public interface UserService extends GenericService<User, Long> {
      * @param login login to check
      * @return {@code true} if there is not user with given login, {@code false} otherwise
      */
-    boolean check(String login);
+    boolean checkLogin(String login);
+
+    /**
+     * Checks whether the user with given email does not exist.
+     *
+     * @param email email to check
+     * @return {@code true} if there is not user with given email, {@code false} otherwise
+     */
+    boolean checkEmail(String email);
 }
