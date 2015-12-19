@@ -62,7 +62,7 @@ public class Comment extends BaseEntity<Long> {
     private Post post;
 
     @JsonProperty("author")
-    @JsonIgnoreProperties(value = {"id", "email"})
+    @JsonIgnoreProperties(value = {"id", "email", "roles"})
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
@@ -115,7 +115,8 @@ public class Comment extends BaseEntity<Long> {
         return "Comment{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
-                ", post_id='" + post.getId() + '\'' +
+//                causes LazyInitializationException
+//                ", post_id='" + post.getId() + '\'' +
                 ", user='" + user.getLogin() + '\'' +
                 ", created='" + created + '\'' +
                 '}';
