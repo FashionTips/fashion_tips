@@ -6,7 +6,6 @@ var MenuController = ['$scope', 'sessionService', 'authService',
 
         $scope.showLoginErrorMessage = false;
         $scope.showRegisterErrorMessage = false;
-        $scope.showRegisterSuccessMessage = false;
 
         /* authorised user's name */
         $scope.username = sessionService.getUsername();
@@ -33,7 +32,9 @@ var MenuController = ['$scope', 'sessionService', 'authService',
             });
         };
 
-        /* Define function for logout action */
+        /**
+         * Process user's logout.
+         */
         $scope.logout = function () {
             authService.logout()
                 .then(function () {
@@ -41,6 +42,9 @@ var MenuController = ['$scope', 'sessionService', 'authService',
                 });
         };
 
+        /**
+         * Process user's registration in the system.
+         */
         $scope.register = function () {
 
             if(!$scope.credentials.username || !$scope.credentials.email || !$scope.credentials.password) {
@@ -50,16 +54,23 @@ var MenuController = ['$scope', 'sessionService', 'authService',
             authService.register($scope.credentials.username, $scope.credentials.email, $scope.credentials.password)
                 .then(function () {
                     $scope.showRegisterErrorMessage = false;
-                    $scope.showRegisterSuccessMessage = true;
+                    angular.element("#successRegistrationModal").modal();
                     $scope.credentials = {};
             }, function (data) {
-                    $scope.showRegisterSuccessMessage = false;
                     $scope.showRegisterErrorMessage = true;
                     $scope.registerFormValidationErrors = data.message;
             });
         };
 
+
         $scope.isAvailable = function () {
             return true;
+        };
+
+        /**
+         * Redirects user to homepage, after that pop-up window about success registration has been dismissed.
+         */
+        $scope.processSuccessRegistration = function () {
+            window.location.href = "/";
         };
     }];
