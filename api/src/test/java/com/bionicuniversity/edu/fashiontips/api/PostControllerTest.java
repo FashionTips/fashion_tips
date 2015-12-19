@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.dao.PostDao;
 import com.bionicuniversity.edu.fashiontips.dao.UserDao;
+import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Before;
@@ -9,6 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,9 +29,9 @@ import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 
 import static com.bionicuniversity.edu.fashiontips.util.TestUtil.json;
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -57,6 +59,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles("dev")
 public class PostControllerTest {
+
+    private static final String POSTS_API_URL = "/posts";
+    private static final String TEST_USER_LOGIN = "login1";
+    private static final String TEST_USER_PASSWORD = "1111";
 
     @Inject
     private WebApplicationContext webApplicationContext;
@@ -86,7 +92,11 @@ public class PostControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilter(springSecurityFilterChain).build();
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .addFilter(springSecurityFilterChain)
+                .defaultRequest(get(POSTS_API_URL).with(testSecurityContext()))
+                .build();
 
         user = userDao.getById(1L);
 
@@ -97,7 +107,7 @@ public class PostControllerTest {
     @Test
     @Transactional
     public void testGetPostUserAuthorised() throws Exception {
-        mockMvc.perform(get("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), "1111")))
+        mockMvc.perform(get(POSTS_API_URL + "/" + post1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.id", is(post1.getId().intValue())))
@@ -111,7 +121,7 @@ public class PostControllerTest {
     @Test
     @Transactional
     public void testGetPostUserUnauthorised() throws Exception {
-        mockMvc.perform(get("/posts/" + post1.getId()))
+        mockMvc.perform(get(POSTS_API_URL + "/" + post1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.id", is(post1.getId().intValue())))
@@ -124,15 +134,16 @@ public class PostControllerTest {
 
     @Test
     public void testGetNonexistentPost() throws Exception {
-        mockMvc.perform(get("/posts/-1").with(httpBasic(user.getLogin(), "1111")))
+        mockMvc.perform(get(POSTS_API_URL + "/-1"))
                 .andExpect(status().isNotFound());
     }
 
     @Ignore("Issue: the order of posts is different whenever run test in single mode or all together.")
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void testGetPostsUserAuthorised() throws Exception {
-        mockMvc.perform(get("/posts").with(user(user.getLogin())))
+        mockMvc.perform(get(POSTS_API_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$", hasSize(6)))
@@ -152,17 +163,18 @@ public class PostControllerTest {
 
     @Test
     public void testGetPostsUserUnauthorised() throws Exception {
-        mockMvc.perform(get("/posts"))
+        mockMvc.perform(get(POSTS_API_URL))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser(TEST_USER_LOGIN)
     public void testSaveNewPostWithValidDataUserAuthorised() throws Exception {
 
         Post post = new Post(user, "Some title", "what fits me with these pants?", Post.Category.QUESTION);
+        post.setImages(asList(new Image(1L, "name1"), new Image(2L, "name2")));
 
-        mockMvc.perform(post("/posts")
-                .with(user(user.getLogin()))
+        mockMvc.perform(post(POSTS_API_URL)
                 .contentType(contentType)
                 .content(json(post))
         )
@@ -171,10 +183,14 @@ public class PostControllerTest {
     }
 
     @Test
+    @WithMockUser(TEST_USER_LOGIN)
     public void testSaveNewPostWithNotValidDataUserAuthorised() throws Exception {
         Post post = new Post(user, "", "", Post.Category.QUESTION);
 
-        mockMvc.perform(post("/posts").with(httpBasic(user.getLogin(), "1111")).contentType(contentType).content(json(post)))
+        mockMvc.perform(post(POSTS_API_URL)
+                .contentType(contentType)
+                .content(json(post))
+        )
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -187,53 +203,76 @@ public class PostControllerTest {
         post.setTitle("Some title");
         post.setUser(user);
 
-        mockMvc.perform(post("/posts").contentType(contentType).content(json(post)))
+        mockMvc.perform(post(POSTS_API_URL).contentType(contentType).content(json(post)))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
+    @WithMockUser(TEST_USER_LOGIN)
     public void testDeleteExistingPostUserAuthorised() throws Exception {
-        mockMvc.perform(delete("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), "1111")))
+        mockMvc.perform(delete(POSTS_API_URL + "/" + post1.getId()))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser(TEST_USER_LOGIN)
     public void testDeleteNonexistentPost() throws Exception {
-        mockMvc.perform(delete("/posts/-1").with(httpBasic(user.getLogin(), "1111")))
-                .andExpect(status().isNotFound());
-    }
-
-    @Ignore("Need to implement check for nonexistent values. See FT12-27")
-    @Test
-    public void testUpdateExistingPostUserAuthorised() throws Exception {
-        post1.setTextMessage("Some another message");
-        post1.setTitle("Some another title.");
-
-        mockMvc.perform(put("/posts/" + post1.getId()).with(httpBasic(user.getLogin(), user.getPassword()))
-                .contentType(contentType).content(json(post1)))
-                .andExpect(status().isOk());
-    }
-
-    @Ignore("Need to implement check for nonexistent values. See FT12-27")
-    @Test
-    public void testUpdateNonexistentPost() throws Exception {
-        Post post = new Post(user, "Some title", "what fits me with these pants?", Post.Category.QUESTION);
-        post.setCreated(LocalDateTime.now());
-
-        mockMvc.perform(put("/posts/-1").with(httpBasic(user.getLogin(), user.getPassword()))
-                .contentType(contentType).content(json(post)))
+        mockMvc.perform(delete(POSTS_API_URL + "/-1"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    public void testToggleLikedStatusOwnPost() throws Exception {
-        mockMvc.perform(post("/posts/1/liked").with(httpBasic(user.getLogin(), "1111")))
+    @WithMockUser("notTheAuthor")
+    public void testDeletePostByNotAuthor() throws Exception {
+        mockMvc.perform(delete(POSTS_API_URL + "/" + post1.getId()))
                 .andExpect(status().isForbidden());
     }
 
     @Test
+    @WithMockUser(TEST_USER_LOGIN)
+    public void testUpdateExistingPostUserAuthorised() throws Exception {
+        post1.setTextMessage("Some another message");
+        post1.setTitle("Some another title.");
+
+        mockMvc.perform(put(POSTS_API_URL + "/" + post1.getId())
+                .contentType(contentType).content(json(post1)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(TEST_USER_LOGIN)
+    public void testUpdateNonexistentPost() throws Exception {
+        Post post = new Post(user, "Some title", "what fits me with these pants?", Post.Category.QUESTION);
+        post.setCreated(LocalDateTime.now());
+
+        mockMvc.perform(put(POSTS_API_URL + "/-1")
+                .contentType(contentType).content(json(post)))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    @WithMockUser("notTheAuthor")
+    public void testUpdatePostByNotAuthor() throws Exception {
+        post1.setTextMessage("Some another message");
+        post1.setTitle("Some another title.");
+
+        mockMvc.perform(put(POSTS_API_URL + "/" + post1.getId())
+                .contentType(contentType).content(json(post1)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(TEST_USER_LOGIN)
+    public void testToggleLikedStatusOwnPost() throws Exception {
+        mockMvc.perform(post(POSTS_API_URL + "/1/liked"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(TEST_USER_LOGIN)
     public void testToggleLikedStatus() throws Exception {
-        mockMvc.perform(post("/posts/2/liked").with(httpBasic(user.getLogin(), "1111")))
+        mockMvc.perform(post(POSTS_API_URL + "/2/liked"))
                 .andExpect(status().isOk());
     }
 }

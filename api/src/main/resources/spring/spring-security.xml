@@ -5,6 +5,9 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
+    <!-- Enable security annotation configs -->
+    <global-method-security pre-post-annotations="enabled"/>
+
     <http>
         <http-basic entry-point-ref="entryPoint"/>
 

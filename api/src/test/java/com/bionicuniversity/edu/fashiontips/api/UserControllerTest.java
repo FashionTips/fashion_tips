@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,7 +26,7 @@ import java.nio.charset.Charset;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -55,6 +56,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest {
 
     private static final String USERS_URL = "/users";
+    private static final String TEST_USER_LOGIN = "login1";
+    private static final String TEST_USER_PASSWORD = "1111";
 
     @Inject
     private WebApplicationContext webApplicationContext;
@@ -78,16 +81,20 @@ public class UserControllerTest {
     @Before
     public void setUp() throws Exception {
 
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilter(springSecurityFilterChain).build();
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .addFilter(springSecurityFilterChain)
+                .defaultRequest(get(USERS_URL).with(testSecurityContext()))
+                .build();
+
         user = userService.get(1L);
     }
 
     @Test
+    @WithMockUser(TEST_USER_LOGIN)
     public void testGetUserAuthorised() throws Exception {
 
-        mockMvc.perform(get(USERS_URL + "/" + user.getId())
-                .with(user(user.getLogin()))
-        )
+        mockMvc.perform(get(USERS_URL + "/" + user.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.id", is(user.getId().intValue())))
@@ -103,11 +110,10 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(TEST_USER_LOGIN)
     public void testProcessUserNotFoundExWithAuth() throws Exception {
 
-        mockMvc.perform(get(USERS_URL + "/-1")
-                .with(user(user.getLogin()))
-        )
+        mockMvc.perform(get(USERS_URL + "/-1"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(contentType));
     }
@@ -134,6 +140,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(TEST_USER_LOGIN)
     public void testUpdateUserWithUserAuthorised() throws Exception {
 
         User user = new User(this.user.getLogin(), "another@email.com", "testPassword");
@@ -144,7 +151,6 @@ public class UserControllerTest {
         mockMvc.perform(put(USERS_URL + "/" + this.user.getId())
                 .contentType(contentType)
                 .content(userJson)
-                .with(user(this.user.getLogin()))
         )
                 .andExpect(status().isOk());
     }
@@ -164,10 +170,8 @@ public class UserControllerTest {
     @Test
     public void testLoginAvailableWithExistentLogin() throws Exception {
 
-        String login = user.getLogin();
-
         mockMvc.perform(get(USERS_URL + "/available")
-                .param("login", login)
+                .param("login", TEST_USER_LOGIN)
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(Boolean.FALSE.toString()));
