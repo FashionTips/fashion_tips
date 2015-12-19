@@ -17,7 +17,7 @@
                         <div class="media-body">
                             <div class="media-heading">
                                 <p class="col-md-6">{{ comment.author.login }}</p>
-                                <p class="col-md-6 text-right">{{ comment.created }}</p>
+                                <p class="col-md-6 text-right">{{ comment.created | date:'medium' }}</p>
                             </div>
                             {{ comment.text }}
                         </div>
