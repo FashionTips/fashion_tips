@@ -176,5 +176,6 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
          */
         $scope.clearPostForm = function () {
             $scope.postForm = {};
+            $scope.showAddPostErrorMessage = false;
         };
     }];
