@@ -1,9 +1,10 @@
 package com.bionicuniversity.edu.fashiontips.entity;
 
-import com.bionicuniversity.edu.fashiontips.dao.util.LocalDateTimeDeserializer;
-import com.bionicuniversity.edu.fashiontips.dao.util.LocalDateTimeSerializer;
+import com.bionicuniversity.edu.fashiontips.entity.util.AuthorDeserializer;
+import com.bionicuniversity.edu.fashiontips.entity.util.AuthorSerializer;
+import com.bionicuniversity.edu.fashiontips.entity.util.LocalDateTimeDeserializer;
+import com.bionicuniversity.edu.fashiontips.entity.util.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -34,7 +35,8 @@ public class Post extends BaseEntity<Long> {
      * Column user, which consists User Entity
      */
     @JsonProperty("author")
-    @JsonIgnoreProperties(value = {"id", "email", "roles"})
+    @JsonSerialize(using = AuthorSerializer.class)
+    @JsonDeserialize(using = AuthorDeserializer.class)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;

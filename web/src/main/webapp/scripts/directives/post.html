@@ -5,7 +5,7 @@
                 <span class="label label-info">{{ post.category }}</span>
             </div>
             <div class="col-md-6">
-                <div class="pull-right" data-ng-show="post.author.login === username">
+                <div class="pull-right" data-ng-show="post.author === username">
                     <button type="button" class="btn btn-xs btn-warning" data-toggle="modal"
                             data-target="#postEditModal" data-ng-click="showEditPostForm()">
                         <span class="glyphicon glyphicon-pencil"></span>&nbsp;
@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <h2><a href="/post/{{ post.id }}">{{ post.title }}</a>
-                        <small>by {{ post.author.login }}</small>
+                        <small>by {{ post.author }}</small>
                     </h2>
                 </div>
                 <div class="col-md-4">

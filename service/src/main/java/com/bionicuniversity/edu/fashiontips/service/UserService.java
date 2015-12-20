@@ -35,4 +35,12 @@ public interface UserService extends GenericService<User, Long> {
      * @return {@code true} if there is not user with given email, {@code false} otherwise
      */
     boolean checkEmail(String email);
+
+    /**
+     * Sets to user with given id the given user's data and saves to persistence.
+     *
+     * @param id user's id to update
+     * @param userData user's data
+     */
+    void update(Long id, User userData);
 }

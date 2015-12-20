@@ -1,4 +1,4 @@
-package com.bionicuniversity.edu.fashiontips.dao.util;
+package com.bionicuniversity.edu.fashiontips.entity.util;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

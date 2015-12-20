@@ -4,14 +4,23 @@ import com.bionicuniversity.edu.fashiontips.annotation.Create;
 import com.bionicuniversity.edu.fashiontips.annotation.UniqueEmail;
 import com.bionicuniversity.edu.fashiontips.annotation.UniqueLogin;
 import com.bionicuniversity.edu.fashiontips.annotation.Update;
+import com.bionicuniversity.edu.fashiontips.entity.util.LocalDateDeserializer;
+import com.bionicuniversity.edu.fashiontips.entity.util.LocalDateSerializer;
+import com.bionicuniversity.edu.fashiontips.entity.util.LocalDateTimeDeserializer;
+import com.bionicuniversity.edu.fashiontips.entity.util.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -27,12 +36,12 @@ public class User extends BaseEntity<Long> {
     @UniqueLogin(groups = Create.class)
     private String login;
 
-    @NotBlank(message = "Email not be empty.", groups = {Create.class, Update.class})
+    @NotBlank(message = "Email could not be empty.", groups = {Create.class})
     @Email(message = "The given string is not email.", groups = {Create.class, Update.class})
     @UniqueEmail(groups = Create.class)
     private String email;
 
-    @NotBlank(message = "Password could not be empty.", groups = {Create.class, Update.class})
+    @NotBlank(message = "Password could not be empty.", groups = {Create.class})
     @Size(min = 4, max = 32, message = "Password has to have 4 to 32 characters.",
             groups = {Create.class, Update.class})
     private String password;
@@ -42,6 +51,48 @@ public class User extends BaseEntity<Long> {
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
+
+    /* User profile's data */
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @Column(name = "created", nullable = false, insertable = false)
+    private LocalDateTime created;
+
+    @OneToOne
+    @JoinTable(
+            name = "user_images",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "img_id")
+    )
+    private Image avatar;
+
+    private String firstName, lastName;
+
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate birthday;
+
+    private Boolean hideAge;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private String location;
+
+    @OneToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
+
+    private String occupation;
+
+    private String aboutMe;
+
+    private String instagram;
+
+    private URL blogUrl;
+
+    private URL websiteUrl;
 
     /**
      * Default Constructor
@@ -86,10 +137,12 @@ public class User extends BaseEntity<Long> {
         this.login = login;
     }
 
+    @JsonIgnore
     public String getEmail() {
         return email;
     }
 
+    @JsonProperty
     public void setEmail(String email) {
         this.email = email;
     }
@@ -104,6 +157,118 @@ public class User extends BaseEntity<Long> {
         this.password = password;
     }
 
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public Image getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Image avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public Boolean isHideAge() {
+        return hideAge;
+    }
+
+    public void setHideAge(Boolean hideAge) {
+        this.hideAge = hideAge;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+    }
+
+    public String getInstagram() {
+        return instagram;
+    }
+
+    public void setInstagram(String instagram) {
+        this.instagram = instagram;
+    }
+
+    public URL getBlogUrl() {
+        return blogUrl;
+    }
+
+    public void setBlogUrl(URL blogUrl) {
+        this.blogUrl = blogUrl;
+    }
+
+    public URL getWebsiteUrl() {
+        return websiteUrl;
+    }
+
+    public void setWebsiteUrl(URL websiteUrl) {
+        this.websiteUrl = websiteUrl;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -112,5 +277,12 @@ public class User extends BaseEntity<Long> {
                 ", password='" + password + '\'' +
                 ", roles=" + roles +
                 '}';
+    }
+
+    /**
+     * Representation of human genger. Could have one of two options: GUY and GIRL.
+     */
+    public enum Gender {
+        GIRL, GUY
     }
 }

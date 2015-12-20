@@ -73,13 +73,12 @@ public class UserController {
     /**
      * Updates user with given data.
      *
-     * @param user data
-     * @param id   user's id
+     * @param userData user data
+     * @param id user's id
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public void updateUser(@Validated(Update.class) @RequestBody User user, @PathVariable("id") long id) {
-        user.setId(id);
-        userService.update(user);
+    public void updateUser(@Validated(Update.class) @RequestBody User userData, @PathVariable("id") long id) {
+        userService.update(id, userData);
     }
 
     /**
