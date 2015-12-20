@@ -1,5 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
+import com.bionicuniversity.edu.fashiontips.dao.CountryDao;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -19,15 +20,21 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
+import java.net.URL;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
+import static com.bionicuniversity.edu.fashiontips.util.TestUtil.json;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -68,6 +75,9 @@ public class UserControllerTest {
     @Inject
     private UserService userService;
 
+    @Inject
+    private CountryDao countryDao;
+
     private MockMvc mockMvc;
 
     /* user for testing */
@@ -91,22 +101,26 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(TEST_USER_LOGIN)
-    public void testGetUserAuthorised() throws Exception {
+    public void testGetUser() throws Exception {
 
         mockMvc.perform(get(USERS_URL + "/" + user.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$.id", is(user.getId().intValue())))
                 .andExpect(jsonPath("$.login", is(user.getLogin())))
-                .andExpect(jsonPath("$.email", is(user.getEmail())));
-    }
+                .andExpect(jsonPath("$.email").doesNotExist())
+                .andExpect(jsonPath("$.password").doesNotExist())
+                .andExpect(jsonPath("$.roles").isArray())
+                .andExpect(jsonPath("$.created").value(
+                        user.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                ))
+                .andExpect(jsonPath("$.avatar").value(user.getAvatar()))
+                .andExpect(jsonPath("$.firstName").value(user.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(user.getLastName()))
+                .andExpect(jsonPath("$.hideAge").value(user.isHideAge()))
+                .andExpect(jsonPath("$.gender").value(user.getGender()))
+                .andExpect(jsonPath("$.location").value(user.getLocation()));
 
-    @Test
-    public void testGetUserUnauthorised() throws Exception {
-
-        mockMvc.perform(get(USERS_URL + "/" + user.getId()))
-                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -130,29 +144,52 @@ public class UserControllerTest {
                 .content(userJson)
                 .contentType(contentType)
         )
+                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(contentType))
                 .andExpect(header().string("Location", notNullValue()))
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.login").value(is(user.getLogin())))
-                .andExpect(jsonPath("$.email").value(is(user.getEmail())))
+                .andExpect(jsonPath("$.email").doesNotExist())
                 .andExpect(jsonPath("$.password").doesNotExist());
     }
 
     @Test
     @WithMockUser(TEST_USER_LOGIN)
+    @Transactional
     public void testUpdateUserWithUserAuthorised() throws Exception {
 
         User user = new User(this.user.getLogin(), "another@email.com", "testPassword");
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(MapperFeature.USE_ANNOTATIONS);  // to disable password ignore
-        String userJson = mapper.writeValueAsString(user);
+        user.setAboutMe("Some text about me");
+        user.setBirthday(LocalDate.of(2000, 5, 23));
+        user.setBlogUrl(new URL("https://www.google.com"));
+        user.setCountry(countryDao.getById(1));
+        user.setFirstName("John");
+        user.setLastName("Gold");
+        user.setGender(User.Gender.GUY);
+        user.setHideAge(true);
+        user.setInstagram("@my_instagram");
+        user.setLocation("Los Angeles, LA");
+        user.setOccupation("Unknown");
+        user.setWebsiteUrl(new URL("https://www.google.com"));
 
         mockMvc.perform(put(USERS_URL + "/" + this.user.getId())
                 .contentType(contentType)
-                .content(userJson)
+                .content(json(user))
         )
+                .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser("someAnotherUser")
+    public void testUpdateUserByAnotherUser() throws Exception {
+
+        mockMvc.perform(put(USERS_URL + "/1")
+                .content(json(user))
+                .contentType(contentType)
+        )
+                .andExpect(status().isForbidden());
     }
 
     @Test

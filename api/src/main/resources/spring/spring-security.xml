@@ -20,9 +20,11 @@
         <!-- Permit posts GET request for unauthorized users.-->
         <intercept-url pattern="/posts/**" method="GET" access="permitAll"/>
 
-        <!-- Let everybody can register a new user and check, whether the login is available -->
+        <!-- Let everybody can see public user data -->
+        <intercept-url pattern="/users/*" method="GET" access="permitAll"/>
+
+        <!-- Let everybody can register a new user -->
         <intercept-url pattern="/users" method="POST" access="permitAll"/>
-        <intercept-url pattern="/users/available" method="GET" access="permitAll"/>
 
         <!-- Only authenticated users can access the api methods -->
         <intercept-url pattern="/**" access="isAuthenticated()"/>

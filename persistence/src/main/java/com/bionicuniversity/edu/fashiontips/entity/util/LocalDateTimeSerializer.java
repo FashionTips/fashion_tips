@@ -1,4 +1,4 @@
-package com.bionicuniversity.edu.fashiontips.dao.util;
+package com.bionicuniversity.edu.fashiontips.entity.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

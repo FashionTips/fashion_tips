@@ -1,11 +1,19 @@
 DROP TABLE IF EXISTS post_user_likes;
-DROP TABLE IF EXISTS comments ;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS user_images;
 DROP TABLE IF EXISTS post_images;
 DROP TABLE IF EXISTS images;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS user_role;
 DROP TABLE IF EXISTS users ;
 DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS countries;
+
+CREATE TABLE countries (
+  id INT,
+  name VARCHAR(64),
+  CONSTRAINT "country_id" PRIMARY KEY (id)
+);
 
 CREATE TABLE roles (
   id BIGSERIAL,
@@ -18,7 +26,21 @@ CREATE TABLE users (
   login VARCHAR,
   email VARCHAR,
   password VARCHAR,
-  CONSTRAINT "user_id" PRIMARY KEY (id)
+  created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  firstName VARCHAR(64),
+  lastName VARCHAR(64),
+  birthday DATE,
+  hideAge BOOLEAN,
+  gender VARCHAR(8),
+  location VARCHAR(64),
+  country_id INT,
+  occupation VARCHAR(64),
+  aboutMe VARCHAR(255),
+  instagram VARCHAR(32),
+  blogUrl VARCHAR(255),
+  websiteUrl VARCHAR(255),
+  CONSTRAINT "user_id" PRIMARY KEY (id),
+  FOREIGN KEY (country_id) REFERENCES countries(id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 CREATE UNIQUE INDEX login ON users (login);
 CREATE UNIQUE INDEX email ON users (email);
@@ -53,6 +75,14 @@ CREATE TABLE post_images (
   FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
   FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE,
   CONSTRAINT post_pictures_idx UNIQUE (post_id, img_id)
+);
+
+CREATE TABLE user_images (
+  user_id BIGINT NOT NULL,
+  img_id BIGINT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES posts (id) ON DELETE CASCADE,
+  FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE,
+  CONSTRAINT user_pictures_idx UNIQUE (user_id, img_id)
 );
 
 CREATE TABLE comments (
