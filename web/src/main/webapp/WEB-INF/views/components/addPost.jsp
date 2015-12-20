@@ -7,30 +7,52 @@
                 <a href="{{ newPostUrl }}" target="_self">here</a>
             </div>
             <div class="alert alert-danger" role="alert" data-ng-show="showAddPostErrorMessage">
-                Error occurred, post was not stored :-(
+                Errors occurred:
+                <br/>
+                {{ postForm.errors }}
             </div>
             <div class="page-header">
                 <h2>Post: {{ postForm.title }}</h2>
             </div>
-            <form data-ng-submit="addPost()">
-                <div class="form-group">
+            <form name="addPostForm" accept-charset="UTF-8" data-ng-submit="addPost()"
+                  data-ng-class="{'has-error': addPostForm.$invalid && addPostForm.$submitted}" novalidate>
+
+                <%-- Title --%>
+                <div class="form-group has-feedback"
+                     data-ng-class="{ 'has-error': addPostForm.title.$invalid && addPostForm.title.$dirty,
+                          'has-success': addPostForm.title.$valid && addPostForm.title.$dirty}">
                     <label>Title</label>
-                    <input type="text" class="form-control" placeholder="Title"
-                           data-ng-model="postForm.title"
-                           autofocus>
+                    <input type="text" class="form-control" placeholder="Title" name="title"
+                           data-ng-model="postForm.title" autofocus required maxlength="100">
+                    <div data-ng-messages="addPostForm.title.$error" role="alert"
+                         data-ng-show="addPostForm.title.$dirty">
+                        <div data-ng-messages-include="messages.html"></div>
+                    </div>
                 </div>
-                <div class="form-group">
+
+                <%-- Text Message --%>
+                <div class="form-group has-feedback" data-ng-class="{ 'has-error': addPostForm.textMessage.$invalid &&
+                addPostForm.textMessage.$dirty,
+                          'has-success': addPostForm.textMessage.$valid && addPostForm.textMessage.$dirty}">
                     <label>Your thoughts:</label>
                 <textarea class="form-control" rows="3" data-ng-model="postForm.textMessage"
-                          title="Textarea"></textarea>
+                          name="textMessage" title="Text Message" required maxlength="1000"></textarea>
+                    <div data-ng-messages="addPostForm.textMessage.$error" role="alert"
+                         data-ng-show="addPostForm.textMessage.$dirty">
+                        <div data-ng-messages-include="messages.html"></div>
+                    </div>
                 </div>
+
+                <%-- Category --%>
                 <label class="radio-inline">
-                    <input type="radio" name="category" value="POST" data-ng-model="postForm.category"> POST
+                    <input type="radio" name="category" required value="POST" data-ng-model="postForm.category"> POST
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="category" value="QUESTION" data-ng-model="postForm.category">
+                    <input type="radio" name="category" required value="QUESTION" data-ng-model="postForm.category">
                     QUESTION
                 </label>
+
+                <%-- Pictures --%>
                 <div class="form-group">
                     <label>Photos</label>
                     <div>
@@ -40,13 +62,13 @@
                     <div class="row">
                         <div class="col-lg-2" data-ng-repeat="image in postForm.images">
                             <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}"/>
-                            <a href="#" data-ng-click="removeImage(image.id)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                            <a href="#" data-ng-click="removeImage(image.id)"><span class="glyphicon glyphicon-remove"
+                                                                                    aria-hidden="true"></span></a>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </div>
+                    <input type="submit" class="btn btn-success" data-ng-disabled="addPostForm.$invalid"
+                           value="Create">
             </form>
         </div>
     </div>
