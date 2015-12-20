@@ -47,10 +47,6 @@ var MenuController = ['$scope', 'sessionService', 'authService',
          */
         $scope.register = function () {
 
-            if(!$scope.credentials.username || !$scope.credentials.email || !$scope.credentials.password) {
-                return;
-            }
-
             authService.register($scope.credentials.username, $scope.credentials.email, $scope.credentials.password)
                 .then(function () {
                     $scope.showRegisterErrorMessage = false;

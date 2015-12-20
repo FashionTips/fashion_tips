@@ -57,13 +57,18 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
     }
 
     @Override
-    public boolean check(String login) {
+    public boolean checkLogin(String login) {
         try {
             ((UserDao) repository).getByLogin(login);
             return false;
         } catch (NoResultException ex) {
             return true;
         }
+    }
+
+    @Override
+    public boolean checkEmail(String email) {
+        return ((UserDao) repository).findByEmail(email) == null;
     }
 
     private void encodePassword(User user) {

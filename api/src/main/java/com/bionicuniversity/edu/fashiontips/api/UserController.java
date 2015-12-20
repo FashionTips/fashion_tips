@@ -74,7 +74,7 @@ public class UserController {
      * Updates user with given data.
      *
      * @param user data
-     * @param id user's id
+     * @param id   user's id
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public void updateUser(@Validated(Update.class) @RequestBody User user, @PathVariable("id") long id) {
@@ -89,7 +89,18 @@ public class UserController {
      * @return {@code true} if there is not user with given login, {@code false} otherwise
      */
     @RequestMapping(value = "/available", method = RequestMethod.GET)
-    public boolean available(@RequestParam("login") String login) {
-        return userService.check(login);
+    public boolean available(@RequestParam(value = "login", required = false) String login,
+                             @RequestParam(value = "email", required = false) String email) {
+
+        if (login != null && email == null) {
+            return userService.checkLogin(login);
+        }
+
+        if (login == null && email != null) {
+            return userService.checkEmail(email);
+        }
+
+        // at this step email is always != null
+        return login != null && userService.checkLogin(login) && userService.checkEmail(email);
     }
 }

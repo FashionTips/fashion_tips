@@ -9,16 +9,17 @@
                 <form name="signinForm" accept-charset="UTF-8" data-ng-submit="login()">
                     <p class="text-danger" data-ng-show="showLoginErrorMessage">Invalid login or password!</p>
                     <div class="form-group has-feedback"
-                         data-ng-class="{ 'has-error': signinForm.username.$invalid }">
+                         data-ng-class="{ 'has-error': signinForm.username.$invalid && signinForm.username.$dirty}">
                         <input class="form-control" type="text" placeholder="Username" name="username"
                                data-ng-model="credentials.username" required autofocus>
                     </div>
                     <div class="form-group has-feedback"
-                         data-ng-class="{ 'has-error': signinForm.password.$invalid }">
+                         data-ng-class="{ 'has-error': signinForm.password.$invalid && signinForm.password.$dirty}">
                         <input type="password" class="form-control" placeholder="Password" id="password" name="password"
                                data-ng-model="credentials.password" required>
                     </div>
-                    <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Sign In">
+                    <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Sign In"
+                    data-ng-disabled="signinForm.$invalid">
                 </form>
             </section>
         </div>
