@@ -1,5 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
+import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
 import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.service.ImageService;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.ImageUploadExeption;
@@ -31,6 +32,7 @@ public class ImageController {
             try {
                 image.setData(file.getBytes());
                 imageService.save(image);
+                ImageUtil.createUrlName(image);
             } catch (Exception e) {
                 throw new ImageUploadExeption(String.format("Cannot load image %s", file.getOriginalFilename()));
             }

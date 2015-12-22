@@ -4,12 +4,10 @@
         <div class="col-md-6 col-md-offset-3">
             <div class="jumbotron">
                 <h1>Hello, {{ user.login }}!</h1>
-
-                <p>Email: {{ user.email }}</p>
             </div>
 
             <div class="page-header">
-                <h2>{{ posts.length == 0 ? "You have no posts ;(" : "Recent posts"}}</h2>
+                <h2>{{ posts.length === 0 ? "You have no posts ;(" : "Recent posts"}}</h2>
             </div>
 
             <div class="row">
