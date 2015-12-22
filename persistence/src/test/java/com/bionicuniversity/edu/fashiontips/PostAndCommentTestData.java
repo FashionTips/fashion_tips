@@ -8,6 +8,7 @@ import java.time.Month;
 import java.util.*;
 
 import static com.bionicuniversity.edu.fashiontips.ImageTestData.*;
+import static com.bionicuniversity.edu.fashiontips.TagLineTestData.*;
 import static com.bionicuniversity.edu.fashiontips.UserTestData.*;
 
 /**
@@ -54,9 +55,20 @@ public class PostAndCommentTestData {
     public static final List<Comment> LIST_IF_UPDATE_COMMENT2 = Arrays.asList(COMMENT1, UPDATE_COMMENT2, COMMENT3);
 
     static {
+        POST1.setTagLines(Arrays.asList(TAG_LINE1, TAG_LINE2, TAG_LINE3));
         POST1.setComments(Arrays.asList(COMMENT1));
         POST2.setComments(Arrays.asList(COMMENT2));
         POST3.setComments(Arrays.asList(COMMENT3));
         UPDATE_POST1.setComments(Arrays.asList(COMMENT1));
+        UPDATE_POST1.setTagLines(Arrays.asList(UPDATED_TAG_LINE_FOR_POST, TAG_LINE2, TAG_LINE3));
+
+        POST2.setTagLines(new ArrayList<>());
+        POST3.setTagLines(new ArrayList<>());
+        POST4.setTagLines(new ArrayList<>());
+        POST5.setTagLines(new ArrayList<>());
+        POST6.setTagLines(new ArrayList<>());
+
+        NEW_POST_BEFORE_SAVE.setTagLines(Arrays.asList(NEW_TAG_LINE_FOR_POST));
+        NEW_POST_AFTER_SAVE.setTagLines(Arrays.asList(ADDED_TAG_LINE_FOR_POST));
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -67,5 +68,11 @@ public abstract class GenericDaoImpl<T extends BaseEntity, PK extends Serializab
     @Override
     public T getReference(PK id) {
         return em.getReference(templateClass, id);
+    }
+
+    @Override
+    public boolean exists(long id) {
+        TypedQuery<Long> query = em.createQuery(String.format("SELECT COUNT(e.id) FROM %s e WHERE e.id =:id", templateClass.getSimpleName()), Long.class);
+        return query.setParameter("id", id).getSingleResult() > 0;
     }
 }

@@ -1,3 +1,9 @@
+DELETE FROM tag_parameters;
+DELETE FROM tags_tag_lines;
+DELETE FROM tags;
+DELETE FROM tag_types;
+DELETE FROM tag_lines;
+DELETE FROM clothes;
 DELETE FROM post_user_likes;
 DELETE FROM comments;
 DELETE FROM post_images;
@@ -8,6 +14,11 @@ DELETE FROM users;
 DELETE FROM roles;
 DELETE FROM countries;
 
+ALTER SEQUENCE tag_parameters_id_seq RESTART WITH 1;
+ALTER SEQUENCE tags_id_seq RESTART WITH 1;
+ALTER SEQUENCE tag_types_id_seq RESTART WITH 1;
+ALTER SEQUENCE tag_lines_id_seq RESTART WITH 1;
+ALTER SEQUENCE clothes_id_seq RESTART WITH 1;
 ALTER SEQUENCE comments_id_seq RESTART WITH 1;
 ALTER SEQUENCE images_id_seq RESTART WITH 1;
 ALTER SEQUENCE posts_id_seq RESTART WITH 1;
@@ -262,3 +273,27 @@ INSERT INTO post_user_likes (post_id, user_id) VALUES (1,3);
 INSERT INTO post_user_likes (post_id, user_id) VALUES (2,3);
 INSERT INTO post_user_likes (post_id, user_id) VALUES (3,1);
 INSERT INTO post_user_likes (post_id, user_id) VALUES (3,2);
+
+INSERT INTO clothes (name) VALUES ('hat');
+INSERT INTO clothes (name) VALUES ('scarf');
+INSERT INTO clothes (name) VALUES ('t-shirt');
+INSERT INTO clothes (name) VALUES ('dress');
+
+INSERT INTO tag_lines (POST_ID, CLOTHES_ID) VALUES (1,3);
+INSERT INTO tag_lines (POST_ID, CLOTHES_ID) VALUES (1,2);
+INSERT INTO tag_lines (POST_ID, CLOTHES_ID) VALUES (1,4);
+
+INSERT INTO TAG_TYPES (TYPE) VALUES ('brand');
+INSERT INTO TAG_TYPES (TYPE) VALUES ('store');
+
+INSERT INTO TAGS (VALUE, TAG_TYPE_ID) VALUES ('UNTITLED & CO', 1);
+INSERT INTO TAGS (VALUE, TAG_TYPE_ID) VALUES ('karmaloop', 2);
+INSERT INTO TAGS (VALUE, TAG_TYPE_ID) VALUES ('Finch', 1);
+
+INSERT INTO TAGS_TAG_LINES (TAG_LINE_ID,TAG_ID) VALUES (1, 1);
+INSERT INTO TAGS_TAG_LINES (TAG_LINE_ID,TAG_ID) VALUES (1, 2);
+INSERT INTO TAGS_TAG_LINES (TAG_LINE_ID,TAG_ID) VALUES (1, 3);
+
+INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://untitledandco.com/collections/womens', 'site', 1);
+INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://www.karmaloop.com/product/The-Hey-Ma-Tee-in-White/549232', 'url', 1);
+INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://finchwear.com.ua/', 'site', 1);
