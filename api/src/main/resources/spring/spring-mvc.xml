@@ -17,12 +17,22 @@
     <context:component-scan base-package="com.bionicuniversity.edu.fashiontips.api"/>
 
     <!-- Import application variables -->
-    <context:property-placeholder location="classpath:fashion_tips.properties" system-properties-mode="OVERRIDE"/>
+    <context:property-placeholder location="classpath:api.properties" system-properties-mode="OVERRIDE"/>
 
     <!-- Bean for enabling ability receive multipart request from internet -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
     <!-- Mapping to display images from images filesystem store -->
     <mvc:resources mapping="/images/**" location="file:${application.images.path}"/>
+
+    <!-- Initialize ImageUtil with application URL -->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="com.bionicuniversity.edu.fashiontips.api.util.ImageUtil.setApiUrl"/>
+        <property name="arguments">
+            <list>
+                <value>${application.api.url}</value>
+            </list>
+        </property>
+    </bean>
 
 </beans>

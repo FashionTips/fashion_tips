@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS countries;
 
 CREATE TABLE countries (
-  id INT,
+  id SERIAL,
   name VARCHAR(64),
   CONSTRAINT "country_id" PRIMARY KEY (id)
 );

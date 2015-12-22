@@ -21,10 +21,6 @@ public class PostUtil {
      * @param loggedUser entity of logged user
      */
     public static void normalizeForClient(Post post, User loggedUser) {
-
-        /* Setting imgUrl to images in Post entity */
-        post.getImages().stream().forEach(ImageUtil::createUrlName);
-
         /* Setting necessary for clients parameters, related to "likes" */
         post.setLikes((long) post.getLikedByUsers().size());
         if (loggedUser != null)
