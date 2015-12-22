@@ -5,6 +5,7 @@ import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
+import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class PostController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Post getPost(@PathVariable long id, Principal principal) {
         User user = principal == null ? null : userService.findOne(principal.getName());
-        return postService.get(id, user);
+        return ImageUtil.createUrlNameForPost(postService.get(id, user));
     }
 
 
@@ -60,13 +61,15 @@ public class PostController {
                                 @RequestParam(value = "hashtag", required = false) String hashTag,
                                 Principal principal) {
         User user = principal == null ? null : userService.findOne(principal.getName());
+        List<Post> posts;
         if (login != null) {
-            return postService.findAllByUser(userService.findOne(login), user);
+            posts = postService.findAllByUser(userService.findOne(login), user);
         } else if (hashTag != null) {
-            return postService.findAllByHashTag(hashTag, user);
+            posts = postService.findAllByHashTag(hashTag, user);
+        } else  {
+            posts = postService.findAll(user);
         }
-        return postService.findAll(user);
-
+        return ImageUtil.createUrlNameForPosts(posts);
     }
 
     /**

@@ -5,6 +5,7 @@
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jee="http://www.springframework.org/schema/jee"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
@@ -12,25 +13,12 @@
        http://www.springframework.org/schema/jdbc
        http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
        http://www.springframework.org/schema/tx
-       http://www.springframework.org/schema/tx/spring-tx.xsd">
+       http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
 
     <context:component-scan base-package="com.bionicuniversity.edu.fashiontips.**.dao"/>
 
     <!-- Configure a default Validator as a Spring bean to make custom validation constraints work -->
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-
-    <bean id="dataSource"
-      class="org.springframework.jdbc.datasource.DriverManagerDataSource"
-      p:driverClassName="${database.driverClassName}"
-      p:url="${database.url}"
-      p:username="${database.username}"
-      p:password="${database.password}"/>
-
-    <!--Initialize datasource with default values-->
-    <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
-        <jdbc:script location="classpath:db/${jdbc.initLocation}"/>
-        <jdbc:script encoding="utf-8" location="classpath:db/${jdbc.filloutDB}"/>
-    </jdbc:initialize-database>
 
     <bean id="entityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -58,20 +46,54 @@
 
     <tx:annotation-driven/>
 
+    <!-- Profile for development. Used HSQL database and Spring connection pool -->
     <beans profile="dev">
         <context:property-placeholder
                 location="classpath:db/hsqldb.properties,
-                          classpath:fashion_tips.properties"
+                          classpath:persistence.properties"
                 ignore-unresolvable="true"
                 system-properties-mode="OVERRIDE"/>
+
+        <bean id="dataSource"
+              class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+              p:driverClassName="${database.driverClassName}"
+              p:url="${database.url}"
+              p:username="${database.username}"
+              p:password="${database.password}"/>
     </beans>
 
-    <beans profile="production">
+    <!-- Profile for testing app on PostgreSQL with production connection pool -->
+    <beans profile="postgres">
         <context:property-placeholder
                 location="classpath:db/postgresql.properties,
-                          classpath:fashion_tips.properties"
+                          classpath:persistence.properties"
                 ignore-unresolvable="true"
                 system-properties-mode="OVERRIDE"/>
+
+        <bean id="dataSource"
+              class="org.apache.tomcat.jdbc.pool.DataSource"
+              p:driverClassName="${database.driverClassName}"
+              p:url="${database.url}"
+              p:username="${database.username}"
+              p:password="${database.password}"/>
+    </beans>
+
+    <beans profile="dev, postgres">
+        <!--Initialize datasource with default values-->
+        <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
+            <jdbc:script location="classpath:db/${jdbc.initLocation}"/>
+            <jdbc:script encoding="utf-8" location="classpath:db/${jdbc.filloutDB}"/>
+        </jdbc:initialize-database>
+    </beans>
+
+    <!-- Profile for production. Database is getting from app server by JNDI lookup -->
+    <beans profile="tomcat">
+        <context:property-placeholder
+                location="classpath:db/tomcat.properties,
+                          classpath:persistence.properties"
+                ignore-unresolvable="true"
+                system-properties-mode="OVERRIDE"/>
+        <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/fashion_tips"/>
     </beans>
 
     <beans profile="initImgFolder">

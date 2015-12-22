@@ -5,6 +5,12 @@
 
     <display-name>Fashion tips</display-name>
 
+    <!-- Default Spring profiles -->
+    <context-param>
+        <param-name>spring.profiles.default</param-name>
+        <param-value>tomcat</param-value>
+    </context-param>
+
     <!--Load Spring Configuration-->
     <context-param>
         <param-name>contextConfigLocation</param-name>
