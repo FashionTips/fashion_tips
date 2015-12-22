@@ -15,6 +15,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -114,6 +115,15 @@ public class Post extends BaseEntity<Long> {
      * */
     @Transient
     private Boolean isLikedByAuthUser;
+
+    /**
+    * List of posts tag lines
+    */
+    @Valid
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "post")
+    @Fetch(FetchMode.SELECT)
+    @OrderBy(value = "id ASC")
+    private List<TagLine> tagLines;
 
     /**
      * Default Constructor
@@ -228,6 +238,22 @@ public class Post extends BaseEntity<Long> {
         this.isLikedByAuthUser = isLikedByAuthUser;
     }
 
+    public Boolean getLikedByAuthUser() {
+        return isLikedByAuthUser;
+    }
+
+    public void setLikedByAuthUser(Boolean likedByAuthUser) {
+        isLikedByAuthUser = likedByAuthUser;
+    }
+
+    public List<TagLine> getTagLines() {
+        return tagLines;
+    }
+
+    public void setTagLines(List<TagLine> tagLines) {
+        this.tagLines = tagLines;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -241,6 +267,7 @@ public class Post extends BaseEntity<Long> {
                 ", comments=" + comments +
                 ", likes=" + likes +
                 ", isLikedByAuthUser=" + isLikedByAuthUser +
+                ", tagLines=" + tagLines +
                 '}';
     }
 

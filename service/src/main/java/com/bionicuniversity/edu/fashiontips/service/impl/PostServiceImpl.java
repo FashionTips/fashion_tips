@@ -85,4 +85,13 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
             throw new IllegalArgumentException("Users can not 'liked' their own posts");
         }
     }
+
+    @Override
+    @Transactional
+    public Post save(Post post) {
+        if(post.getTagLines() != null && post.getTagLines().size() > 0){
+            post.getTagLines().stream().forEach(tagLine -> tagLine.setPost(post));
+        }
+        return super.save(post);
+    }
 }

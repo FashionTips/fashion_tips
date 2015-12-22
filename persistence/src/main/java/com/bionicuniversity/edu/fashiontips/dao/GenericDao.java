@@ -23,4 +23,6 @@ public interface GenericDao<T extends BaseEntity, PK extends Serializable> {
     void deleteAll();
 
     T getReference(PK id);
+
+    boolean exists(long id);
 }

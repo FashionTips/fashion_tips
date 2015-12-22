@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.bionicuniversity.edu.fashiontips.PostAndCommentTestData.*;
