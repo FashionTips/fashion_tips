@@ -20,7 +20,10 @@
     <context:property-placeholder location="classpath:api.properties" system-properties-mode="OVERRIDE"/>
 
     <!-- Bean for enabling ability receive multipart request from internet -->
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- Maximum file size in bytes (5242880 B = 5 MB) -->
+        <property name="maxUploadSize" value="5242880"/>
+    </bean>
 
     <!-- Mapping to display images from images filesystem store -->
     <mvc:resources mapping="/images/**" location="file:${application.images.path}"/>
