@@ -26,6 +26,8 @@ public class ImageController {
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public ResponseEntity imageUpload(@RequestParam("file") MultipartFile file) {
+        if(!file.getContentType().startsWith("image/"))
+            throw new ImageUploadExeption(String.format("Cannot load file %s, it is not an image", file.getOriginalFilename()));
 
         if (!file.isEmpty()) {
             Image image = new Image(file.getOriginalFilename());
