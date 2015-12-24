@@ -1,8 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.service;
 
-import com.bionicuniversity.edu.fashiontips.entity.Clothes;
-import com.bionicuniversity.edu.fashiontips.entity.TagLine;
-import com.bionicuniversity.edu.fashiontips.entity.TagType;
+import com.bionicuniversity.edu.fashiontips.entity.*;
 
 import java.util.List;
 
@@ -20,5 +18,7 @@ public interface TagLineService {
     TagLine save(TagLine tagLine, long postId);
 
     TagLine get(long id);
+
+    List<Post> findAllByTag(Tag tag, User user);
 
 }

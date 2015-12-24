@@ -1,4 +1,4 @@
-package com.bionicuniversity.edu.fashiontips.dao;
+package com.bionicuniversity.edu.fashiontips.service;
 
 import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import com.bionicuniversity.edu.fashiontips.entity.TagLine;
@@ -6,14 +6,12 @@ import com.bionicuniversity.edu.fashiontips.entity.TagLine;
 import java.util.List;
 
 /**
- * DAO interface to deal with {@code Tag} entity.
- *
- * @author Vadym Golub
  * @author Alexandr Laktionov
  */
-public interface TagDao extends GenericDao<Tag, Long> {
+public interface TagService {
 
     Tag findTag(String tagName);
+
     List<TagLine> findTagLinesByTag(Tag tag);
 
 }

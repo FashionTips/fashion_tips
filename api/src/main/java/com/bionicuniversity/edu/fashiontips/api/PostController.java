@@ -1,10 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
-import com.bionicuniversity.edu.fashiontips.entity.Image;
-import com.bionicuniversity.edu.fashiontips.entity.Post;
-import com.bionicuniversity.edu.fashiontips.entity.User;
-import com.bionicuniversity.edu.fashiontips.service.PostService;
-import com.bionicuniversity.edu.fashiontips.service.UserService;
+import com.bionicuniversity.edu.fashiontips.entity.*;
+import com.bionicuniversity.edu.fashiontips.service.*;
 import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +31,15 @@ public class PostController {
     @Inject
     private UserService userService;
 
+    @Inject
+    private TagLineService tagLineService;
+
+    @Inject
+    private ClothesService clothesService;
+
+    @Inject
+    private TagService tagService;
+
 
     /**
      * Returns post from database by given id. Or throws {@code PostNotFoundException} if there is not post
@@ -48,25 +54,39 @@ public class PostController {
         return ImageUtil.createUrlNameForPost(postService.get(id, user));
     }
 
-
     /**
-     * Without parameters returned all posts.
      *
      * @param login   optional parameter. If present then returned list user's (login = "login") posts
      * @param hashTag optional parameter. If present then returned list of posts with this hashtag
+     * @param clothes optional parameter. If present then returned list of posts with this clothes's tag
+     * @param tags    optional parameter. If present then returned list of posts with these tags*
      * @return list of all posts with such parameters
      */
     @RequestMapping(method = RequestMethod.GET)
     public List<Post> findPosts(@RequestParam(value = "author", required = false) String login,
                                 @RequestParam(value = "hashtag", required = false) String hashTag,
+                                @RequestParam(value = "clothes", required = false) String clothes,
+                                @RequestParam(value = "tags", required = false) String tags,
                                 Principal principal) {
         User user = principal == null ? null : userService.findOne(principal.getName());
         List<Post> posts;
+        Clothes clothesTag = null;
+        Tag tag = null;
+        if (clothes != null)
+            clothesTag = clothesService.findClothesByName(clothes);
+
+        if (tags != null)
+            tag = tagService.findTag(tags);
+
         if (login != null) {
             posts = postService.findAllByUser(userService.findOne(login), user);
         } else if (hashTag != null) {
             posts = postService.findAllByHashTag(hashTag, user);
-        } else  {
+        } else if (clothesTag != null) {
+            posts = postService.findAllByClothes(clothesTag, user);
+        } else if (tag != null) {
+            posts = tagLineService.findAllByTag(tag, user);
+        } else {
             posts = postService.findAll(user);
         }
         return ImageUtil.createUrlNameForPosts(posts);

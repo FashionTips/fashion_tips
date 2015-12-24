@@ -1,20 +1,17 @@
 package com.bionicuniversity.edu.fashiontips.service.impl;
 
-import com.bionicuniversity.edu.fashiontips.dao.ClothesDao;
-import com.bionicuniversity.edu.fashiontips.dao.PostDao;
-import com.bionicuniversity.edu.fashiontips.dao.TagLineDao;
-import com.bionicuniversity.edu.fashiontips.dao.TagTypeDao;
-import com.bionicuniversity.edu.fashiontips.entity.Clothes;
-import com.bionicuniversity.edu.fashiontips.entity.Post;
-import com.bionicuniversity.edu.fashiontips.entity.TagLine;
-import com.bionicuniversity.edu.fashiontips.entity.TagType;
+import com.bionicuniversity.edu.fashiontips.dao.*;
+import com.bionicuniversity.edu.fashiontips.entity.*;
 import com.bionicuniversity.edu.fashiontips.service.TagLineService;
+import com.bionicuniversity.edu.fashiontips.service.util.PostUtil;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Named
 public class TagLineServiceImpl implements TagLineService {
@@ -27,6 +24,9 @@ public class TagLineServiceImpl implements TagLineService {
 
     @Inject
     private TagTypeDao tagTypeDao;
+
+    @Inject
+    private TagDao tagDao;
 
     @Inject
     private PostDao postDao;
@@ -61,5 +61,14 @@ public class TagLineServiceImpl implements TagLineService {
         } else {
             throw new NotFoundException(String.format("TagLine not found by id=%d", id));
         }
+    }
+
+    @Override
+    @Transactional
+    public List<Post> findAllByTag(Tag tag, User loggedUser) {
+        List<Post> posts = tagDao.findTagLinesByTag(tag).parallelStream().flatMap( tagTag ->
+                Arrays.asList(tagTag.getPost()).stream()).distinct().collect(Collectors.toList());
+        PostUtil.normalizeForClient(posts, loggedUser);
+        return posts;
     }
 }
