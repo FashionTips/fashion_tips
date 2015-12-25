@@ -50,7 +50,6 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
     @Override
     @PreAuthorize("#user.login == authentication.name")
     public void update(@P("user") User user) {
-        encodePassword(user);
         super.update(user);
     }
 
@@ -58,7 +57,10 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
     public void update(Long id, User userData) {
         User user = get(id);
         String password = userData.getPassword();
-        if (password != null) user.setPassword(password);
+        if (password != null) {
+            user.setPassword(password);
+            encodePassword(user);
+        }
         Image avatar = userData.getAvatar();
         if (avatar != null) user.setAvatar(avatar);
         String firstName = userData.getFirstName();

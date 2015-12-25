@@ -5,7 +5,7 @@
                 <span class="label label-info">{{ post.category }}</span>
             </div>
             <div class="col-md-6">
-                <div class="pull-right" data-ng-show="post.author === username">
+                <div class="pull-right" data-ng-show="post.author === username()">
                     <button type="button" class="btn btn-xs btn-warning" data-toggle="modal"
                             data-target="#postEditModal" data-ng-click="showEditPostForm()">
                         <span class="glyphicon glyphicon-pencil"></span>&nbsp;

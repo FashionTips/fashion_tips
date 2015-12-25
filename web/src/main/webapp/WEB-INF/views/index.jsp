@@ -29,6 +29,8 @@
     <script src="/scripts/services/SessionService.js"></script>
     <script src="/scripts/services/AuthService.js"></script>
     <script src="/scripts/services/PostService.js"></script>
+    <script src="/scripts/services/UserService.js"></script>
+    <script src="/scripts/services/DictionaryService.js"></script>
     <script src="/scripts/controllers/MainController.js"></script>
     <script src="/scripts/controllers/ProfileController.js"></script>
     <script src="/scripts/controllers/PostController.js"></script>
@@ -70,12 +72,12 @@
                                 <li>
                                     <div class="media">
                                         <div class="media-left">
-                                            <img class="media-object" src="http://placehold.it/64x64"
+                                            <img class="media-object" height="64px" data-ng-src="{{ avatarUrl || 'http://placehold.it/64x64' }}"
                                                  alt="Avatar {{ username }}">
                                         </div>
                                         <div class="media-body">
                                             <h4 class="media-heading">{{ username }}</h4>
-                                            <a href="/profile" target="_self">Profile</a>
+                                            <a href="/user/{{ username }}" target="_self">Profile</a>
                                         </div>
                                     </div>
                                 </li>

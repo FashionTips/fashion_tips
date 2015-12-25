@@ -22,9 +22,14 @@
         <put-attribute name="body" value="/WEB-INF/views/components/register.jsp"/>
     </definition>
 
-    <definition name="profile" extends="common">
-        <put-attribute name="title" value="Profile"/>
+    <definition name="user.profile" extends="common">
+        <put-attribute name="title" value="User"/>
         <put-attribute name="body" value="/WEB-INF/views/components/profile.jsp"/>
+    </definition>
+
+    <definition name="edit.user.profile" extends="common">
+        <put-attribute name="title" value="Edit Profile"/>
+        <put-attribute name="body" value="/WEB-INF/views/components/editProfile.jsp"/>
     </definition>
 
     <definition name="post.add" extends="common">

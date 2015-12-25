@@ -1,5 +1,5 @@
-var MenuController = ['$scope', 'sessionService', 'authService',
-    function ($scope, sessionService, authService) {
+var MenuController = ['$scope', 'sessionService', 'authService', '$location', 'userService',
+    function ($scope, sessionService, authService, $location, userService) {
 
         /* Define variable for credential object which will be filled from inputs in Login and Register form */
         $scope.credentials = {};
@@ -26,7 +26,13 @@ var MenuController = ['$scope', 'sessionService', 'authService',
                 $scope.$watch(function () {
                     $scope.username = sessionService.getUsername();
                 });
-                window.location.href = "/profile";
+
+                /* if user is on register or login page - redirect him */
+                if (($location.absUrl().indexOf('/login') > -1 || $location.absUrl().indexOf('/register') > -1)
+                    && $location.absUrl().indexOf('/user') === -1) {
+                    window.location.href = "/";
+                }
+
             }, function () {
                 $scope.showLoginErrorMessage = true;
             });
@@ -47,20 +53,16 @@ var MenuController = ['$scope', 'sessionService', 'authService',
          */
         $scope.register = function () {
 
-            authService.register($scope.credentials.username, $scope.credentials.email, $scope.credentials.password)
+            authService.register($scope.credentials.username, $scope.credentials.email,
+                $scope.credentials.password, $scope.credentials.gender)
                 .then(function () {
                     $scope.showRegisterErrorMessage = false;
                     angular.element("#successRegistrationModal").modal();
                     $scope.credentials = {};
-            }, function (data) {
+                }, function (data) {
                     $scope.showRegisterErrorMessage = true;
                     $scope.registerFormValidationErrors = data.message;
-            });
-        };
-
-
-        $scope.isAvailable = function () {
-            return true;
+                });
         };
 
         /**
@@ -69,4 +71,10 @@ var MenuController = ['$scope', 'sessionService', 'authService',
         $scope.processSuccessRegistration = function () {
             window.location.href = "/";
         };
+
+        if($scope.loggedIn()) {
+            userService.getByUsername($scope.username, function(response) {
+                $scope.avatarUrl = response.avatar.imgUrl;
+            })
+        }
     }];

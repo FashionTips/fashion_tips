@@ -45,12 +45,20 @@ var authService = ['$http', 'sessionService', '$q', function ($http, sessionServ
         return result.promise;
     };
 
-
-    this.register = function (username, email, password) {
+    /**
+     * Register new user.
+     *
+     * @param username
+     * @param email
+     * @param password
+     * @param gender
+     * @returns {d.promise|*|promise}
+     */
+    this.register = function (username, email, password, gender) {
 
         var result = $q.defer();
 
-        $http.post(urlApi + "/users", {login: username, email: email, password: password})
+        $http.post(urlApi + "/users", {login: username, email: email, password: password, gender: gender})
             .then(
                 function () {
                     result.resolve();

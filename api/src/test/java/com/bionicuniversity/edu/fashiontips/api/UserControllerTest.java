@@ -1,6 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
-import com.bionicuniversity.edu.fashiontips.dao.CountryDao;
+import com.bionicuniversity.edu.fashiontips.entity.Country;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -74,9 +74,6 @@ public class UserControllerTest {
 
     @Inject
     private UserService userService;
-
-    @Inject
-    private CountryDao countryDao;
 
     private MockMvc mockMvc;
 
@@ -163,7 +160,9 @@ public class UserControllerTest {
         user.setAboutMe("Some text about me");
         user.setBirthday(LocalDate.of(2000, 5, 23));
         user.setBlogUrl(new URL("https://www.google.com"));
-        user.setCountry(countryDao.getById(1));
+        Country country = new Country();
+        country.setId(1);
+        user.setCountry(country);
         user.setFirstName("John");
         user.setLastName("Gold");
         user.setGender(User.Gender.GUY);
@@ -177,7 +176,6 @@ public class UserControllerTest {
                 .contentType(contentType)
                 .content(json(user))
         )
-                .andDo(print())
                 .andExpect(status().isOk());
     }
 
