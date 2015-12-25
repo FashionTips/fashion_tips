@@ -3,6 +3,7 @@ package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.annotation.Create;
 import com.bionicuniversity.edu.fashiontips.annotation.Update;
+import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,9 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ResponseEntity getUser(@PathVariable Long id) {
         User user = userService.get(id);
+        if(user.getAvatar() != null) {
+            ImageUtil.createUrlName(user.getAvatar());
+        }
         return ResponseEntity.ok(user);
     }
 
@@ -49,6 +53,9 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, value = "/by")
     public ResponseEntity getUserByLogin(@RequestParam(value = "login") String login) {
         User user = userService.findOne(login);
+        if(user.getAvatar() != null) {
+            ImageUtil.createUrlName(user.getAvatar());
+        }
         return ResponseEntity.ok(user);
     }
 
@@ -60,7 +67,6 @@ public class UserController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createUser(@Validated(Create.class) @RequestBody User user) {
-        System.out.println(user);
         User savedUser = userService.save(user);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()

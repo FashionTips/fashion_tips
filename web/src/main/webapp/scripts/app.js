@@ -18,6 +18,8 @@ app.config(['$routeProvider', '$httpProvider',
 app.service('sessionService', sessionService);
 app.service('authService', authService);
 app.service('postService', postService);
+app.service('userService', userService);
+app.service('dictionaryService', dictionaryService);
 
 /* Controllers */
 app.controller('MenuController', MenuController);

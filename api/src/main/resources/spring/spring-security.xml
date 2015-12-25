@@ -26,6 +26,9 @@
         <!-- Let everybody can register a new user -->
         <intercept-url pattern="/users" method="POST" access="permitAll"/>
 
+        <!-- Let everybody can get dictionary data -->
+        <intercept-url pattern="/dictionary/**" method="GET" access="permitAll"/>
+
         <!-- Only authenticated users can access the api methods -->
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <logout success-handler-ref="logoutSuccessHandler"/>

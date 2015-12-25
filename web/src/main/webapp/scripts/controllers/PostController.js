@@ -10,7 +10,9 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
         }
 
         /* username of authenticated user */
-        $scope.username = sessionService.getUsername();
+        $scope.username = function () {
+            return sessionService.getUsername();
+        };
 
         /* data from post form */
         $scope.postForm = {};

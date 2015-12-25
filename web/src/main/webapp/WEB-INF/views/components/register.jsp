@@ -55,6 +55,25 @@
                         </div>
                     </div>
 
+                    <%-- Gender --%>
+                    <div class="form-group" data-ng-class="{ 'has-error': registerForm.gender.$invalid && registerForm.gender.$dirty,
+                          'has-success': registerForm.gender.$valid && registerForm.gender.$dirty}">
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input type="radio" name="gender" value="GIRL" data-ng-model="credentials.gender"
+                                       required>Female
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="gender" value="GUY" data-ng-model="credentials.gender"
+                                       required>Male
+                            </label>
+                            <div data-ng-messages="registerForm.gender.$error" role="alert"
+                                 data-ng-show="registerForm.gender.$dirty">
+                                <div data-ng-messages-include="messages.html"></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <%-- Password --%>
                     <div class="form-group has-feedback"
                          data-ng-class="{ 'has-error': registerForm.password.$invalid && registerForm.password.$dirty,
