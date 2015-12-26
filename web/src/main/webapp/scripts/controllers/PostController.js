@@ -17,6 +17,7 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
         /* data from post form */
         $scope.postForm = {};
         $scope.postForm.images = [];
+        $scope.postForm.tagLines = [];
         $scope.newPostUrl = undefined;
         $scope.showAddPostErrorMessage = false;
 
@@ -77,6 +78,15 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
                 }
             }
                 $scope.postForm.images.splice(index, 1);
+        };
+
+        $scope.removeTagLine = function (tagLine) {
+            for (var i = 0; i < $scope.postForm.tagLines.length; i++) {
+                if (tagLine === $scope.postForm.tagLines[i]) {
+                    $scope.postForm.tagLines.splice(i, 1);
+                    break;
+                }
+            }
         };
 
         /**

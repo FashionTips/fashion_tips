@@ -49,6 +49,17 @@
                 </div>
             </div>
         </div>
+
+        <!--Tags -->
+        <div class="form-group">
+            <span data-ng-repeat="tagLine in post.tagLines">
+                <strong>{{tagLine.clothes.name}}</strong> -
+                <span data-ng-repeat="tag in tagLine.tags">
+                   <i>{{tag.tagType.type}}</i>:{{tag.value}}
+                </span>
+                <br/>
+            </span>
+        </div>
         <hr/>
         <p data-ng-bind-html="(post.textMessage | hashtag)"></p>
     </div>

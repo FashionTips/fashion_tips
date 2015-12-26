@@ -67,7 +67,43 @@
                         </div>
                     </div>
                 </div>
-                    <input type="submit" class="btn btn-success" data-ng-disabled="addPostForm.$invalid"
+
+                <%-- Tags --%>
+                <div class="form-group">
+                    <label>Tags</label>
+                    <div>
+                        <p data-ng-hide="postForm.tagLines.length !== 0">No tags</p>
+                        <span data-ng-repeat="tagLine in postForm.tagLines">
+                            <strong>{{tagLine.clothes.name}}</strong> -
+                            <span data-ng-repeat="tag in tagLine.tags">
+                               <i>{{tag.tagType.type}}</i>:{{tag.value}}
+                            </span>
+                            <a href="#" data-ng-click="removeTagLine(tagLine)"><span class="glyphicon glyphicon-remove"
+                                                                                    aria-hidden="true"></span></a>
+                            <br/>
+                        </span>
+                    </div>
+                </div>
+
+                <%-- Add Tags section --%>
+                <div data-ng-controller="TagController" class="form-group">
+                    <button type="button" class="btn btn-info btn-sm" data-ng-hide="tagFormActive" data-ng-click="tagFormActive = true">Add tag</button>
+                    <div data-ng-show="tagFormActive">
+                        <label>Add Tag</label>
+                        <div>
+                            <select data-ng-model="currentTagLine.clothes" data-ng-options="clothesItem.name for clothesItem in clothes"></select>
+                            <table>
+                                <tr data-ng-repeat="tagType in tagTypes">
+                                    <td><input type="checkbox" data-ng-model="isActive" data-ng-click="activateTag(this)" data-ng-disabled="!currentTagLine.clothes">{{tagType.type}}</td>
+                                    <td><input type="text" data-ng-model="tagText" data-ng-change="setTagText(this)" data-ng-disabled="!isActive"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <button type="button" data-ng-click="addTagLineToPost()" data-ng-disabled="!currentTagLine.clothes" class="btn btn-info btn-sm">Add</button>
+                    </div>
+                </div>
+
+                <input type="submit" class="btn btn-success" data-ng-disabled="addPostForm.$invalid"
                            value="Create">
             </form>
         </div>
