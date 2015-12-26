@@ -3,6 +3,7 @@ package com.bionicuniversity.edu.fashiontips.web.controllers;
 import com.bionicuniversity.edu.fashiontips.web.config.MvcConfig;
 import com.bionicuniversity.edu.fashiontips.web.config.WebSecurityConfig;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

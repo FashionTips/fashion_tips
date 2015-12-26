@@ -30,8 +30,4 @@ public class TagServiceImpl implements TagService {
         return tag;
     }
 
-    @Override
-    public List<TagLine> findTagLinesByTag(Tag tag) {
-        return tagDao.findTagLinesByTag(tag);
-    }
 }

@@ -1,9 +1,9 @@
 package com.bionicuniversity.edu.fashiontips.service.impl;
 
 import com.bionicuniversity.edu.fashiontips.dao.PostDao;
-import com.bionicuniversity.edu.fashiontips.dao.TagLineDao;
 import com.bionicuniversity.edu.fashiontips.entity.Clothes;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
+import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.util.PostUtil;
@@ -11,7 +11,6 @@ import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Arrays;
 import java.util.List;
@@ -27,9 +26,6 @@ import java.util.stream.Collectors;
  */
 @Named
 public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements PostService {
-
-    @Inject
-    private TagLineDao tagLineDao;
 
     @Override
     @Transactional
@@ -61,9 +57,16 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     @Override
     @Transactional
     public List<Post> findAllByClothes(Clothes clothesTag, User loggedUser) {
-        List<Post> posts =  tagLineDao.getAllByClothes(clothesTag).stream().flatMap( tagLine ->
-            Arrays.asList(tagLine.getPost()).stream()).distinct().collect(Collectors.toList());
+        List<Post> posts = ((PostDao)repository).getAllByClothes(clothesTag);
         PostUtil.normalizeForClient(posts,loggedUser);
+        return posts;
+    }
+
+    @Override
+    @Transactional
+    public List<Post> findAllByTag(Tag tag, User loggedUser) {
+        List<Post> posts = ((PostDao)repository).getAllByTag(tag);
+        PostUtil.normalizeForClient(posts, loggedUser);
         return posts;
     }
 

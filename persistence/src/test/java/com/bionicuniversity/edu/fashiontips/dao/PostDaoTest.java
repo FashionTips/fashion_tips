@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
 import com.bionicuniversity.edu.fashiontips.entity.Post;
+import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -37,6 +38,9 @@ public class PostDaoTest {
 
     @Inject
     private PostDao postDao;
+
+    @Inject
+    private TagDao tagDao;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -110,5 +114,13 @@ public class PostDaoTest {
         thrown.expect(ConstraintViolationException.class);
         postDao.save(NOT_VALID_POST);
         fail("Should not save not valid entities.");
+    }
+
+    @Test
+    @Transactional
+    public void testGetAllByTag() {
+        Tag tag = tagDao.findTag("Finch");
+        List<Post> posts = postDao.getAllByTag(tag);
+        POST_MATCHER.assertListEquals(Arrays.asList(POST1), posts);
     }
 }

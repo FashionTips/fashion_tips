@@ -62,13 +62,4 @@ public class TagLineServiceImpl implements TagLineService {
             throw new NotFoundException(String.format("TagLine not found by id=%d", id));
         }
     }
-
-    @Override
-    @Transactional
-    public List<Post> findAllByTag(Tag tag, User loggedUser) {
-        List<Post> posts = tagDao.findTagLinesByTag(tag).parallelStream().flatMap( tagTag ->
-                Arrays.asList(tagTag.getPost()).stream()).distinct().collect(Collectors.toList());
-        PostUtil.normalizeForClient(posts, loggedUser);
-        return posts;
-    }
 }

@@ -32,9 +32,6 @@ public class PostController {
     private UserService userService;
 
     @Inject
-    private TagLineService tagLineService;
-
-    @Inject
     private ClothesService clothesService;
 
     @Inject
@@ -82,10 +79,10 @@ public class PostController {
             posts = postService.findAllByUser(userService.findOne(login), user);
         } else if (hashTag != null) {
             posts = postService.findAllByHashTag(hashTag, user);
-        } else if (clothesTag != null) {
+        } else if (clothes != null) {
             posts = postService.findAllByClothes(clothesTag, user);
-        } else if (tag != null) {
-            posts = tagLineService.findAllByTag(tag, user);
+        } else if (tags != null) {
+            posts = postService.findAllByTag(tag, user);
         } else {
             posts = postService.findAll(user);
         }

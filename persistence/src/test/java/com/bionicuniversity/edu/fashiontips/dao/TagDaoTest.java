@@ -1,7 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
 import com.bionicuniversity.edu.fashiontips.entity.Tag;
-import com.bionicuniversity.edu.fashiontips.entity.TagParameter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
@@ -66,5 +65,12 @@ public class TagDaoTest {
         tagDao.delete(2L);
         List<Tag> testList = tagDao.getAll();
         TAG_MATCHER.assertListEquals(LIST_IF_DELETE_SCND_TAG, testList);
+    }
+
+    @Test
+    @Transactional
+    public void testFindTag() {
+        Tag tag = tagDao.findTag("Finch");
+        TAG_MATCHER.assertEquals(TAG3, tag);
     }
 }

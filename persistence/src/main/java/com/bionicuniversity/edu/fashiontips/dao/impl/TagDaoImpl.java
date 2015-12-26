@@ -25,14 +25,4 @@ public class TagDaoImpl extends GenericDaoImpl<Tag, Long> implements TagDao {
         query.setParameter("name", tagName);
         return query.getSingleResult();
     }
-
-    @Override
-    public List<TagLine> findTagLinesByTag(Tag tag) {
-        Query query = em.createNativeQuery("SELECT DISTINCT tgline.* FROM TAG_LINES tgline " +
-                "INNER JOIN TAGS_TAG_LINES tag_taglines ON tag_taglines.TAG_LINE_ID = tgline.ID " +
-                "INNER JOIN TAGS tags ON tag_taglines.TAG_ID = tags.ID " +
-                "WHERE tags.ID = :tagId", TagLine.class);
-        query.setParameter("tagId", tag.getId());
-        return query.getResultList();
-    }
 }

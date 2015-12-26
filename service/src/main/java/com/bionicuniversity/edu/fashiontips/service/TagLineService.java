@@ -19,6 +19,4 @@ public interface TagLineService {
 
     TagLine get(long id);
 
-    List<Post> findAllByTag(Tag tag, User user);
-
 }

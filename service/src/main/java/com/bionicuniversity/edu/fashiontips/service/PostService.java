@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.service;
 
 import com.bionicuniversity.edu.fashiontips.entity.Clothes;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
+import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public interface PostService extends GenericService<Post, Long> {
     List<Post> findAllByHashTag(String hashTag, User loggedUser);
     List<Post> findAll(User loggedUser);
     List<Post> findAllByClothes(Clothes clothesTag, User user);
+    List<Post> findAllByTag(Tag tag, User user);
 
     /**
      * Handles requests for changing "like" status of post.
