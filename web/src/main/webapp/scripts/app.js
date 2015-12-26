@@ -20,12 +20,14 @@ app.service('authService', authService);
 app.service('postService', postService);
 app.service('userService', userService);
 app.service('dictionaryService', dictionaryService);
+app.service('tagService', tagService);
 
 /* Controllers */
 app.controller('MenuController', MenuController);
 app.controller('MainController', MainController);
 app.controller('PostController', PostController);
 app.controller('ProfileController', ProfileController);
+app.controller('TagController', TagController);
 
 /* Filters */
 app.filter("hashtag", [function () {

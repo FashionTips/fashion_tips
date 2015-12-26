@@ -31,10 +31,12 @@
     <script src="/scripts/services/PostService.js"></script>
     <script src="/scripts/services/UserService.js"></script>
     <script src="/scripts/services/DictionaryService.js"></script>
+    <script src="/scripts/services/TagService.js"></script>
     <script src="/scripts/controllers/MainController.js"></script>
     <script src="/scripts/controllers/ProfileController.js"></script>
     <script src="/scripts/controllers/PostController.js"></script>
     <script src="/scripts/controllers/MenuController.js"></script>
+    <script src="/scripts/controllers/TagController.js"></script>
     <script src="/scripts/app.js"></script>
 </head>
 <body data-ng-app="fashion-tips-web" data-ng-strict-di>
