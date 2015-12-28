@@ -52,4 +52,10 @@
             </div>
         </div>
     </div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#">Recent Posts</a></li>
+    </ul>
+    <div class="list-group">
+        <a href="/post/{{post.id}}" class="list-group-item" data-ng-repeat="post in posts">{{post.title}} - {{post.created | date:"dd MMM yyyy 'at' hh:mm"}}</a>
+    </div>
 </div>

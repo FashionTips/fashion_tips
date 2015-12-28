@@ -59,7 +59,7 @@ public class User extends BaseEntity<Long> {
     @Column(name = "created", nullable = false, insertable = false)
     private LocalDateTime created;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_images",
             joinColumns = @JoinColumn(name = "user_id"),

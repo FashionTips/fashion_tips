@@ -45,7 +45,12 @@ public class PostController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Post getPost(@PathVariable long id, Principal principal) {
         User user = principal == null ? null : userService.findOne(principal.getName());
-        return ImageUtil.createUrlNameForPost(postService.get(id, user));
+        Post post = postService.get(id, user);
+        ImageUtil.createUrlNameForPost(post);
+        if (post.getComments() != null) {
+            post.getComments().stream().forEach(comment -> ImageUtil.createUrlNameForUserAvatar(comment.getUser()));
+        }
+        return post;
     }
 
 

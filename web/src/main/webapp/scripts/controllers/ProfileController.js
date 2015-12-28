@@ -1,5 +1,5 @@
-var ProfileController = ['$scope', 'sessionService', '$http', 'userService', '$location', 'dictionaryService',
-    function ($scope, sessionService, $http, userService, $location, dictionaryService) {
+var ProfileController = ['$scope', 'sessionService', '$http', 'userService', '$location', 'dictionaryService', 'postService',
+    function ($scope, sessionService, $http, userService, $location, dictionaryService, postService) {
 
         $scope.user = {};
         $scope.countries = [];
@@ -75,4 +75,9 @@ var ProfileController = ['$scope', 'sessionService', '$http', 'userService', '$l
             return Math.abs(ageDate.getUTCFullYear() - 1970);
         };
 
+        /* Load recent user posts for profile page */
+        $scope.userPosts = [];
+        postService.getAll(null, $scope.username()).then(function (data) {
+            $scope.posts = data;
+        });
     }];

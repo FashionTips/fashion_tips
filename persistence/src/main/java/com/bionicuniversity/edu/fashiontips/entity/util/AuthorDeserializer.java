@@ -18,8 +18,6 @@ public class AuthorDeserializer extends JsonDeserializer<User> {
 
     @Override
     public User deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
-        User user = new User();
-        user.setLogin(parser.getValueAsString());
-        return user;
+        return null;
     }
 }

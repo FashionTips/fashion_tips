@@ -3,6 +3,7 @@ package com.bionicuniversity.edu.fashiontips.api.util;
 
 import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
+import com.bionicuniversity.edu.fashiontips.entity.User;
 
 import java.util.List;
 
@@ -37,5 +38,13 @@ public class ImageUtil {
     public static List<Post> createUrlNameForPosts(List<Post> posts) {
         posts.stream().forEach(ImageUtil::createUrlNameForPost);
         return posts;
+    }
+
+    /* Setting imgUrl to user avatars */
+    public static User createUrlNameForUserAvatar(User user) {
+        if (user.getAvatar() != null) {
+            createUrlName(user.getAvatar());
+        }
+        return user;
     }
 }

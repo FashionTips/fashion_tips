@@ -5,7 +5,7 @@
                 <span class="label label-info">{{ post.category }}</span>
             </div>
             <div class="col-md-6">
-                <div class="pull-right" data-ng-show="post.author === username()">
+                <div class="pull-right" data-ng-show="post.author.login === username()">
                     <button type="button" class="btn btn-xs btn-warning" data-toggle="modal"
                             data-target="#postEditModal" data-ng-click="showEditPostForm()">
                         <span class="glyphicon glyphicon-pencil"></span>&nbsp;
@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <h2><a href="/post/{{ post.id }}">{{ post.title }}</a>
-                        <small>by {{ post.author }}</small>
+                        <small>by {{ post.author.login }}</small>
                     </h2>
                 </div>
                 <div class="col-md-4">
@@ -144,7 +144,7 @@
                         <button type="button" data-ng-click="uploadImages()">Upload</button>
                     </div>
                     <div class="row">
-                        <div class="col-lg-2" data-ng-repeat="image in postForm.images">
+                        <div class="col-sm-2" data-ng-repeat="image in postForm.images">
                             <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}"/>
                             <a href="#" data-ng-click="removeImage(image.id)"><span
                                     class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>

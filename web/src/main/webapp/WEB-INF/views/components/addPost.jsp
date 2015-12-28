@@ -60,7 +60,7 @@
                         <button type="button" data-ng-click="uploadImages()">Upload</button>
                     </div>
                     <div class="row">
-                        <div class="col-lg-2" data-ng-repeat="image in postForm.images">
+                        <div class="col-sm-2" data-ng-repeat="image in postForm.images">
                             <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}"/>
                             <a href="#" data-ng-click="removeImage(image.id)"><span class="glyphicon glyphicon-remove"
                                                                                     aria-hidden="true"></span></a>

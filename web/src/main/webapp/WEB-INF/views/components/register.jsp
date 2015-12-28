@@ -61,11 +61,11 @@
                         <div class="radio">
                             <label class="radio-inline">
                                 <input type="radio" name="gender" value="GIRL" data-ng-model="credentials.gender"
-                                       required>Female
+                                       required>Girl
                             </label>
                             <label class="radio-inline">
                                 <input type="radio" name="gender" value="GUY" data-ng-model="credentials.gender"
-                                       required>Male
+                                       required>Guy
                             </label>
                             <div data-ng-messages="registerForm.gender.$error" role="alert"
                                  data-ng-show="registerForm.gender.$dirty">
