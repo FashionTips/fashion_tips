@@ -102,7 +102,7 @@ public class PostCommentControllerTest {
                 .andExpect(jsonPath("$.id", is(notNullValue())))
                 .andExpect(jsonPath("$.created", is(notNullValue())))
                 .andExpect(jsonPath("$.text", is(testComment.getText())))
-                .andExpect(jsonPath("$.author", is(testComment.getUser().getLogin())));
+                .andExpect(jsonPath("$.author.login", is(testComment.getUser().getLogin())));
     }
 
     @Test
@@ -116,6 +116,6 @@ public class PostCommentControllerTest {
                 .andExpect(jsonPath("$[0].created", is(
                         comment1.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
                 )
-                .andExpect(jsonPath("$[0].author", is(comment1.getUser().getLogin())));
+                .andExpect(jsonPath("$[0].author.login", is(comment1.getUser().getLogin())));
     }
 }
