@@ -1,5 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
+import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
 import com.bionicuniversity.edu.fashiontips.service.CommentService;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.inject.Inject;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Controller to deal with request concerning post comments.
@@ -46,6 +48,7 @@ public class PostCommentController {
     public ResponseEntity save(@RequestBody Comment comment, @PathVariable long postId, Principal principal) {
         comment.setUser(userService.findOne(principal.getName()));
         Comment savedComment = commentService.save(comment, postId);
+        ImageUtil.createUrlNameForUserAvatar(savedComment.getUser());
 
         return ResponseEntity
                 .created(ServletUriComponentsBuilder
@@ -64,6 +67,8 @@ public class PostCommentController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public Collection<Comment> getAll(@PathVariable long postId) {
-        return commentService.findAllByPostId(postId);
+        List<Comment> comments = commentService.findAllByPostId(postId);
+        comments.stream().forEach(comment -> ImageUtil.createUrlNameForUserAvatar(comment.getUser()));
+        return comments;
     }
 }

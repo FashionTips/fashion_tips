@@ -18,7 +18,10 @@ public class AuthorSerializer extends JsonSerializer<User> {
 
     @Override
     public void serialize(User user, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        gen.writeString(user.getLogin());
+        gen.writeStartObject();
+        gen.writeObjectField("login", user.getLogin());
+        gen.writeObjectField("avatar", user.getAvatar() == null ? null : user.getAvatar().getImgUrl());
+        gen.writeEndObject();
     }
 
 }

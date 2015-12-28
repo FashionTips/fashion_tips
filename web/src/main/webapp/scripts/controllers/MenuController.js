@@ -74,7 +74,7 @@ var MenuController = ['$scope', 'sessionService', 'authService', '$location', 'u
 
         if($scope.loggedIn()) {
             userService.getByUsername($scope.username, function(response) {
-                $scope.avatarUrl = response.avatar.imgUrl;
+                $scope.avatarUrl = response.avatar ? response.avatar.imgUrl : null;
             })
         }
     }];

@@ -12,11 +12,11 @@
                 <div class="list-group-item">
                     <div class="media">
                         <div class="media-left">
-                            <img class="media-object" src="http://placehold.it/64x64" alt="Avatar">
+                            <img data-ng-src="{{ comment.author.avatar || 'http://placehold.it/64x64' }}" height="64" class="media-object"/>
                         </div>
                         <div class="media-body">
                             <div class="media-heading">
-                                <p class="col-md-6">{{ comment.author }}</p>
+                                <p class="col-md-6">{{ comment.author.login }}</p>
                                 <p class="col-md-6 text-right">{{ comment.created | date:'medium' }}</p>
                             </div>
                             {{ comment.text }}
