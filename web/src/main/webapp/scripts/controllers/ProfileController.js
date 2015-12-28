@@ -77,7 +77,7 @@ var ProfileController = ['$scope', 'sessionService', '$http', 'userService', '$l
 
         /* Load recent user posts for profile page */
         $scope.userPosts = [];
-        postService.getAll(null, $scope.username()).then(function (data) {
-            $scope.posts = data;
+        postService.getAll(null, userId).then(function (data) {
+            $scope.userPosts = data;
         });
     }];
