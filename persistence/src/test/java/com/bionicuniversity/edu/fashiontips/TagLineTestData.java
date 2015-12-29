@@ -1,19 +1,13 @@
 package com.bionicuniversity.edu.fashiontips;
 
 import com.bionicuniversity.edu.fashiontips.entity.Clothes;
-import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import com.bionicuniversity.edu.fashiontips.entity.TagLine;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static com.bionicuniversity.edu.fashiontips.PostAndCommentTestData.NEW_POST_AFTER_SAVE;
-import static com.bionicuniversity.edu.fashiontips.PostAndCommentTestData.NEW_POST_BEFORE_SAVE;
-import static com.bionicuniversity.edu.fashiontips.PostAndCommentTestData.POST2;
+import static com.bionicuniversity.edu.fashiontips.PostAndCommentTestData.*;
 import static com.bionicuniversity.edu.fashiontips.TagTestData.*;
 
 /**
@@ -24,9 +18,9 @@ import static com.bionicuniversity.edu.fashiontips.TagTestData.*;
 public class TagLineTestData {
     public static final ModelMatcher<TagLine, String> TAG_LINE_MATCHER = new ModelMatcher<>(TagLine::toString);
 
-    public static final Clothes CLOTHES1 = new Clothes(3L, "t-shirt");
-    public static final Clothes CLOTHES2 = new Clothes(2L, "scarf");
-    public static final Clothes CLOTHES3 = new Clothes(4L, "dress");
+    public static final Clothes CLOTHES1 = new Clothes(3L, "Dresses");
+    public static final Clothes CLOTHES2 = new Clothes(2L, "Cardigans");
+    public static final Clothes CLOTHES3 = new Clothes(4L, "Intimates");
 
     public static final TagLine TAG_LINE1 = new TagLine(1L, null, CLOTHES1, Arrays.asList(TAG1, TAG2, TAG3));
     public static final TagLine TAG_LINE2 = new TagLine(2L, null, CLOTHES2, new ArrayList<>());

@@ -274,10 +274,46 @@ INSERT INTO post_user_likes (post_id, user_id) VALUES (2,3);
 INSERT INTO post_user_likes (post_id, user_id) VALUES (3,1);
 INSERT INTO post_user_likes (post_id, user_id) VALUES (3,2);
 
-INSERT INTO clothes (name) VALUES ('hat');
-INSERT INTO clothes (name) VALUES ('scarf');
-INSERT INTO clothes (name) VALUES ('t-shirt');
-INSERT INTO clothes (name) VALUES ('dress');
+INSERT INTO clothes (name) VALUES
+  ('Blazers'),
+  ('Cardigans'),
+  ('Dresses'),
+  ('Intimates'),
+  ('Jeans'),
+  ('One-Pieces'),
+  ('Outerwear'),
+  ('Pants'),
+  ('Shirts'),
+  ('Shorts'),
+  ('Skirts'),
+  ('Suits'),
+  ('Sweaters'),
+  ('Swim'),
+  ('Tops'),
+  ('Vests'),
+  ('Boots'),
+  ('Dress Shoes'),
+  ('Flats'),
+  ('Heels'),
+  ('Platforms'),
+  ('Sandals'),
+  ('Sneakers'),
+  ('Wedges'),
+  ('Bags'),
+  ('Belts'),
+  ('Cufflinks'),
+  ('Eyewear'),
+  ('Gloves'),
+  ('Hats'),
+  ('Jewelry'),
+  ('Legwear'),
+  ('Scarves'),
+  ('Socks'),
+  ('Suspenders'),
+  ('Ties'),
+  ('Umbrellas'),
+  ('Wallets'),
+  ('Watches');
 
 INSERT INTO tag_lines (POST_ID, CLOTHES_ID) VALUES (1,3);
 INSERT INTO tag_lines (POST_ID, CLOTHES_ID) VALUES (1,2);
