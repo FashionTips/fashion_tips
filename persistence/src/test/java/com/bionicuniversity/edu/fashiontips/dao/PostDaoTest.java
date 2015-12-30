@@ -15,12 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.bionicuniversity.edu.fashiontips.PostAndCommentTestData.*;
 import static com.bionicuniversity.edu.fashiontips.UserTestData.USER3;
 import static org.junit.Assert.fail;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.IGNORE_DEFAULTS;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.LENIENT_ORDER;
 
 /**
  * Class for testing PostDao
@@ -45,11 +47,11 @@ public class PostDaoTest {
     public void testSavePost() {
         Post testPost = postDao.save(POST_MATCHER.deepClone(NEW_POST_BEFORE_SAVE));
         /*Check that the method Save returns correct value */
-        POST_MATCHER.assertEquals(NEW_POST_AFTER_SAVE, testPost);
+        assertReflectionEquals(NEW_POST_AFTER_SAVE, testPost, IGNORE_DEFAULTS);
 
         List<Post> testList = postDao.getAll();
         /*Check that the new Post added*/
-        POST_MATCHER.assertListEquals(LIST_WITH_NEW_POST, testList);
+        assertReflectionEquals(LIST_WITH_NEW_POST, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
@@ -60,10 +62,10 @@ public class PostDaoTest {
         postDao.save(testPost);
         testPost = postDao.getById(1L);
 
-        POST_MATCHER.assertEquals(UPDATE_POST1, testPost);
+        assertReflectionEquals(UPDATE_POST1, testPost, IGNORE_DEFAULTS);
 
         List<Post> testList = postDao.getAll();
-        POST_MATCHER.assertListEquals(LIST_IF_UPDATE_FIRST_POST, testList);
+        assertReflectionEquals(LIST_IF_UPDATE_FIRST_POST, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
@@ -72,37 +74,37 @@ public class PostDaoTest {
         postDao.delete(1L);
         List<Post> testList = postDao.getAll();
 
-        POST_MATCHER.assertListEquals(LIST_IF_DELETE_FIRST_POST, testList);
+        assertReflectionEquals(LIST_IF_DELETE_FIRST_POST, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
     public void testGetPostById() throws IOException, ClassNotFoundException {
         Post testPost = postDao.getById(1L);
-        POST_MATCHER.assertEquals(POST1, testPost);
+        assertReflectionEquals(POST1, testPost, IGNORE_DEFAULTS);
     }
 
     @Test
     public void testGetAll() {
         List<Post> testList = postDao.getAll();
-        POST_MATCHER.assertListEquals(LIST_OF_POSTS, testList);
+        assertReflectionEquals(LIST_OF_POSTS, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
     public void testFindByUser() {
         List<Post> testFindByUser3 = postDao.findByUser(USER3);
-        POST_MATCHER.assertListEquals(FIND_BY_USER3_SORTED_BY_CREATED, testFindByUser3);
+        assertReflectionEquals(FIND_BY_USER3_SORTED_BY_CREATED, testFindByUser3, IGNORE_DEFAULTS);
     }
 
     @Test
     public void testFindByWord() {
         List<Post> testFindByWordAgain = postDao.findByWord("Again");
-        POST_MATCHER.assertListEquals(FIND_BY_WORD_AGAIN_SORTED_BY_CREATED, testFindByWordAgain);
+        assertReflectionEquals(FIND_BY_WORD_AGAIN_SORTED_BY_CREATED, testFindByWordAgain, IGNORE_DEFAULTS);
     }
 
     @Test
     public void testFindAll() {
         List<Post> testFindAll = postDao.findAll();
-        POST_MATCHER.assertListEquals(FIND_ALL_SORTED_BY_CREATED, testFindAll);
+        assertReflectionEquals(FIND_ALL_SORTED_BY_CREATED, testFindAll, IGNORE_DEFAULTS);
     }
 
     @Test

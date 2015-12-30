@@ -15,6 +15,9 @@ import java.util.List;
 
 
 import static com.bionicuniversity.edu.fashiontips.TagLineTestData.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.IGNORE_DEFAULTS;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.LENIENT_ORDER;
 
 /**
  * Class for testing TagLineDao
@@ -35,15 +38,15 @@ public class TagLineDaoTest {
     @Test
     public void testGetAll(){
         List<TagLine> testList = tagLineDao.getAll();
-        TAG_LINE_MATCHER.assertListEquals(LIST_OF_TAG_LINES, testList);
+        assertReflectionEquals(LIST_OF_TAG_LINES, testList,IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
     @Transactional
     public void saveTagLine(){
         TagLine testTagLine = tagLineDao.save(TAG_LINE_MATCHER.deepClone(NEW_TAG_LINE_BEFORE_SAVE));
-        TAG_LINE_MATCHER.assertEquals(NEW_TAG_LINE_AFTER_SAVE, testTagLine);
+        assertReflectionEquals(NEW_TAG_LINE_AFTER_SAVE, testTagLine,IGNORE_DEFAULTS);
         List<TagLine> testListOfTagLines = tagLineDao.getAll();
-        TAG_LINE_MATCHER.assertListEquals(LIST_WITH_NEW_TAG_LINE, testListOfTagLines);
+        assertReflectionEquals(LIST_WITH_NEW_TAG_LINE, testListOfTagLines,IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 }
