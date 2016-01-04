@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <h2><a href="/post/{{ post.id }}">{{ post.title }}</a>
-                        <small>by {{ post.author.login }}</small>
+                        <small>by <a href="/user/{{post.author.login}}">{{ post.author.login }}</a></small>
                     </h2>
                 </div>
                 <div class="col-md-4">

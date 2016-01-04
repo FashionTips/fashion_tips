@@ -75,9 +75,21 @@ var ProfileController = ['$scope', 'sessionService', '$http', 'userService', '$l
             return Math.abs(ageDate.getUTCFullYear() - 1970);
         };
 
+
+
         /* Load recent user posts for profile page */
         $scope.userPosts = [];
-        postService.getAll(null, userId).then(function (data) {
-            $scope.userPosts = data;
-        });
+        var getUserPosts = function() {
+            postService.getAll(null, $scope.user.login).then(function (data) {
+                $scope.userPosts = data;
+            });
+        };
+        /* Temporal workaround !!!! */
+        setTimeout(getUserPosts, 1000);
+
+        /* Temporal workaround !!!! */
+        var getFTUrl = function() {
+            $scope.fashionTipsProfileUrl = "http://" + $location.host() + ":" + $location.port() + "/user/" + $scope.user.id;
+        }
+        setTimeout(getFTUrl, 1000);
     }];

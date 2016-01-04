@@ -24,7 +24,8 @@
                           'has-success': registerForm.username.$valid && registerForm.username.$dirty}">
                         <input class="form-control" type="text" placeholder="Username" name="username"
                                data-ng-model="credentials.username" required autofocus data-minlength="4"
-                               data-maxlength="32" data-username>
+                               data-maxlength="32" data-username data-ng-trim="false"
+                               data-ng-change="credentials.username = credentials.username.split(' ').join('')">
                         <span class="glyphicon form-control-feedback" aria-hidden="true"
                               data-ng-class="{'glyphicon-ok': registerForm.username.$valid && registerForm.username.$dirty,
                               'glyphicon-remove': registerForm.username.$invalid && registerForm.username.$dirty}"></span>

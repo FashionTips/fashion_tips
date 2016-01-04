@@ -32,7 +32,7 @@
                         <tbody>
                         <tr>
                             <th>FT</th>
-                            <td><a href="/user/{{ user.id }}">http://localhost:8081/user/{{ user.id }}</a></td>
+                            <td><a href="/user/{{ user.id }}">{{ fashionTipsProfileUrl }}</a></td>
                         </tr>
                         <tr>
                             <th>Blog</th>
