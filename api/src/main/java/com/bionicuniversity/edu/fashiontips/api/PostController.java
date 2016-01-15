@@ -59,11 +59,13 @@ public class PostController {
      *
      * @param login   optional parameter. If present then returned list user's (login = "login") posts
      * @param hashTag optional parameter. If present then returned list of posts with this hashtag
+     * @param categoryName optional parameter. If present then returned list of posts with preset category
      * @return list of all posts with such parameters
      */
     @RequestMapping(method = RequestMethod.GET)
     public List<Post> findPosts(@RequestParam(value = "author", required = false) String login,
                                 @RequestParam(value = "hashtag", required = false) String hashTag,
+                                @RequestParam(value = "category", required = false) String categoryName,
                                 Principal principal) {
         User user = principal == null ? null : userService.findOne(principal.getName());
         List<Post> posts;
@@ -71,6 +73,8 @@ public class PostController {
             posts = postService.findAllByUser(userService.findOne(login), user);
         } else if (hashTag != null) {
             posts = postService.findAllByHashTag(hashTag, user);
+        } else if (categoryName != null) {
+            posts = postService.findAllByCategory(categoryName, user);
         } else  {
             posts = postService.findAll(user);
         }

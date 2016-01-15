@@ -46,6 +46,14 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
 
     @Override
     @Transactional
+    public List<Post> findAllByCategory(String categoryName, User loggedUser) {
+        List<Post> posts = ((PostDao) repository).findByCategory(categoryName.toUpperCase());
+        PostUtil.normalizeForClient(posts, loggedUser);
+        return posts;
+    }
+
+    @Override
+    @Transactional
     public List<Post> findAll(User loggedUser) {
         List<Post> posts = ((PostDao) repository).findAll();
         PostUtil.normalizeForClient(posts, loggedUser);
@@ -89,7 +97,7 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     @Override
     @Transactional
     public Post save(Post post) {
-        if(post.getTagLines() != null && post.getTagLines().size() > 0){
+        if (post.getTagLines() != null && post.getTagLines().size() > 0) {
             post.getTagLines().stream().forEach(tagLine -> tagLine.setPost(post));
         }
         return super.save(post);

@@ -102,6 +102,14 @@ public class PostDaoTest {
     }
 
     @Test
+    public void testFindByCategory() {
+        List<Post> testFindByCategoryPost = postDao.findByCategory("POST");
+        List<Post> testFindByCategoryQuestion = postDao.findByCategory("QUESTION");
+        assertReflectionEquals(FIND_BY_CATEGORY_POST, testFindByCategoryPost, IGNORE_DEFAULTS);
+        assertReflectionEquals(FIND_BY_CATEGORY_QUESTION, testFindByCategoryQuestion, IGNORE_DEFAULTS);
+    }
+
+    @Test
     public void testFindAll() {
         List<Post> testFindAll = postDao.findAll();
         assertReflectionEquals(FIND_ALL_SORTED_BY_CREATED, testFindAll, IGNORE_DEFAULTS);
