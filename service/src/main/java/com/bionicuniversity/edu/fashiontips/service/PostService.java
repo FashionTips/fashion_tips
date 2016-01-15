@@ -31,6 +31,7 @@ public interface PostService extends GenericService<Post, Long> {
      * @return list of posts
      */
     List<Post> findAllByUser(User user, User loggedUser);
+    List<Post> findAllByCategory(String categoryName, User loggedUser);
     List<Post> findAllByHashTag(String hashTag, User loggedUser);
     List<Post> findAll(User loggedUser);
 

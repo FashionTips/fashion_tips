@@ -35,7 +35,8 @@ public class PostAndCommentTestData {
     public static final List<Post> LIST_OF_POSTS = Arrays.asList(POST1, POST2, POST3, POST4, POST5, POST6);
     public static final List<Post> LIST_WITH_NEW_POST = Arrays.asList(POST1, POST2, POST3, POST4, POST5, POST6, NEW_POST_AFTER_SAVE);
     public static final List<Post> LIST_IF_UPDATE_FIRST_POST = Arrays.asList(UPDATE_POST1, POST2, POST3, POST4, POST5, POST6);
-
+    public static final List<Post> FIND_BY_CATEGORY_QUESTION = Arrays.asList(POST3, POST2, POST1);
+    public static final List<Post> FIND_BY_CATEGORY_POST = Arrays.asList(POST6, POST5, POST4);
     public static final List<Post> FIND_BY_USER3_SORTED_BY_CREATED = Arrays.asList(POST6, POST3);
 
     public static final List<Post> FIND_BY_WORD_AGAIN_SORTED_BY_CREATED = Arrays.asList(POST6, POST5, POST4);

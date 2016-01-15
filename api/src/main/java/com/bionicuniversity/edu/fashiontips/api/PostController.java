@@ -64,6 +64,7 @@ public class PostController {
     @RequestMapping(method = RequestMethod.GET)
     public List<Post> findPosts(@RequestParam(value = "author", required = false) String login,
                                 @RequestParam(value = "hashtag", required = false) String hashTag,
+                                @RequestParam(value = "category", required = false) String categoryName,
                                 Principal principal) {
         User user = principal == null ? null : userService.findOne(principal.getName());
         List<Post> posts;
@@ -71,6 +72,8 @@ public class PostController {
             posts = postService.findAllByUser(userService.findOne(login), user);
         } else if (hashTag != null) {
             posts = postService.findAllByHashTag(hashTag, user);
+        } else if (categoryName != null) {
+            posts = postService.findAllByCategory(categoryName, user);
         } else  {
             posts = postService.findAll(user);
         }

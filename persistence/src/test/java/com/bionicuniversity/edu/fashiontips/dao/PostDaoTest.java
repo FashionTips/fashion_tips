@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.bionicuniversity.edu.fashiontips.PostAndCommentTestData.*;
@@ -97,6 +96,14 @@ public class PostDaoTest {
     public void testFindByWord() {
         List<Post> testFindByWordAgain = postDao.findByWord("Again");
         POST_MATCHER.assertListEquals(FIND_BY_WORD_AGAIN_SORTED_BY_CREATED, testFindByWordAgain);
+    }
+
+    @Test
+    public void testFindByCategory() {
+        List<Post> testFindByCategoryPost = postDao.findByCategory("POST");
+        List<Post> testFindByCategoryQuestion = postDao.findByCategory("QUESTION");
+        POST_MATCHER.assertListEquals(FIND_BY_CATEGORY_POST, testFindByCategoryPost);
+        POST_MATCHER.assertListEquals(FIND_BY_CATEGORY_QUESTION, testFindByCategoryQuestion);
     }
 
     @Test

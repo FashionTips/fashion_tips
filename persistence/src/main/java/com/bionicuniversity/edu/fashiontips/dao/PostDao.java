@@ -27,6 +27,13 @@ public interface PostDao extends GenericDao<Post, Long> {
     List<Post> findByWord(String word);
 
     /**
+     * Returns all posts with category, sorted by time created.
+     *
+     * @param categoryName
+     * @return list of posts
+     */
+    List<Post> findByCategory(String categoryName);
+    /**
      * Returns all posts sorted by time created.
      * @return list of all posts
      */
