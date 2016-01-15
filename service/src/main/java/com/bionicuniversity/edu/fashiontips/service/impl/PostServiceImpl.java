@@ -35,6 +35,14 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
 
     @Override
     @Transactional
+    public List<Post> findAllByCategory(String categoryName, User loggedUser) {
+        List<Post> posts = ((PostDao) repository).findByCategory(categoryName.toUpperCase());
+        PostUtil.normalizeForClient(posts, loggedUser);
+        return posts;
+    }
+
+    @Override
+    @Transactional
     public List<Post> findAllByHashTag(String hashTag, User loggedUser) {
         List<Post> posts = ((PostDao) repository).findByWord(hashTag).stream().filter(post -> {
             String text = post.getTextMessage();
