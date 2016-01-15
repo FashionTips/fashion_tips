@@ -1,5 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
+import com.bionicuniversity.edu.fashiontips.entity.Clothes;
+import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import com.bionicuniversity.edu.fashiontips.entity.TagLine;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
-
 
 import static com.bionicuniversity.edu.fashiontips.TagLineTestData.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
@@ -35,6 +37,12 @@ public class TagLineDaoTest {
     @Inject
     private TagLineDao tagLineDao;
 
+    @Inject
+    private TagDao tagDao;
+
+    @Inject
+    private ClothesDao clothesDao;
+
     @Test
     public void testGetAll(){
         List<TagLine> testList = tagLineDao.getAll();
@@ -48,5 +56,21 @@ public class TagLineDaoTest {
         assertReflectionEquals(NEW_TAG_LINE_AFTER_SAVE, testTagLine,IGNORE_DEFAULTS);
         List<TagLine> testListOfTagLines = tagLineDao.getAll();
         assertReflectionEquals(LIST_WITH_NEW_TAG_LINE, testListOfTagLines,IGNORE_DEFAULTS, LENIENT_ORDER);
+    }
+
+    @Test
+    @Transactional
+    public void testFindTagLinesByTag() {
+        Tag tag = tagDao.findTag("Finch");
+        List<TagLine> tagLines = tagLineDao.findTagLinesByTag(tag);
+        TAG_LINE_MATCHER.assertListEquals(Arrays.asList(TAG_LINE1), tagLines);
+    }
+
+    @Test
+    @Transactional
+    public void testGetAllByClothes() {
+        Clothes clothes = clothesDao.findClothesByName("dress");
+        List<TagLine> tagLines = tagLineDao.getAllByClothes(clothes);
+        TAG_LINE_MATCHER.assertListEquals(Arrays.asList(TAG_LINE3), tagLines);
     }
 }

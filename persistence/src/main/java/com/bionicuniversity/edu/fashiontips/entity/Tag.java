@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -19,6 +20,14 @@ public class Tag extends BaseEntity<Long> {
     private List<TagParameter> tagParameters;
 
     private String value;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "tags_tag_lines",
+            joinColumns = @JoinColumn(name = "tag_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_line_id")
+    )
+    private Collection<TagLine> tagLines;
 
     public TagType getTagType() {
         return tagType;

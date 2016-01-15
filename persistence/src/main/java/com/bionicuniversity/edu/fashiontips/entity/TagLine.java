@@ -16,7 +16,7 @@ import java.util.List;
 public class TagLine extends BaseEntity<Long> {
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) /* EAGER needs to retrieve posts by clothes's tag, because if Lazy fetched cannot transform Proxy-object to json */
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 

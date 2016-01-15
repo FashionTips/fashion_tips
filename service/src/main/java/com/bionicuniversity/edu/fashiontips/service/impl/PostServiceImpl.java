@@ -1,7 +1,9 @@
 package com.bionicuniversity.edu.fashiontips.service.impl;
 
 import com.bionicuniversity.edu.fashiontips.dao.PostDao;
+import com.bionicuniversity.edu.fashiontips.entity.Clothes;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
+import com.bionicuniversity.edu.fashiontips.entity.Tag;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.util.PostUtil;
@@ -48,6 +50,22 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     @Transactional
     public List<Post> findAll(User loggedUser) {
         List<Post> posts = ((PostDao) repository).findAll();
+        PostUtil.normalizeForClient(posts, loggedUser);
+        return posts;
+    }
+
+    @Override
+    @Transactional
+    public List<Post> findAllByClothes(Clothes clothesTag, User loggedUser) {
+        List<Post> posts = ((PostDao)repository).getAllByClothes(clothesTag);
+        PostUtil.normalizeForClient(posts,loggedUser);
+        return posts;
+    }
+
+    @Override
+    @Transactional
+    public List<Post> findAllByTag(Tag tag, User loggedUser) {
+        List<Post> posts = ((PostDao)repository).getAllByTag(tag);
         PostUtil.normalizeForClient(posts, loggedUser);
         return posts;
     }

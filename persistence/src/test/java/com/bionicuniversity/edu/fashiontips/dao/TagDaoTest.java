@@ -70,4 +70,11 @@ public class TagDaoTest {
         List<Tag> testList = tagDao.getAll();
         assertReflectionEquals(LIST_IF_DELETE_SCND_TAG, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
+
+    @Test
+    @Transactional
+    public void testFindTag() {
+        Tag tag = tagDao.findTag("Finch");
+        TAG_MATCHER.assertEquals(TAG3, tag);
+    }
 }
