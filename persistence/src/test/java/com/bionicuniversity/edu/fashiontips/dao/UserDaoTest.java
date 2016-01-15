@@ -17,7 +17,9 @@ import java.util.List;
 
 import static com.bionicuniversity.edu.fashiontips.UserTestData.*;
 import static org.junit.Assert.assertNull;
-//import static org.junit.Assert.assertEquals;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.IGNORE_DEFAULTS;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.LENIENT_ORDER;
 
 /**
  * Calss for testing UserDao
@@ -42,11 +44,11 @@ public class UserDaoTest {
         User testUser = userDao.save(USER_MATCHER.deepClone(NEW_USER_BEFORE_SAVE));
 
         /*Check that the method Save returns correct value */
-        USER_MATCHER.assertEquals(NEW_USER_AFTER_SAVE, testUser);
+        assertReflectionEquals(NEW_USER_AFTER_SAVE, testUser,IGNORE_DEFAULTS);
 
         List<User> testList = userDao.getAll();
         /*Check that the new User added*/
-        USER_MATCHER.assertListEquals(LIST_WITH_NEW_USER, testList);
+        assertReflectionEquals(LIST_WITH_NEW_USER, testList,IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
@@ -54,32 +56,32 @@ public class UserDaoTest {
         /*Delete User(ID = 1) from DB*/
         userDao.delete(1L);
         List<User> testList = userDao.getAll();
-        USER_MATCHER.assertListEquals(LIST_IF_DELETE_FIRST_USER, testList);
+        assertReflectionEquals(LIST_IF_DELETE_FIRST_USER, testList,IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
     public void testGetUserById() {
         User testUser = userDao.getById(1L);
-        USER_MATCHER.assertEquals(USER1, testUser);
+        assertReflectionEquals(USER1, testUser,IGNORE_DEFAULTS);
     }
 
     @Test
     public void testGetAll() throws Exception {
         /*Get list of all Users from DB*/
         List<User> testList = userDao.getAll();
-        USER_MATCHER.assertListEquals(LIST_OF_USERS, testList);
+        assertReflectionEquals(LIST_OF_USERS, testList,IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
     public void testGetByLogin() throws Exception {
         /*Get User(login = "login2") from DB*/
         User testUser = userDao.getByLogin("login2");
-        USER_MATCHER.assertEquals(USER2, testUser);
+        assertReflectionEquals(USER2, testUser, IGNORE_DEFAULTS);
     }
 
     @Test
     public void testFindByEmail_EmailExist() throws Exception {
-        USER_MATCHER.assertEquals("Should find the same user by email.", USER1, userDao.findByEmail("email1@example.com"));
+        assertReflectionEquals("Should find the same user by email.", USER1, userDao.findByEmail("email1@example.com"), IGNORE_DEFAULTS);
     }
 
     @Test

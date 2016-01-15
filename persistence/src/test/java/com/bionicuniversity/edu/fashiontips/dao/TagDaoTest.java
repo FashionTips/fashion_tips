@@ -1,7 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
 import com.bionicuniversity.edu.fashiontips.entity.Tag;
-import com.bionicuniversity.edu.fashiontips.entity.TagParameter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
@@ -16,6 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.bionicuniversity.edu.fashiontips.TagTestData.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.IGNORE_DEFAULTS;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.LENIENT_ORDER;
+
 /**
  * Class for testing TagDao
  */
@@ -33,16 +36,16 @@ public class TagDaoTest {
     @Test
     public void testGetAll() throws Exception {
         List<Tag> testList = tagDao.getAll();
-        TAG_MATCHER.assertListEquals(LIST_OF_TAGS, testList);
+        assertReflectionEquals(LIST_OF_TAGS, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
     @Transactional
     public void testSaveTag() {
         Tag testTag = tagDao.save(TAG_MATCHER.deepClone(NEW_TAG_BEFORE_SAVE));
-        TAG_MATCHER.assertEquals(NEW_TAG_AFTER_SAVE, testTag);
+        assertReflectionEquals(NEW_TAG_AFTER_SAVE, testTag, IGNORE_DEFAULTS);
         List<Tag> testList = tagDao.getAll();
-        TAG_MATCHER.assertListEquals(LIST_WITH_NEW_TAG, testList);
+        assertReflectionEquals(LIST_WITH_NEW_TAG, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
@@ -53,10 +56,10 @@ public class TagDaoTest {
         tag.setTagType(TAG_TYPE_BRAND);
         tag.setValue("test value");
         Tag updatedTag = tagDao.save(tag);
-        TAG_MATCHER.assertEquals(UPDATED_TAG, updatedTag);
+        assertReflectionEquals(UPDATED_TAG, updatedTag, IGNORE_DEFAULTS);
 
         List<Tag> testListOfTags = tagDao.getAll();
-        TAG_MATCHER.assertListEquals(LIST_WITH_UPDATED_SCND_TAG, testListOfTags);
+        assertReflectionEquals(LIST_WITH_UPDATED_SCND_TAG, testListOfTags, IGNORE_DEFAULTS, LENIENT_ORDER);
 
     }
 
@@ -65,6 +68,6 @@ public class TagDaoTest {
     public void testDeleteTag() {
         tagDao.delete(2L);
         List<Tag> testList = tagDao.getAll();
-        TAG_MATCHER.assertListEquals(LIST_IF_DELETE_SCND_TAG, testList);
+        assertReflectionEquals(LIST_IF_DELETE_SCND_TAG, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 }

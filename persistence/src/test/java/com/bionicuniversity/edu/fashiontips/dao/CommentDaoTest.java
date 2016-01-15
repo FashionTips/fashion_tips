@@ -16,7 +16,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.bionicuniversity.edu.fashiontips.PostAndCommentTestData.*;
-
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.IGNORE_DEFAULTS;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.LENIENT_ORDER;
 /**
  * @author alaktionov aka slav9nin
  */
@@ -36,30 +38,28 @@ public class CommentDaoTest {
     @Test
     public void testAddComment() {
         Comment testComment = commentDao.save(COMMENT_MATCHER.deepClone(NEW_COMMENT_BEFORE_SAVE));
-
-        COMMENT_MATCHER.assertEquals(NEW_COMMENT_AFTER_SAVE, testComment);
-
+        assertReflectionEquals(NEW_COMMENT_AFTER_SAVE, testComment, IGNORE_DEFAULTS);
         List<Comment> testList = commentDao.getAll();
-        COMMENT_MATCHER.assertListEquals(LIST_WITH_NEW_COMMENT, testList);
+        assertReflectionEquals(LIST_WITH_NEW_COMMENT, testList,IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
     public void testDeleteComment() {
         commentDao.delete(1L);
         List<Comment> testList = commentDao.getAll();
-        COMMENT_MATCHER.assertListEquals(LIST_IF_DELETE_FIRST_COMMENT, testList);
+        assertReflectionEquals(LIST_IF_DELETE_FIRST_COMMENT, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
     public void testGetCommentById() {
         Comment testComment = commentDao.getById(1L);
-        COMMENT_MATCHER.assertEquals(COMMENT1, testComment);
+        assertReflectionEquals(COMMENT1, testComment, IGNORE_DEFAULTS);
     }
 
     @Test
     public void testGetAll() {
         List<Comment> testList = commentDao.getAll();
-        COMMENT_MATCHER.assertListEquals(LIST_OF_COMMENTS, testList);
+        assertReflectionEquals(LIST_OF_COMMENTS, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
 
@@ -70,15 +70,16 @@ public class CommentDaoTest {
         commentDao.save(testComment);
         Comment updatedComment = commentDao.getById(2L);
 
-        COMMENT_MATCHER.assertEquals(UPDATE_COMMENT2, updatedComment);
+        assertReflectionEquals(UPDATE_COMMENT2, updatedComment, IGNORE_DEFAULTS);
 
         List<Comment> testList = commentDao.getAll();
-        COMMENT_MATCHER.assertListEquals(LIST_IF_UPDATE_COMMENT2, testList);
+        assertReflectionEquals(LIST_IF_UPDATE_COMMENT2, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
     public void testGetCommentByPost() {
         List<Comment> testList = commentDao.findAllByPost(POST1);
-        COMMENT_MATCHER.assertListEquals(Arrays.asList(COMMENT1), testList);
+        assertReflectionEquals(Arrays.asList(COMMENT1), testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 }
+
