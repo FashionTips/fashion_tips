@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+    <definition name="common" template="/WEB-INF/views/index.jsp">
+    </definition>
+
+    <definition name="homepage" extends="common">
+        <put-attribute name="title" value="Homepage"/>
+        <put-attribute name="body" value="/WEB-INF/views/components/homepage.jsp"/>
+    </definition>
+
+    <definition name="login" extends="common">
+        <put-attribute name="title" value="Login"/>
+        <put-attribute name="body" value="/WEB-INF/views/components/login.jsp"/>
+    </definition>
+
+    <definition name="register" extends="common">
+        <put-attribute name="title" value="Register"/>
+        <put-attribute name="body" value="/WEB-INF/views/components/register.jsp"/>
+    </definition>
+
+    <definition name="user.profile" extends="common">
+        <put-attribute name="title" value="User"/>
+        <put-attribute name="body" value="/WEB-INF/views/components/profile.jsp"/>
+    </definition>
+
+    <definition name="edit.user.profile" extends="common">
+        <put-attribute name="title" value="Edit Profile"/>
+        <put-attribute name="body" value="/WEB-INF/views/components/editProfile.jsp"/>
+    </definition>
+
+    <definition name="post.add" extends="common">
+        <put-attribute name="title" value="Post a Look"/>
+        <put-attribute name="body" value="/WEB-INF/views/components/addPost.jsp"/>
+    </definition>
+
+    <definition name="post.view" extends="common">
+        <put-attribute name="title" value="Post"/>
+        <put-attribute name="body" value="/WEB-INF/views/components/post.jsp"/>
+    </definition>
+
+</tiles-definitions>

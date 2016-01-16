@@ -1,0 +1,165 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <span class="label label-info">{{ post.category }}</span>
+            </div>
+            <div class="col-md-6">
+                <div class="pull-right" data-ng-show="post.author.login === username()">
+                    <button type="button" class="btn btn-xs btn-warning" data-toggle="modal"
+                            data-target="#postEditModal" data-ng-click="showEditPostForm()">
+                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;
+                    </button>
+                    <button type="button" class="btn btn-xs btn-danger" data-toggle="modal"
+                            data-target="#postDeleteModal">
+                        <span class="glyphicon glyphicon-remove"></span>&nbsp;
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="page-header">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2><a href="/post/{{ post.id }}">{{ post.title }}</a>
+                        <small>by <a href="/user/{{post.author.login}}">{{ post.author.login }}</a></small>
+                    </h2>
+                </div>
+                <div class="col-md-4">
+                    <p class="text-muted text-right">{{ post.created | date:'short' }}</p>
+                    <h4 class="text-right">
+                        Likes:{{post.likes}}
+                    <span data-ng-show="post.isLikedByAuthUser !== null" class="glyphicon glyphicon-thumbs-up"
+                          data-ng-class="{liked:post.isLikedByAuthUser}"
+                          data-ng-click="toggleLikedStatus(post.id)"></span>
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div id="post-gallery" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#post-gallery" data-slide-to="{{$index}}" data-ng-class='{active:$first}'
+                    data-ng-repeat="num in post.images"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                <div class="item" ng-class='{active:$first}' data-ng-repeat="image in post.images">
+                    <img data-ng-src="{{image.imgUrl}}">
+                </div>
+            </div>
+        </div>
+
+        <!--Tags -->
+        <div class="form-group">
+            <span data-ng-repeat="tagLine in post.tagLines">
+                <strong>{{tagLine.clothes.name}}</strong> -
+                <span data-ng-repeat="tag in tagLine.tags">
+                   <i>{{tag.tagType.type}}</i>:{{tag.value}}
+                </span>
+                <br/>
+            </span>
+        </div>
+        <hr/>
+        <p data-ng-bind-html="(post.textMessage | hashtag)"></p>
+    </div>
+</div>
+
+<!-- Delete Post Modal -->
+<div class="modal fade" id="postDeleteModal" tabindex="-1" role="dialog" aria-labelledby="postDeleteModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                Are you sure you want to delete a post? This operation cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" data-ng-click="deletePost(post.id)">Delete post</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Post Modal -->
+<div class="modal fade" id="postEditModal" tabindex="-1" role="dialog" aria-labelledby="postEditModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form class="has-feedback" name="editPostForm" data-ng-submit="editPost(post.id)" novalidate
+                  data-ng-class="{'has-error': editPostForm.$invalid && editPostForm.$submitted}">
+                <div class="modal-body">
+
+                    <div class="alert alert-success" role="alert"
+                         data-ng-show="newPostUrl && !showAddPostErrorMessage">
+                        <strong>Well done!</strong> You have been successfully add the post, and now it sits
+                        <a href="{{ newPostUrl }}">here</a>
+                    </div>
+                    <div class="alert alert-danger" role="alert" data-ng-show="showAddPostErrorMessage">
+                        Errors occurred:
+                        <br/>
+                        {{ postForm.errors }}
+                    </div>
+
+                    <!-- Title -->
+                    <div class="form-group has-feedback"
+                         data-ng-class="{ 'has-error': editPostForm.title.$invalid && editPostForm.title.$dirty,
+                          'has-success': editPostForm.title.$valid && editPostForm.title.$dirty}">
+                        <label>Title</label>
+                        <input type="text" class="form-control" placeholder="Title" name="title"
+                               data-ng-model="postForm.title" autofocus required maxlength="100">
+                        <div data-ng-messages="editPostForm.title.$error" role="alert"
+                             data-ng-show="editPostForm.title.$dirty">
+                            <span class="help-block" data-ng-message="maxlength">This field is too long</span>
+                            <span class="help-block" data-ng-message="required">This field is required</span>
+                        </div>
+                    </div>
+
+                    <!-- Text Message -->
+                    <div class="form-group has-feedback"
+                         data-ng-class="{ 'has-error': editPostForm.textMessage.$invalid &&  editPostForm.textMessage.$dirty,
+                         'has-success': editPostForm.textMessage.$valid && editPostForm.textMessage.$dirty}">
+                        <label>Your thoughts:</label>
+                <textarea class="form-control" rows="3" data-ng-model="postForm.textMessage"
+                          name="textMessage" title="Text Message" required maxlength="1000"></textarea>
+                        <div data-ng-messages="editPostForm.textMessage.$error" role="alert"
+                             data-ng-show="editPostForm.textMessage.$dirty">
+                            <span class="help-block" data-ng-message="maxlength">This field is too long</span>
+                            <span class="help-block" data-ng-message="required">This field is required</span>
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <label class="radio-inline">
+                        <input type="radio" name="category" required value="POST" data-ng-model="postForm.category">
+                        POST
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="category" required value="QUESTION" data-ng-model="postForm.category">
+                        QUESTION
+                    </label>
+
+                    <!-- Pictures -->
+                    <div>
+                        <label>Photos</label>
+                        <input id="images-input" type="file" data-file-model="postImages" multiple/>
+                        <button type="button" data-ng-click="uploadImages()">Upload</button>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2" data-ng-repeat="image in postForm.images">
+                            <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}"/>
+                            <a href="#" data-ng-click="removeImage(image.id)"><span
+                                    class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clearPostForm()">
+                        Cancel
+                    </button>
+                    <input type="submit" class="btn btn-success" value="Save" data-ng-disabled="editPostForm.$invalid">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

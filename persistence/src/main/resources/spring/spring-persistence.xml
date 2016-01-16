@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/jdbc
+       http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
+
+    <context:component-scan base-package="com.bionicuniversity.edu.fashiontips.**.dao"/>
+
+    <!-- Configure a default Validator as a Spring bean to make custom validation constraints work -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="packagesToScan" value="com.bionicuniversity.edu.fashiontips.entity"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property value="${jpa.showSql}" name="showSql"/>
+            </bean>
+        </property>
+        <property name="jpaPropertyMap">
+            <map>
+                <!--Enable formatting sql commands in log-->
+                <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>
+                <!--Adding comments to sql commands in log-->
+                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}"
+                       value="${hibernate.use_sql_comments}"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.orm.jpa.JpaTransactionManager"
+          p:entityManagerFactory-ref="entityManagerFactory"/>
+
+    <tx:annotation-driven/>
+
+    <!-- Profile for development. Used HSQL database and Spring connection pool -->
+    <beans profile="dev">
+        <context:property-placeholder
+                location="classpath:db/hsqldb.properties,
+                          classpath:persistence.properties"
+                ignore-unresolvable="true"
+                system-properties-mode="OVERRIDE"/>
+
+        <bean id="dataSource"
+              class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+              p:driverClassName="${database.driverClassName}"
+              p:url="${database.url}"
+              p:username="${database.username}"
+              p:password="${database.password}"/>
+    </beans>
+
+    <!-- Profile for testing app on PostgreSQL with production connection pool -->
+    <beans profile="postgres">
+        <context:property-placeholder
+                location="classpath:db/postgresql.properties,
+                          classpath:persistence.properties"
+                ignore-unresolvable="true"
+                system-properties-mode="OVERRIDE"/>
+
+        <bean id="dataSource"
+              class="org.apache.tomcat.jdbc.pool.DataSource"
+              p:driverClassName="${database.driverClassName}"
+              p:url="${database.url}"
+              p:username="${database.username}"
+              p:password="${database.password}"/>
+    </beans>
+
+    <beans profile="dev, postgres">
+        <!--Initialize datasource with default values-->
+        <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
+            <jdbc:script location="classpath:db/${jdbc.initLocation}"/>
+            <jdbc:script encoding="utf-8" location="classpath:db/${jdbc.filloutDB}"/>
+        </jdbc:initialize-database>
+    </beans>
+
+    <!-- Profile for production. Database is getting from app server by JNDI lookup -->
+    <beans profile="tomcat">
+        <context:property-placeholder
+                location="classpath:db/tomcat.properties,
+                          classpath:persistence.properties"
+                ignore-unresolvable="true"
+                system-properties-mode="OVERRIDE"/>
+        <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/fashion_tips"/>
+    </beans>
+
+    <beans profile="initImgFolder">
+        <bean class="com.bionicuniversity.edu.fashiontips.dao.util.InitializeImageStorage"/>
+    </beans>
+
+</beans>
