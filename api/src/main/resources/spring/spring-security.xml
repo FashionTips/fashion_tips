@@ -8,14 +8,14 @@
     <!-- Enable security annotation configs -->
     <global-method-security pre-post-annotations="enabled"/>
 
+    <!-- Exclude static resources from security -->
+    <http pattern="/images/**" security="none"/>
+
     <http>
         <http-basic entry-point-ref="entryPoint"/>
 
         <!-- Permit OPTIONS request for all to support cors -->
         <intercept-url pattern="/**" method="OPTIONS" access="permitAll"/>
-
-        <!-- Permit unauth access to images -->
-        <intercept-url pattern="/images/**" method="GET" access="permitAll"/>
 
         <!-- Permit posts GET request for unauthorized users.-->
         <intercept-url pattern="/posts/**" method="GET" access="permitAll"/>
