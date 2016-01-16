@@ -115,7 +115,7 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
 
         var result = $q.defer();
 
-        var uploadUrl = urlApi + "/images/upload";
+        var uploadUrl = urlApi + "/upload";
         var fd = new FormData();
         fd.append('file', image);
 

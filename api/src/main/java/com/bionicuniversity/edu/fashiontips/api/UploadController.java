@@ -12,19 +12,19 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.inject.Inject;
 
 /**
- *  This class handles http requests that relate to images processing
+ *  This class handles http requests that relate to uploading files
  *
  *  @author Volodymyr Portianko
  */
 @RestController
 @CrossOrigin
-@RequestMapping("/images")
-public class ImageController {
+@RequestMapping("/upload")
+public class UploadController {
 
     @Inject
     private ImageService imageService;
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity imageUpload(@RequestParam("file") MultipartFile file) {
         if(!file.getContentType().startsWith("image/"))
             throw new ImageUploadExeption(String.format("Cannot load file %s, it is not an image", file.getOriginalFilename()));
