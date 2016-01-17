@@ -23,27 +23,33 @@ public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
 
     @Override
     public List<Post> findByUser(User user) {
-        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :user ORDER BY p.created DESC", Post.class);
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :user AND p.hide = false ORDER BY p.created DESC", Post.class);
         return query.setParameter("user", user).getResultList();
+    }
+
+    @Override
+    public List<Post> findMine(User author) {
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :author ORDER BY p.created DESC", Post.class);
+        return query.setParameter("author", author).getResultList();
     }
 
     @Override
     public List<Post> findByWord(String word) {
         TypedQuery<Post> query =
-                em.createQuery("SELECT p FROM Post p WHERE p.textMessage LIKE :pattern ORDER BY p.created DESC", Post.class);
+                em.createQuery("SELECT p FROM Post p WHERE p.textMessage LIKE :pattern AND p.hide = false  ORDER BY p.created DESC", Post.class);
 
         return query.setParameter("pattern", "%" + word + "%").getResultList();
     }
 
     @Override
     public List<Post> findByCategory(String categoryName) {
-        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.category = :category ORDER BY p.created DESC", Post.class);
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.category = :category AND p.hide = false  ORDER BY p.created DESC", Post.class);
         return query.setParameter("category", Category.valueOf(categoryName)).getResultList();
     }
 
     @Override
     public List<Post> findAll() {
-        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p ORDER BY p.created DESC", Post.class);
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.hide = false  ORDER BY p.created DESC", Post.class);
         return query.getResultList();
     }
 }

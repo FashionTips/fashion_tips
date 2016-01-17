@@ -28,10 +28,12 @@ public class PostAndCommentTestData {
 
     public static final Post POST3_AFTER_ADD_NEW_COMMENT = new Post(3L, USER3, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 2), "title3", "red is cool?", Post.Category.QUESTION, Collections.singletonList(IMAGE6), new ArrayList<>(), new HashSet<>(Arrays.asList(USER1, USER2)), null, null);
     public static final Post POST2_AFTER_UPDATE_COMMENT2 = new Post(2L, USER2, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 1), "title2", "what hat does put on?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(Arrays.asList(USER3)), null, null);
-    public static final Post NEW_POST_BEFORE_SAVE = new Post(null, USER1, LocalDateTime.now(), "title_new", "How are you?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(), null, null);
-    public static final Post NEW_POST_AFTER_SAVE = new Post(7L, USER1, LocalDateTime.now(), "title_new", "How are you?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(), null, null);
+    public static final Post NEW_POST_BEFORE_SAVE = new Post(null, USER1, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 20), "title_new", "How are you?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(), null, null);
+    public static final Post NEW_POST_AFTER_SAVE = new Post(7L, USER1, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 20), "title_new", "How are you?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(), null, null);
     public static final Post UPDATE_POST1 = new Post(1L, USER1, POST1.getCreated(), "UPDATE title", "UPDATE what fits me with these pants?", Post.Category.QUESTION, Arrays.asList(IMAGE1, IMAGE2, IMAGE3), new ArrayList<>(), new HashSet<>(Arrays.asList(USER2, USER3)), null, null);
     public static final Post NOT_VALID_POST = new Post(USER1, "", "", Post.Category.POST);
+
+    public static final Post HIDDEN_POST = new Post(7L, USER3, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 15), "hidden", "hidden. Again", Post.Category.POST, new ArrayList<>(), new ArrayList<>(), new HashSet<>(), null, null, true);
 
     public static final List<Post> LIST_IF_DELETE_FIRST_POST = Arrays.asList(POST2, POST3, POST4, POST5, POST6);
     public static final List<Post> LIST_OF_POSTS = Arrays.asList(POST1, POST2, POST3, POST4, POST5, POST6);
@@ -41,6 +43,7 @@ public class PostAndCommentTestData {
     public static final List<Post> FIND_BY_CATEGORY_POST = Arrays.asList(POST6, POST5, POST4);
 
     public static final List<Post> FIND_BY_USER3_SORTED_BY_CREATED = Arrays.asList(POST6, POST3);
+    public static final List<Post> FIND_BY_USER3_WITH_HIDDEN_POST = Arrays.asList(HIDDEN_POST, POST6, POST3);
 
     public static final List<Post> FIND_BY_WORD_AGAIN_SORTED_BY_CREATED = Arrays.asList(POST6, POST5, POST4);
     public static final List<Post> FIND_ALL_SORTED_BY_CREATED = Arrays.asList(POST6, POST5, POST4, POST3, POST2, POST1);
