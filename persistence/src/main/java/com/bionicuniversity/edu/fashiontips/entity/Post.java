@@ -117,13 +117,18 @@ public class Post extends BaseEntity<Long> {
     private Boolean isLikedByAuthUser;
 
     /**
-    * List of posts tag lines
-    */
+     * List of posts tag lines
+     */
     @Valid
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "post")
     @Fetch(FetchMode.SELECT)
     @OrderBy(value = "id ASC")
     private List<TagLine> tagLines;
+
+    /**
+     * Flag indicates that the post is hidden for all users besides the author
+     */
+    private Boolean hide = false;
 
     /**
      * Default Constructor
@@ -154,6 +159,11 @@ public class Post extends BaseEntity<Long> {
         this.likedByUsers = likedByUsers;
         this.likes = likes;
         this.isLikedByAuthUser = isLikedByAuthUser;
+    }
+
+    public Post(Long id, User user, LocalDateTime created, String title, String textMessage, Category category, List<Image> images, List<Comment> comments, Set<User> likedByUsers, Long likes, Boolean isLikedByAuthUser, Boolean hide) {
+        this(id, user, created, title, textMessage, category, images, comments, likedByUsers, likes, isLikedByAuthUser);
+        this.hide = hide;
     }
 
     public User getUser() {
@@ -252,6 +262,14 @@ public class Post extends BaseEntity<Long> {
 
     public void setTagLines(List<TagLine> tagLines) {
         this.tagLines = tagLines;
+    }
+
+    public Boolean getHide() {
+        return hide;
+    }
+
+    public void setHide(Boolean hide) {
+        this.hide = hide;
     }
 
     @Override
