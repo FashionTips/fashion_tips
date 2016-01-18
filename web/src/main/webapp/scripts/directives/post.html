@@ -146,6 +146,9 @@
                         <input id="images-input" type="file" data-file-model="postImages" multiple/>
                         <button type="button" data-ng-click="uploadImages()">Upload</button>
                     </div>
+                    <div class="alert alert-danger" data-ng-repeat="imageUploadError in imageUploadErrors">
+                        {{imageUploadError}}
+                    </div>
                     <div class="row">
                         <div class="col-sm-2" data-ng-repeat="image in postForm.images">
                             <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}"/>
