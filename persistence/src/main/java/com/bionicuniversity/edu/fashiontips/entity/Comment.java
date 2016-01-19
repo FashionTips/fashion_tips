@@ -87,6 +87,8 @@ public class Comment extends BaseEntity<Long> {
     @Column(name = "created", nullable = false, insertable = false)
     private LocalDateTime created;
 
+    private boolean available;
+
     public LocalDateTime getCreated() {
         return created;
     }
@@ -111,6 +113,13 @@ public class Comment extends BaseEntity<Long> {
         this.text = text;
     }
 
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
 
     @Override
     public String toString() {

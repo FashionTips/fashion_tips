@@ -31,4 +31,7 @@ public interface CommentService extends GenericService<Comment, Long> {
      */
     @Transactional
     List<Comment> findAllByPostId(Long postId);
+
+    @Transactional
+    void hideById(long commentId, String login);
 }

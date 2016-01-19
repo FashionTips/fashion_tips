@@ -29,6 +29,7 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     @Transactional
     public List<Post> findAllByUser(User user, User loggedUser) {
         List<Post> posts = ((PostDao) repository).findByUser(user);
+        PostUtil.handleDeletedMessages(posts);
         PostUtil.normalizeForClient(posts, loggedUser);
         return posts;
     }
@@ -40,6 +41,7 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
             String text = post.getTextMessage();
             return Arrays.asList(text.split("\\s")).stream().anyMatch(s -> s.matches(hashTag + "\\W*"));
         }).collect(Collectors.toList());
+        PostUtil.handleDeletedMessages(posts);
         PostUtil.normalizeForClient(posts, loggedUser);
         return posts;
     }
@@ -48,6 +50,7 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     @Transactional
     public List<Post> findAllByCategory(String categoryName, User loggedUser) {
         List<Post> posts = ((PostDao) repository).findByCategory(categoryName.toUpperCase());
+        PostUtil.handleDeletedMessages(posts);
         PostUtil.normalizeForClient(posts, loggedUser);
         return posts;
     }
@@ -56,6 +59,7 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     @Transactional
     public List<Post> findAll(User loggedUser) {
         List<Post> posts = ((PostDao) repository).findAll();
+        PostUtil.handleDeletedMessages(posts);
         PostUtil.normalizeForClient(posts, loggedUser);
         return posts;
     }
@@ -64,6 +68,7 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     @Transactional
     public Post get(Long id, User loggedUser) {
         Post post = super.get(id);
+        PostUtil.handleDeletedMessages(post);
         PostUtil.normalizeForClient(post, loggedUser);
         return post;
     }
