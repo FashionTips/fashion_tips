@@ -1,4 +1,4 @@
-var MainController = ['$scope', 'postService', function ($scope, postService) {
+var MainController = ['$scope', 'postService', 'sessionService', function ($scope, postService, sessionService) {
 
     var qUrl = /q=([^&]+)/.exec(document.location.search);
     var q = qUrl === null ? undefined : qUrl[1].replace('%23', '#');      // get value of q url-parameter
@@ -41,4 +41,12 @@ var MainController = ['$scope', 'postService', function ($scope, postService) {
 
         });
     }
+
+    /**
+     * Check if user is logged in.
+     * @returns {boolean}
+     */
+    $scope.loggedIn = function () {
+        return sessionService.getToken() !== undefined;
+    };
 }];

@@ -1,5 +1,5 @@
-var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessionService', '$location',
-    function ($scope, $routeParams, $route, postService, sessionService, $location) {
+var PostController = ['$scope', 'postService', 'sessionService', '$location',
+    function ($scope, postService, sessionService, $location) {
 
         /* if postId is present, then upload post by id */
         var absUrl = $location.absUrl();

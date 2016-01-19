@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-md-8">
             <ul class="list-group" data-ng-repeat="post in posts">
-                <data-ft-post></data-ft-post>
+                <div data-ft-post data-feed="true"></div>
             </ul>
         </div>
     </div>
