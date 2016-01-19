@@ -116,6 +116,31 @@ public class PostDaoTest {
     }
 
     @Test
+    public void testFindWithHiddenPost() {
+        postDao.save(POST_MATCHER.deepClone(HIDDEN_POST));
+
+        List<Post> testFindByUser3 = postDao.findByUser(USER3);
+        assertReflectionEquals(FIND_BY_USER3_SORTED_BY_CREATED, testFindByUser3, IGNORE_DEFAULTS);
+
+        List<Post> testFindByWordAgain = postDao.findByWord("Again");
+        assertReflectionEquals(FIND_BY_WORD_AGAIN_SORTED_BY_CREATED, testFindByWordAgain, IGNORE_DEFAULTS);
+
+        List<Post> testFindByCategoryPost = postDao.findByCategory("POST");
+        assertReflectionEquals(FIND_BY_CATEGORY_POST, testFindByCategoryPost, IGNORE_DEFAULTS);
+
+        List<Post> testFindAll = postDao.findAll();
+        assertReflectionEquals(FIND_ALL_SORTED_BY_CREATED, testFindAll, IGNORE_DEFAULTS);
+    }
+
+    @Test
+    public void testFindMine() {
+        postDao.save(POST_MATCHER.deepClone(HIDDEN_POST));
+
+        List<Post> testFindMine = postDao.findMine(USER3);
+        assertReflectionEquals(FIND_BY_USER3_WITH_HIDDEN_POST, testFindMine, IGNORE_DEFAULTS);
+    }
+
+    @Test
     public void testAddNotValidPost() {
         thrown.expect(ConstraintViolationException.class);
         postDao.save(NOT_VALID_POST);

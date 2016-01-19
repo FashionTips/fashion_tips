@@ -73,6 +73,10 @@ public class Post extends BaseEntity<Long> {
     @Column(nullable = false, updatable = true, insertable = true)
     private Category category;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, updatable = true, insertable = true)
+    private Status status;
+
     /*
     * List of posts images
     * Relationships store in separate table
@@ -117,13 +121,14 @@ public class Post extends BaseEntity<Long> {
     private Boolean isLikedByAuthUser;
 
     /**
-    * List of posts tag lines
-    */
+     * List of posts tag lines
+     */
     @Valid
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "post")
     @Fetch(FetchMode.SELECT)
     @OrderBy(value = "id ASC")
     private List<TagLine> tagLines;
+
 
     /**
      * Default Constructor
@@ -154,6 +159,11 @@ public class Post extends BaseEntity<Long> {
         this.likedByUsers = likedByUsers;
         this.likes = likes;
         this.isLikedByAuthUser = isLikedByAuthUser;
+    }
+
+    public Post(Long id, User user, LocalDateTime created, String title, String textMessage, Category category, List<Image> images, List<Comment> comments, Set<User> likedByUsers, Long likes, Boolean isLikedByAuthUser, Status status) {
+        this(id, user, created, title, textMessage, category, images, comments, likedByUsers, likes, isLikedByAuthUser);
+        this.status = status;
     }
 
     public User getUser() {
@@ -254,6 +264,16 @@ public class Post extends BaseEntity<Long> {
         this.tagLines = tagLines;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+    public void setStatusByName(String status) {
+        this.status = Status.valueOf(status);
+    }
     @Override
     public String toString() {
         return "Post{" +
@@ -283,5 +303,19 @@ public class Post extends BaseEntity<Long> {
      */
     public enum Category {
         POST, QUESTION
+    }
+
+    /**
+     * Enum Category represent status of user's posts.
+     * NEW: post created and hidden. Publication time can be set up.
+     * PUBLISHED: published. Post can be hidden. Publication time can't be set up.
+     * HIDDEN: published and hidden. Publication time can't be set up.
+     * PUBLICATION_PENDING: created with publication postponed and hidden.
+     * Publication time can be set up
+     *
+     * @author Sergiy
+     */
+    public enum Status {
+        NEW, PUBLISHED, HIDDEN, PUBLICATION_PENDING
     }
 }
