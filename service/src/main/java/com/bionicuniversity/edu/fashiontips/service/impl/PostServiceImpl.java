@@ -5,6 +5,7 @@ import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.util.PostUtil;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +25,22 @@ import java.util.stream.Collectors;
  */
 @Named
 public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements PostService {
-
+    /**
+     * If loggedUser and user coincide then returns all posts including hidden.
+     * If loggedUser and user are different then returns all posts for user excluding hidden.
+     *
+     * @param user       - searching posts for this user
+     * @param loggedUser
+     */
     @Override
     @Transactional
     public List<Post> findAllByUser(User user, User loggedUser) {
-        List<Post> posts = ((PostDao) repository).findByUser(user);
+        List<Post> posts;
+        if (!user.equals(loggedUser)) {
+            posts = ((PostDao) repository).findByUser(user);
+        } else {
+            posts = ((PostDao) repository).findMine(user);
+        }
         PostUtil.normalizeForClient(posts, loggedUser);
         return posts;
     }
@@ -64,6 +76,10 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     @Transactional
     public Post get(Long id, User loggedUser) {
         Post post = super.get(id);
+        if (post.getStatus() != Post.Status.PUBLISHED && !post.getUser().equals(loggedUser)) {
+            throw new NotFoundException(
+                    String.format("Could not found post with id  = %s", id.toString()));
+        }
         PostUtil.normalizeForClient(post, loggedUser);
         return post;
     }
@@ -99,6 +115,11 @@ public class PostServiceImpl extends GenericServiceImpl<Post, Long> implements P
     public Post save(Post post) {
         if (post.getTagLines() != null && post.getTagLines().size() > 0) {
             post.getTagLines().stream().forEach(tagLine -> tagLine.setPost(post));
+        }
+        if (post.getStatus() == null) {
+            post.setStatus(Post.Status.PUBLISHED);
+        } else {
+            post.setStatus(Post.Status.NEW);
         }
         return super.save(post);
     }
