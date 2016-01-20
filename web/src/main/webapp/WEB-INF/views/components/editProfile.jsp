@@ -15,8 +15,9 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="inputAvatar">Picture</label>
                     <div class="col-sm-10">
-                        <input type="file" id="inputAvatar" data-file-model="avatarFile">
-                        <button type="button" data-ng-click="uploadAvatar()">Upload</button>
+                        <span class="btn btn-info btn-sm btn-file">
+                            Browse... <input type="file" id="inputAvatar" data-custom-on-change="uploadAvatar" accept="image/*"/>
+                        </span>
                         <p class="bg-danger" data-ng-show="imageUploadError">{{imageUploadError}}</p>
                         <p class="help-block">Set a new profile picture</p>
                     </div>

@@ -54,10 +54,11 @@
 
                 <%-- Pictures --%>
                 <div class="form-group">
-                    <label>Photos</label>
+                    <label>Add Photos</label>
                     <div>
-                        <input id="images-input" type="file" data-file-model="postImages" multiple/>
-                        <button type="button" data-ng-click="uploadImages()">Upload</button>
+                        <span class="btn btn-info btn-sm btn-file">
+                            Browse... <input type="file" data-custom-on-change="uploadImages" accept="image/*" multiple/>
+                        </span>
                     </div>
                     <div class="alert alert-danger" data-ng-repeat="imageUploadError in imageUploadErrors">
                         {{imageUploadError}}

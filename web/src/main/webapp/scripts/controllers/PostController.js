@@ -61,9 +61,9 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
         /**
          * Upload images to api. Images selected by user.
          */
-        $scope.uploadImages = function () {
+        $scope.uploadImages = function (event) {
             $scope.imageUploadErrors = [];
-            var images = $scope.postImages;
+            var images = event.target.files;
             for (var i = 0; i < images.length; i++) {
                 $scope.uploadImage(images[i]);
             }
