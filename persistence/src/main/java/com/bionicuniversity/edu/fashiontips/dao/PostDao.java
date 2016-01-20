@@ -19,6 +19,14 @@ public interface PostDao extends GenericDao<Post, Long> {
     List<Post> findByUser(User user);
 
     /**
+     * Returns all author's posts including hidden
+     *
+     * @param author
+     * @return list of posts
+     */
+    List<Post> findMine(User author);
+
+    /**
      * Returns all posts with hashTag, sorted by time created.
      *
      * @param word
@@ -35,7 +43,7 @@ public interface PostDao extends GenericDao<Post, Long> {
     List<Post> findByCategory(String categoryName);
 
 
-     /**
+    /**
      * Returns all posts sorted by time created.
      *
      * @return list of all posts
