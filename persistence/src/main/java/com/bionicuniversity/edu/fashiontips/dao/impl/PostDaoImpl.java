@@ -23,27 +23,33 @@ public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
 
     @Override
     public List<Post> findByUser(User user) {
-        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :user ORDER BY p.created DESC", Post.class);
-        return query.setParameter("user", user).getResultList();
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :user AND p.status = :published ORDER BY p.created DESC", Post.class);
+        return query.setParameter("user", user).setParameter("published", Status.PUBLISHED).getResultList();
+    }
+
+    @Override
+    public List<Post> findMine(User author) {
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :author ORDER BY p.created DESC", Post.class);
+        return query.setParameter("author", author).getResultList();
     }
 
     @Override
     public List<Post> findByWord(String word) {
         TypedQuery<Post> query =
-                em.createQuery("SELECT p FROM Post p WHERE p.textMessage LIKE :pattern ORDER BY p.created DESC", Post.class);
+                em.createQuery("SELECT p FROM Post p WHERE p.textMessage LIKE :pattern AND p.status = :published ORDER BY p.created DESC", Post.class);
 
-        return query.setParameter("pattern", "%" + word + "%").getResultList();
+        return query.setParameter("pattern", "%" + word + "%").setParameter("published", Status.PUBLISHED).getResultList();
     }
 
     @Override
     public List<Post> findByCategory(String categoryName) {
-        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.category = :category ORDER BY p.created DESC", Post.class);
-        return query.setParameter("category", Category.valueOf(categoryName)).getResultList();
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.category = :category AND p.status = :published ORDER BY p.created DESC", Post.class);
+        return query.setParameter("category", Category.valueOf(categoryName)).setParameter("published", Status.PUBLISHED).getResultList();
     }
 
     @Override
     public List<Post> findAll() {
-        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p ORDER BY p.created DESC", Post.class);
-        return query.getResultList();
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.status = :published ORDER BY p.created DESC", Post.class);
+        return query.setParameter("published", Status.PUBLISHED).getResultList();
     }
 }

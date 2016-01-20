@@ -57,8 +57,8 @@ public class PostController {
     /**
      * Without parameters returned all posts.
      *
-     * @param login   optional parameter. If present then returned list user's (login = "login") posts
-     * @param hashTag optional parameter. If present then returned list of posts with this hashtag
+     * @param login        optional parameter. If present then returned list user's (login = "login") posts
+     * @param hashTag      optional parameter. If present then returned list of posts with this hashtag
      * @param categoryName optional parameter. If present then returned list of posts with preset category
      * @return list of all posts with such parameters
      */
@@ -75,7 +75,7 @@ public class PostController {
             posts = postService.findAllByHashTag(hashTag, user);
         } else if (categoryName != null) {
             posts = postService.findAllByCategory(categoryName, user);
-        } else  {
+        } else {
             posts = postService.findAll(user);
         }
         return ImageUtil.createUrlNameForPosts(posts);
@@ -89,8 +89,19 @@ public class PostController {
      * @return response with status 201 (CREATED) and post's data in body
      */
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> saveNewPost(@Valid @RequestBody Post post, Principal principal) {
+    public ResponseEntity<?> saveNewPost(@Valid @RequestBody Post post,
+                                         @RequestParam(value = "hide", required = false) String hide,
+                                         @RequestParam(value = "time", required = false) String time,
+                                         Principal principal) {
         post.setUser(userService.findOne(principal.getName()));
+
+        if (!"true".equals(hide) && time == null) {
+            post.setStatusByName("PUBLISHED");
+        }else if("true".equals(hide)){
+            post.setStatusByName("NEW");
+        } else if (time != null) {
+            post.setStatusByName("PUBLICATION_PENDING");
+        }
         Post savedPost = postService.save(post);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ServletUriComponentsBuilder
@@ -136,7 +147,7 @@ public class PostController {
     /**
      * Toggles "liked" status for post
      *
-     * @param id post ID
+     * @param id        post ID
      * @param principal name of logged user
      */
     @RequestMapping(value = "/{id}/liked", method = RequestMethod.POST)
