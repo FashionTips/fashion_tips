@@ -21,13 +21,14 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
      * Returns all post of user by given username and/or query.
      * @param q query
      * @param username
+     * @param category
      * @returns {d.promise|*|promise}
      */
-    this.getAll = function (q, username) {
+    this.getAll = function (q, username, category) {
 
         var result = $q.defer();
 
-        $http.get(urlApi + '/posts', {params: {hashtag: q, author: username}})
+        $http.get(urlApi + '/posts', {params: {hashtag: q, author: username, category: category}})
             .then(function (data) {
                 result.resolve(data.data);
             }, function () {
