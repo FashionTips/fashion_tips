@@ -17,6 +17,7 @@
                     <div class="col-sm-10">
                         <input type="file" id="inputAvatar" data-file-model="avatarFile">
                         <button type="button" data-ng-click="uploadAvatar()">Upload</button>
+                        <p class="bg-danger" data-ng-show="imageUploadError">{{imageUploadError}}</p>
                         <p class="help-block">Set a new profile picture</p>
                     </div>
                 </div>

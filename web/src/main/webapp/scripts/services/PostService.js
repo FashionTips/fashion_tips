@@ -124,6 +124,8 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
             headers: {'Content-Type': undefined}
         }).then(function (data) {
             result.resolve(data.data);
+        }, function (response) {
+            result.reject(response);
         });
 
         return result.promise;

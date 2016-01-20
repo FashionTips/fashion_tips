@@ -20,6 +20,7 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
         $scope.postForm.tagLines = [];
         $scope.newPostUrl = undefined;
         $scope.showAddPostErrorMessage = false;
+        $scope.imageUploadErrors = [];
 
         /**
          * Saves post.
@@ -51,6 +52,9 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
 
             uploadImage.then(function (data) {
                 $scope.postForm.images.push(data);
+            }, function (reason) {
+                var messageError = reason.data !== null ? reason.data.message : "Cannot load file " + image.name + ", it is too big. Should be less than 5 MB";
+                $scope.imageUploadErrors.push(messageError);
             });
         };
 
@@ -58,6 +62,7 @@ var PostController = ['$scope', '$routeParams', '$route', 'postService', 'sessio
          * Upload images to api. Images selected by user.
          */
         $scope.uploadImages = function () {
+            $scope.imageUploadErrors = [];
             var images = $scope.postImages;
             for (var i = 0; i < images.length; i++) {
                 $scope.uploadImage(images[i]);

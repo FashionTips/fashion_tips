@@ -52,10 +52,15 @@ var ProfileController = ['$scope', 'sessionService', '$http', 'userService', '$l
 
         $scope.uploadAvatar = function () {
 
+            $scope.imageUploadError = null;
+
             var uploadAvatar = userService.uploadAvatar($scope.avatarFile[0]);
 
             uploadAvatar.then(function (data) {
                 $scope.user.avatar = data;
+            }, function (reason) {
+                $scope.imageUploadError = reason.data !== null ? reason.data.message
+                    : "Cannot load file " + $scope.avatarFile[0].name + ", it is too big. Should be less than 5 MB";
             });
         };
 

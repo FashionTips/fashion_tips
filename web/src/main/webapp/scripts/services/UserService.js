@@ -79,6 +79,8 @@ var userService = ['$resource', '$http', '$q', '$filter', function ($resource, $
             headers: {'Content-Type': undefined}
         }).then(function (data) {
             result.resolve(data.data);
+        }, function (response) {
+            result.reject(response);
         });
 
         return result.promise;
