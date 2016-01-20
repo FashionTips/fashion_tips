@@ -70,7 +70,7 @@ var userService = ['$resource', '$http', '$q', '$filter', function ($resource, $
 
         var result = $q.defer();
 
-        var uploadUrl = urlApi + "/images/upload";
+        var uploadUrl = urlApi + "/upload";
         var fd = new FormData();
         fd.append('file', image);
 
