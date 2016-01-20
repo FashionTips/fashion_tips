@@ -145,8 +145,11 @@
                     <!-- Pictures -->
                     <div>
                         <label>Photos</label>
-                        <input id="images-input" type="file" data-file-model="postImages" multiple/>
-                        <button type="button" data-ng-click="uploadImages()">Upload</button>
+                        <div>
+                            <span class="btn btn-info btn-sm btn-file">
+                                Add more...<input type="file" data-custom-on-change="uploadImages" accept="image/*" multiple/>
+                            </span>
+                        </div>
                     </div>
                     <div class="alert alert-danger" data-ng-repeat="imageUploadError in imageUploadErrors">
                         {{imageUploadError}}

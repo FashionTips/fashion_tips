@@ -114,19 +114,13 @@ app.directive('uniqueEmail', ['$q', '$http', function($q, $http) {
 }]);
 
 /* Directive for input file object */
-/* It maps chosen file to angular model object */
-app.directive('fileModel', ['$parse', function ($parse) {
+/* It launches custom function after element changing */
+app.directive('customOnChange', ['$parse', function ($parse) {
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-            var model = $parse(attrs.fileModel);
-            var modelSetter = model.assign;
-
-            element.bind('change', function () {
-                scope.$apply(function () {
-                    modelSetter(scope, element[0].files);
-                });
-            });
+            var onChangeHandler = scope.$eval(attrs.customOnChange);
+            element.bind('change', onChangeHandler);
         }
     };
 }]);
