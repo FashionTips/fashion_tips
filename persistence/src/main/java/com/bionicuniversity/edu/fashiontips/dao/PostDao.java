@@ -29,10 +29,10 @@ public interface PostDao extends GenericDao<Post, Long> {
     /**
      * Returns all posts with hashTag, sorted by time created.
      *
-     * @param categoryName
+     * @param category category to search
      * @return list of posts
      */
-    List<Post> findByCategory(String categoryName);
+    List<Post> findByCategory(Post.Category category);
 
 
      /**

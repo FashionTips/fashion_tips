@@ -7,6 +7,7 @@ import com.bionicuniversity.edu.fashiontips.service.ImageService;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Service class for working with Images
@@ -22,7 +23,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Image save(Image image) throws IOException {
-        imageDao.save(image);
-        return image;
+        Objects.requireNonNull(image);
+        return imageDao.save(image);
     }
 }

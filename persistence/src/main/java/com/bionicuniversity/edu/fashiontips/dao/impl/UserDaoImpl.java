@@ -16,7 +16,11 @@ public class UserDaoImpl extends GenericDaoImpl<User, Long> implements UserDao{
     @Override
     public User getByLogin(String login) {
         TypedQuery<User> query = em.createQuery("SELECT u from User u WHERE u.login=:login", User.class);
-        return query.setParameter("login", login).getSingleResult();
+        try {
+            return query.setParameter("login", login).getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        }
     }
 
     @Override

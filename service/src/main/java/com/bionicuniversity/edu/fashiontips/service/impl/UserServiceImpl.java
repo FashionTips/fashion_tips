@@ -7,7 +7,6 @@ import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Role;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
-import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,10 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.NoResultException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * User Service Implementation.
@@ -29,7 +29,10 @@ import java.util.Collections;
  * @since 20/11/2015
  */
 @Named
-public class UserServiceImpl extends GenericServiceImpl<User, Long> implements UserService {
+public class UserServiceImpl implements UserService {
+
+    @Inject
+    private UserDao userDao;
 
     @Inject
     private RoleDao roleDao;
@@ -37,6 +40,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
     @Override
     @Transactional
     public User save(User user) {
+        Objects.requireNonNull(user, "User cannot be null.");
         user.setId(null);   // workaround, because due to id is common
                             // for all entities, and it is impossible
                             // to manage serialization only for User class id;
@@ -44,18 +48,22 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
         encodePassword(user);
         Role role = roleDao.find("ROLE_USER");
         user.setRoles(Collections.singletonList(role));
-        return super.save(user);
+        return userDao.save(user);
     }
 
     @Override
     @PreAuthorize("#user.login == authentication.name")
     public void update(@P("user") User user) {
-        super.update(user);
+        Objects.requireNonNull(user, "User cannot be null");
+        userDao.save(user);
     }
 
     @Override
-    public void update(Long id, User userData) {
-        User user = get(id);
+    public void update(User user, User userData) {
+
+        Objects.requireNonNull(user);
+        Objects.requireNonNull(userData);
+
         String password = userData.getPassword();
         if (password != null) {
             user.setPassword(password);
@@ -87,31 +95,28 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
         if (blogUrl != null) user.setBlogUrl(blogUrl);
         URL websiteUrl = userData.getWebsiteUrl();
         if (websiteUrl != null) user.setWebsiteUrl(websiteUrl);
+
         update(user);
     }
 
     @Override
-    public User findOne(String login) {
-        try {
-            return ((UserDao) repository).getByLogin(login);
-        } catch (NoResultException ex) {
-            throw new NotFoundException(String.format("User with login %s is not found.", login));
-        }
+    public Optional<User> findOne(String login) {
+            return Optional.ofNullable(userDao.getByLogin(login));
+    }
+
+    @Override
+    public Optional<User> findOne(long id) {
+        return Optional.ofNullable(userDao.getById(id));
     }
 
     @Override
     public boolean checkLogin(String login) {
-        try {
-            ((UserDao) repository).getByLogin(login);
-            return false;
-        } catch (NoResultException ex) {
-            return true;
-        }
+        return userDao.getByLogin(login) == null;
     }
 
     @Override
     public boolean checkEmail(String email) {
-        return ((UserDao) repository).findByEmail(email) == null;
+        return userDao.findByEmail(email) == null;
     }
 
     private void encodePassword(User user) {

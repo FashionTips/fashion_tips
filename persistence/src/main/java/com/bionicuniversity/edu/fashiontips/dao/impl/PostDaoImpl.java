@@ -6,10 +6,9 @@ import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
-import static com.bionicuniversity.edu.fashiontips.entity.Post.*;
+import static com.bionicuniversity.edu.fashiontips.entity.Post.Category;
 
 /**
  * Implementation of {@code PostDao} interface for relational database.
@@ -36,9 +35,9 @@ public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
     }
 
     @Override
-    public List<Post> findByCategory(String categoryName) {
+    public List<Post> findByCategory(Category category) {
         TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.category = :category ORDER BY p.created DESC", Post.class);
-        return query.setParameter("category", Category.valueOf(categoryName)).getResultList();
+        return query.setParameter("category", category).getResultList();
     }
 
     @Override

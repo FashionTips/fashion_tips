@@ -5,6 +5,7 @@ import com.bionicuniversity.edu.fashiontips.entity.TagLine;
 import com.bionicuniversity.edu.fashiontips.entity.TagType;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * TagLine Service Interface.
@@ -19,6 +20,6 @@ public interface TagLineService {
 
     TagLine save(TagLine tagLine, long postId);
 
-    TagLine get(long id);
+    Optional<TagLine> get(long id);
 
 }

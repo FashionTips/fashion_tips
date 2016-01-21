@@ -14,8 +14,13 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
 
-    @Inject
+
     private UserDao userDao;
+
+    @Inject
+    public UniqueEmailValidator(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public void initialize(UniqueEmail constraintAnnotation) {
@@ -24,13 +29,6 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext context) {
-
-        /* sometimes the instance can be created without injection of userDao.
-        So we have to check, whether this is that case. */
-        if(userDao == null) {
-            return true;
-        }
-
         return userDao.findByEmail(email) == null;
     }
 }

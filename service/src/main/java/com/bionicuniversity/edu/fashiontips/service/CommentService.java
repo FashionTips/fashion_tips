@@ -11,7 +11,7 @@ import java.util.List;
  * @author Maksym Dolia
  * @since 13/12/2015
  */
-public interface CommentService extends GenericService<Comment, Long> {
+public interface CommentService {
 
     /**
      * Links comment to post by given id, and saves to persistence.
