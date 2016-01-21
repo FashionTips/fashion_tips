@@ -6,6 +6,7 @@ import com.bionicuniversity.edu.fashiontips.annotation.Update;
 import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +37,9 @@ public class UserController {
      * @return user
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public ResponseEntity getUser(@PathVariable Long id) {
-        User user = userService.get(id);
+    public ResponseEntity getUser(@PathVariable long id) {
+        User user = userService.findOne(id)
+                .orElseThrow(() -> new NotFoundException(String.format("The user with id %d was not found.", id)));
         if(user.getAvatar() != null) {
             ImageUtil.createUrlName(user.getAvatar());
         }
@@ -51,8 +53,9 @@ public class UserController {
      * @return user
      */
     @RequestMapping(method = RequestMethod.GET, value = "/by")
-    public ResponseEntity getUserByLogin(@RequestParam(value = "login") String login) {
-        User user = userService.findOne(login);
+    public ResponseEntity getUserByLogin(@RequestParam String login) {
+        User user = userService.findOne(login)
+                .orElseThrow(() -> new NotFoundException(String.format("The user with login %s was not found.", login)));;
         if(user.getAvatar() != null) {
             ImageUtil.createUrlName(user.getAvatar());
         }
@@ -83,8 +86,10 @@ public class UserController {
      * @param id user's id
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public void updateUser(@Validated(Update.class) @RequestBody User userData, @PathVariable("id") long id) {
-        userService.update(id, userData);
+    public void updateUser(@Validated(Update.class) @RequestBody User userData, @PathVariable long id) {
+        User user = userService.findOne(id)
+                .orElseThrow(() -> new NotFoundException(String.format("The user with id %d was not found.", id)));
+        userService.update(user, userData);
     }
 
     /**

@@ -2,8 +2,11 @@ package com.bionicuniversity.edu.fashiontips.service;
 
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service to deal with user's posts.
@@ -13,7 +16,9 @@ import java.util.List;
  * @author Volodymyr Portianko
  * @since 25/11/2015
  */
-public interface PostService extends GenericService<Post, Long> {
+public interface PostService {
+
+    Optional<Post> get(long id);
 
     /**
      * Returns entity with given id from persistence.
@@ -22,7 +27,7 @@ public interface PostService extends GenericService<Post, Long> {
      * @param loggedUser entity of logged user
      * @return retrieved entity
      */
-    Post get(Long id, User loggedUser);
+    Optional<Post> get(long id, User loggedUser);
 
     /**
      * Returns all user's posts.
@@ -32,7 +37,7 @@ public interface PostService extends GenericService<Post, Long> {
      */
     List<Post> findAllByUser(User user, User loggedUser);
     List<Post> findAllByHashTag(String hashTag, User loggedUser);
-    List<Post> findAllByCategory(String categoryName, User loggedUser);
+    List<Post> findAllByCategory(Post.Category category, User loggedUser);
     List<Post> findAll(User loggedUser);
 
     /**
@@ -41,7 +46,10 @@ public interface PostService extends GenericService<Post, Long> {
      * @param id post id
      * @param loggedUser logged user entity
      **/
-    void toggleLikedStatus(Long id, User loggedUser);
+    void toggleLikedStatus(long id, User loggedUser);
+
+    @PreAuthorize("#post.user.login == authentication.name")
+    void update(Post post);
 
     /**
      * Deletes given post from persistence.
@@ -49,4 +57,7 @@ public interface PostService extends GenericService<Post, Long> {
      * @param post post to delete
      */
     void delete(Post post);
+
+    @Transactional
+    Post save(Post post);
 }

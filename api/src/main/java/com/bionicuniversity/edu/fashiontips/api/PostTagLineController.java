@@ -4,6 +4,7 @@ import com.bionicuniversity.edu.fashiontips.entity.Clothes;
 import com.bionicuniversity.edu.fashiontips.entity.TagLine;
 import com.bionicuniversity.edu.fashiontips.entity.TagType;
 import com.bionicuniversity.edu.fashiontips.service.TagLineService;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -42,7 +43,8 @@ public class PostTagLineController {
     }
 
     @RequestMapping(value = "/tag_lines/{id}", method = RequestMethod.GET)
-    public ResponseEntity getById(@PathVariable long id){
-        return ResponseEntity.ok(tagLineService.get(id));
+    public TagLine getById(@PathVariable long id) {
+        return tagLineService.get(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Tag Line with id '%d' was not found.", id)));
     }
 }

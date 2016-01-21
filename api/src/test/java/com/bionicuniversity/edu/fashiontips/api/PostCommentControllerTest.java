@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,7 +25,7 @@ import java.time.format.DateTimeFormatter;
 import static com.bionicuniversity.edu.fashiontips.util.TestUtil.json;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -64,9 +63,6 @@ public class PostCommentControllerTest {
     @Inject
     private WebApplicationContext webApplicationContext;
 
-    @Inject
-    private FilterChainProxy springSecurityFilterChain;
-
     /* media type to check, that server response in json, encoding is UTF-8 */
     private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
@@ -80,8 +76,7 @@ public class PostCommentControllerTest {
     public void setUp() throws Exception {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
-                .addFilter(springSecurityFilterChain)
-                .defaultRequest(get(COMMENTS_API_URL).with(testSecurityContext()))
+                .apply(springSecurity())
                 .build();
 
         comment1 = commentDao.getById(1L);

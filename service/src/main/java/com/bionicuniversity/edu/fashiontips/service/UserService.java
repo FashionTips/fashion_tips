@@ -1,6 +1,9 @@
 package com.bionicuniversity.edu.fashiontips.service;
 
 import com.bionicuniversity.edu.fashiontips.entity.User;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 /**
@@ -10,15 +13,17 @@ import com.bionicuniversity.edu.fashiontips.entity.User;
  * @author Maksym Dolia
  * @since 20/11/2015
  */
-public interface UserService extends GenericService<User, Long> {
+public interface UserService {
 
     /**
      * Looks for and returns the user with given login.
      *
      * @param login login
-     * @return user with given login
+     * @return optional user with given login
      */
-    User findOne(String login);
+    Optional<User> findOne(String login);
+
+    Optional<User> findOne(long id);
 
     /**
      * Checks whether the user with given login does not exist.
@@ -36,11 +41,15 @@ public interface UserService extends GenericService<User, Long> {
      */
     boolean checkEmail(String email);
 
+    @Transactional
+    User save(User user);
+
+    void update(User user);
+
     /**
      * Sets to user with given id the given user's data and saves to persistence.
-     *
-     * @param id user's id to update
+     *  @param user user's id to update
      * @param userData user's data
      */
-    void update(Long id, User userData);
+    void update(User user, User userData);
 }

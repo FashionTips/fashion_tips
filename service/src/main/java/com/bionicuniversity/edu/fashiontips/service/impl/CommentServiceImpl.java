@@ -4,11 +4,13 @@ import com.bionicuniversity.edu.fashiontips.dao.CommentDao;
 import com.bionicuniversity.edu.fashiontips.dao.PostDao;
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
 import com.bionicuniversity.edu.fashiontips.service.CommentService;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Implementation of {@code CommentService} interface.
@@ -18,7 +20,7 @@ import java.util.List;
  * @since 13/12/2015
  */
 @Named
-public class CommentServiceImpl extends GenericServiceImpl<Comment, Long> implements CommentService {
+public class CommentServiceImpl implements CommentService {
 
     @Inject
     private CommentDao commentDao;
@@ -28,13 +30,17 @@ public class CommentServiceImpl extends GenericServiceImpl<Comment, Long> implem
 
     @Override
     public Comment save(Comment comment, long postId) {
+
+        if(!postDao.exists(postId)) throw new NotFoundException(String.format("Post with id '%d' was not found.", postId));
         comment.setPost(postDao.getReference(postId));
         comment.setCreated(LocalDateTime.now());
-        return save(comment);
+        return commentDao.save(comment);
     }
 
     @Override
     public List<Comment> findAllByPostId(Long postId) {
+
+        Objects.requireNonNull(postId, "The post id cannot be null");
         return commentDao.findAllByPost(postDao.getReference(postId));
     }
 }

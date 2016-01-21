@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Named
 public class TagLineServiceImpl implements TagLineService {
@@ -44,22 +46,19 @@ public class TagLineServiceImpl implements TagLineService {
     @Transactional
     @Override
     public TagLine save(TagLine tagLine, long postId) {
-        if(postDao.exists(postId)){
-            Post postRelatedToTagLine = postDao.getReference(postId);
-            tagLine.setPost(postRelatedToTagLine);
-            return tagLineDao.save(tagLine);
-        } else {
+
+        Objects.requireNonNull(tagLine, "Tag Line should not be null.");
+
+        if (!postDao.exists(postId))
             throw new NotFoundException(String.format("Could not found post with id = %d", postId));
-        }
+
+        Post postRelatedToTagLine = postDao.getReference(postId);
+        tagLine.setPost(postRelatedToTagLine);
+        return tagLineDao.save(tagLine);
     }
 
     @Override
-    public TagLine get(long id) {
-        TagLine tagLine = tagLineDao.getById(id);
-        if (tagLine != null) {
-            return tagLine;
-        } else {
-            throw new NotFoundException(String.format("TagLine not found by id=%d", id));
-        }
+    public Optional<TagLine> get(long id) {
+        return Optional.ofNullable(tagLineDao.getById(id));
     }
 }

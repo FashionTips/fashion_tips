@@ -2,9 +2,11 @@ package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
+import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.CommentService;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -46,7 +48,12 @@ public class PostCommentController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity save(@RequestBody Comment comment, @PathVariable long postId, Principal principal) {
-        comment.setUser(userService.findOne(principal.getName()));
+
+        String login = principal.getName();
+        User user = userService.findOne(login).orElseThrow(() ->
+                new NotFoundException(String.format("User with name '%s' was not found.", login)));
+        comment.setUser(user);
+
         Comment savedComment = commentService.save(comment, postId);
         ImageUtil.createUrlNameForUserAvatar(savedComment.getUser());
 

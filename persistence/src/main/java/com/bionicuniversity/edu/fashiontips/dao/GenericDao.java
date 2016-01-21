@@ -15,14 +15,11 @@ public interface GenericDao<T extends BaseEntity, PK extends Serializable> {
 
     List<T> getAll();
 
-    void delete(PK id);
+    void delete(T obj);
 
-    /**
-     * Deletes all records.
-     */
-    void deleteAll();
+    void delete(PK id);
 
     T getReference(PK id);
 
-    boolean exists(long id);
+    boolean exists(PK id);
 }
