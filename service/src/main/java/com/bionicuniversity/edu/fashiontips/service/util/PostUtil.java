@@ -4,9 +4,7 @@ package com.bionicuniversity.edu.fashiontips.service.util;
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
-import javafx.geometry.Pos;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -45,8 +43,20 @@ public class PostUtil {
         if (!post.getComments().isEmpty()) {
             for (Comment comment : post.getComments()) {
                 if (!comment.isAvailable()){
-                    comment.setText("deleted");
+                    comment.setMappedText("deleted");
+                } else {
+                    comment.setMappedText(comment.getText());
                 }
+            }
+        }
+    }
+
+    public static void handleDeletedMessages(Comment comment) {
+        if (comment != null && comment.getText() != null && !comment.getText().trim().isEmpty()) {
+            if (!comment.isAvailable()) {
+                comment.setMappedText("deleted");
+            } else {
+                comment.setMappedText(comment.getText());
             }
         }
     }

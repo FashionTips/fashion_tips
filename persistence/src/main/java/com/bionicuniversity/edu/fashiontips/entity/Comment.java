@@ -77,10 +77,15 @@ public class Comment extends BaseEntity<Long> {
         this.user = user;
     }
 
+    @JsonIgnore
     @Column(name = "text")
     @NotBlank
     @Size(max = 255, message = "Comment body may not has more than 255 characters.")
     private String text;
+
+    @Transient
+    @JsonProperty("text")
+    private String mappedText;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -119,6 +124,14 @@ public class Comment extends BaseEntity<Long> {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public String getMappedText() {
+        return mappedText;
+    }
+
+    public void setMappedText(String mappedText) {
+        this.mappedText = mappedText;
     }
 
     @Override

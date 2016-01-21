@@ -5,6 +5,7 @@ import com.bionicuniversity.edu.fashiontips.entity.Comment;
 import com.bionicuniversity.edu.fashiontips.service.CommentService;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
+import com.bionicuniversity.edu.fashiontips.service.util.PostUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,7 @@ public class PostCommentController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity save(@RequestBody Comment comment, @PathVariable long postId, Principal principal) {
         comment.setUser(userService.findOne(principal.getName()));
+        comment.setText(comment.getMappedText());
         Comment savedComment = commentService.save(comment, postId);
         ImageUtil.createUrlNameForUserAvatar(savedComment.getUser());
 
@@ -70,6 +72,7 @@ public class PostCommentController {
     public Collection<Comment> getAll(@PathVariable long postId) {
         List<Comment> comments = commentService.findAllByPostId(postId);
         comments.stream().forEach(comment -> ImageUtil.createUrlNameForUserAvatar(comment.getUser()));
+        comments.stream().forEach(comment -> PostUtil.handleDeletedMessages(comment));
         return comments;
     }
 
