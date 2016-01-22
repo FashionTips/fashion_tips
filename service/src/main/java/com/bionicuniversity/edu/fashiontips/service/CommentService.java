@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.service;
 
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -29,6 +30,19 @@ public interface CommentService {
      * @param postId post's id
      * @return list of comments
      */
-    @Transactional
+    @Transactional(readOnly = true)
     List<Comment> findAllByPostId(Long postId);
+
+    /**
+     * Changes comment's state to not available and updates persistence
+     *
+     * @param commentId comment's id
+     * @param login user's login
+     * @throws org.springframework.security.access.AccessDeniedException
+     *          if user doesn't match to comment's user
+     * @throws NotFoundException
+     *          if comment with passed id doesn't exist
+     */
+    @Transactional
+    void hideById(long commentId, String login);
 }
