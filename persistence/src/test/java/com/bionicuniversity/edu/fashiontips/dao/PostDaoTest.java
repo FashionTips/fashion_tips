@@ -22,6 +22,7 @@ import static com.bionicuniversity.edu.fashiontips.UserTestData.USER3;
 import static org.junit.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 import static org.unitils.reflectionassert.ReflectionComparatorMode.IGNORE_DEFAULTS;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.LENIENT_DATES;
 import static org.unitils.reflectionassert.ReflectionComparatorMode.LENIENT_ORDER;
 
 /**
@@ -65,7 +66,7 @@ public class PostDaoTest {
         assertReflectionEquals(UPDATE_POST1, testPost, IGNORE_DEFAULTS);
 
         List<Post> testList = postDao.getAll();
-        assertReflectionEquals(LIST_IF_UPDATE_FIRST_POST, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
+        assertReflectionEquals(LIST_IF_UPDATE_FIRST_POST, testList, IGNORE_DEFAULTS, LENIENT_ORDER, LENIENT_DATES);
     }
 
     @Test

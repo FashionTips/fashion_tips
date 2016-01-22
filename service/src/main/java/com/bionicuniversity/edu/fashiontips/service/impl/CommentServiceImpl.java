@@ -5,6 +5,7 @@ import com.bionicuniversity.edu.fashiontips.dao.PostDao;
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
 import com.bionicuniversity.edu.fashiontips.service.CommentService;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -30,8 +31,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment save(Comment comment, long postId) {
-
         if(!postDao.exists(postId)) throw new NotFoundException(String.format("Post with id '%d' was not found.", postId));
+        comment.setAvailable(true);
         comment.setPost(postDao.getReference(postId));
         comment.setCreated(LocalDateTime.now());
         return commentDao.save(comment);
@@ -39,8 +40,28 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> findAllByPostId(Long postId) {
-
         Objects.requireNonNull(postId, "The post id cannot be null");
-        return commentDao.findAllByPost(postDao.getReference(postId));
+        List<Comment> comments = commentDao.findAllByPost(postDao.getReference(postId));
+        for (Comment c : comments) {
+            if (!c.isAvailable()){
+                c.setText("");
+            }
+        }
+        return comments;
+    }
+
+    @Override
+    public void hideById(long commentId, String login) {
+        Comment comment = commentDao.getById(commentId);
+        if (comment != null) {
+            if (comment.getUser().getLogin().equals(login)) {
+                comment.setAvailable(false);
+                commentDao.save(comment);
+            } else {
+                throw new AccessDeniedException(String.format("Comment doesn't belong to user with login = %s", login));
+            }
+        } else {
+            throw new NotFoundException(String.format("Comment not found by id = %d", commentId));
+        }
     }
 }

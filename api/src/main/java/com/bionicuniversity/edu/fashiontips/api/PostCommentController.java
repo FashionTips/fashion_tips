@@ -7,6 +7,7 @@ import com.bionicuniversity.edu.fashiontips.service.CommentService;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -77,5 +78,11 @@ public class PostCommentController {
         List<Comment> comments = commentService.findAllByPostId(postId);
         comments.stream().forEach(comment -> ImageUtil.createUrlNameForUserAvatar(comment.getUser()));
         return comments;
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity hide(@PathVariable long id, Principal principal){
+        commentService.hideById(id, principal.getName());
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

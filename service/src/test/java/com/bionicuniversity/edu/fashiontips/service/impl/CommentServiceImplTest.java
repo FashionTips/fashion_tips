@@ -13,6 +13,7 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -96,5 +97,30 @@ public class CommentServiceImplTest {
         when(commentDao.findAllByPost(post)).thenReturn(comments);
 
         assertEquals("Should return the same list of comments.", comments, commentService.findAllByPostId(postId));
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testHideById_whenPassInappropriateLoginAgainstCommentsOwner_shouldThrowException() throws Exception {
+        User user = new User();
+        user.setLogin("login1");
+        Comment comment = new Comment(1L, "cool", null, user);
+        when(commentDao.getById(anyLong())).thenReturn(comment);
+        commentService.hideById(1L, "login4444");
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testHideById_whenPassNotExistentCommentId_shouldThrowException() throws Exception {
+        when(commentDao.getById(anyLong())).thenReturn(null);
+        commentService.hideById(anyLong(), "no matter");
+    }
+
+    @Test
+    public void testHideById_whenArgsAreValid_shouldCallMethodSave() throws Exception {
+        User user = new User();
+        user.setLogin("login");
+        Comment comment = new Comment(1L, "some texr", null, user, LocalDateTime.now());
+        when(commentDao.getById(anyLong())).thenReturn(comment);
+        commentService.hideById(1L, "login");
+        verify(commentDao).save(comment);
     }
 }
