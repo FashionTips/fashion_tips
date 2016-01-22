@@ -62,6 +62,7 @@ CREATE TABLE posts (
   user_post VARCHAR(256),
   created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   category VARCHAR(64),
+  is_comments_allowed BOOLEAN DEFAULT TRUE,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 

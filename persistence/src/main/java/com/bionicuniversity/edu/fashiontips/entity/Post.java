@@ -89,6 +89,9 @@ public class Post extends BaseEntity<Long> {
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Comment> comments;
 
+    @Column(name = "is_comments_allowed", nullable = false)
+    private boolean commentsAllowed = true;
+
     /*
     * Set of users that liked post
     * */
@@ -212,6 +215,14 @@ public class Post extends BaseEntity<Long> {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public boolean isCommentsAllowed() {
+        return commentsAllowed;
+    }
+
+    public void setCommentsAllowed(boolean commentsAllowed) {
+        this.commentsAllowed = commentsAllowed;
     }
 
     public Set<User> getLikedByUsers() {

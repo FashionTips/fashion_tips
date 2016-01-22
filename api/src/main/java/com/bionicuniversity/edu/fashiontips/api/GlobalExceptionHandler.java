@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
 
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotAllowedActionException;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,10 @@ public class GlobalExceptionHandler {
      * @param e exception
      * @return response entity
      */
-    @ExceptionHandler(value = {IllegalArgumentException.class, AccessDeniedException.class})
+    @ExceptionHandler(value = {
+            IllegalArgumentException.class,
+            AccessDeniedException.class,
+            NotAllowedActionException.class})
     public ResponseEntity processForbidden(Exception e) {
         ErrorInformation error = new ErrorInformation(e.getClass().toString(), e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
