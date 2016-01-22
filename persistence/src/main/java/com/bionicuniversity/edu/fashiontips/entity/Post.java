@@ -13,6 +13,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -84,6 +85,7 @@ public class Post extends BaseEntity<Long> {
             inverseJoinColumns = @JoinColumn(name = "img_id")
     )
     @Fetch(FetchMode.SELECT)
+    @NotEmpty(message = "Image is required.")
     private List<Image> images;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
