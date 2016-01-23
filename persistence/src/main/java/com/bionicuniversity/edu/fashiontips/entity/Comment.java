@@ -96,7 +96,6 @@ public class Comment extends BaseEntity<Long> {
     @Column(name = "created", nullable = false, insertable = false)
     private LocalDateTime created;
 
-    @JsonIgnore
     private boolean available;
 
     public LocalDateTime getCreated() {
