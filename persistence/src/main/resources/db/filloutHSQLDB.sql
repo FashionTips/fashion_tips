@@ -264,9 +264,10 @@ INSERT INTO post_images (post_id, img_id) VALUES (2,4);
 INSERT INTO post_images (post_id, img_id) VALUES (2,5);
 INSERT INTO post_images (post_id, img_id) VALUES (3,6);
 
-INSERT INTO comments (text, post_id, user_id, created) VALUES ('cool!', 1, 1,'2015-12-17 12:00:00');
-INSERT INTO comments (text, post_id, user_id, created) VALUES ('amazing!!', 2, 1,'2015-12-17 12:01:00');
-INSERT INTO comments (text, post_id, user_id, created) VALUES ('perfect!!!', 3, 2,'2015-12-17 12:02:00');
+INSERT INTO comments (text, post_id, user_id, created, available) VALUES ('cool!', 1, 1,'2015-12-17 12:00:00', 'true');
+INSERT INTO comments (text, post_id, user_id, created, available) VALUES ('hidden', 1, 1,'2015-12-17 12:00:00', 'false');
+INSERT INTO comments (text, post_id, user_id, created, available) VALUES ('amazing!!', 2, 1,'2015-12-17 12:01:00', 'true');
+INSERT INTO comments (text, post_id, user_id, created, available) VALUES ('perfect!!!', 3, 2,'2015-12-17 12:02:00', 'true');
 
 INSERT INTO post_user_likes (post_id, user_id) VALUES (1,2);
 INSERT INTO post_user_likes (post_id, user_id) VALUES (1,3);

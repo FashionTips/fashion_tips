@@ -65,21 +65,21 @@ public class CommentDaoTest {
 
     @Test
     public void testUpdateComment() {
-        Comment testComment = commentDao.getById(2L);
+        Comment testComment = commentDao.getById(3L);
         testComment.setText("UpdateFromTest");
         commentDao.save(testComment);
-        Comment updatedComment = commentDao.getById(2L);
+        Comment updatedComment = commentDao.getById(3L);
 
-        assertReflectionEquals(UPDATE_COMMENT2, updatedComment, IGNORE_DEFAULTS);
+        assertReflectionEquals(UPDATE_COMMENT3, updatedComment, IGNORE_DEFAULTS);
 
         List<Comment> testList = commentDao.getAll();
-        assertReflectionEquals(LIST_IF_UPDATE_COMMENT2, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
+        assertReflectionEquals(LIST_IF_UPDATE_COMMENT3, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 
     @Test
     public void testGetCommentByPost() {
         List<Comment> testList = commentDao.findAllByPost(POST1);
-        assertReflectionEquals(Arrays.asList(COMMENT1), testList, IGNORE_DEFAULTS, LENIENT_ORDER);
+        assertReflectionEquals(Arrays.asList(COMMENT1, COMMENT2_HIDDEN), testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 }
 
