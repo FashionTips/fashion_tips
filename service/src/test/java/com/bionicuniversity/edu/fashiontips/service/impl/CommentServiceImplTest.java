@@ -6,6 +6,7 @@ import com.bionicuniversity.edu.fashiontips.entity.Comment;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.CommentService;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotAllowedActionException;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -52,15 +52,15 @@ public class CommentServiceImplTest {
         Comment savedComment = new Comment(1L, comment.getText(), post, user, LocalDateTime.now());
 
         when(postDao.exists(postId)).thenReturn(true);
-        when(postDao.getReference(postId)).thenReturn(post);
+        when(postDao.getById(postId)).thenReturn(post);
         when(commentDao.save(comment)).thenReturn(savedComment);
 
         assertEquals("Comments should be equal.", savedComment, commentService.save(comment, postId));
 
         InOrder inOrderPostDao = inOrder(postDao);
         inOrderPostDao.verify(postDao).exists(postId);
-        inOrderPostDao.verify(postDao).getReference(postId);
-        verify(commentDao, atMost(1)).getReference(postId);
+        inOrderPostDao.verify(postDao).getById(postId);
+        verify(commentDao, atMost(1)).getById(postId);
     }
 
     @Test(expected = NotFoundException.class)
@@ -70,6 +70,23 @@ public class CommentServiceImplTest {
         when(postDao.exists(postId)).thenReturn(false);
         commentService.save(new Comment(), postId);
         fail("Should throw an exception, when the id of non existent post was passed.");
+    }
+
+    @Test(expected = NotAllowedActionException.class)
+    public void testSave_whenPostsIsAllowedCommentsFalse_shouldThrowAnException() throws Exception {
+
+        long postId = 523L;
+        Post post = new Post();
+        post.setId(postId);
+        post.setCommentsAllowed(false);
+        Comment comment = new Comment();
+
+        when(postDao.exists(postId)).thenReturn(true);
+        when(postDao.getById(postId)).thenReturn(post);
+        when(commentDao.save(comment)).thenReturn(comment);
+
+        commentService.save(comment, postId);
+        fail("Should throw an exception if comments are not allowed.");
     }
 
     @Test(expected = NullPointerException.class)
@@ -96,5 +113,32 @@ public class CommentServiceImplTest {
         when(commentDao.findAllByPost(post)).thenReturn(comments);
 
         assertEquals("Should return the same list of comments.", comments, commentService.findAllByPostId(postId));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testBlock_whenPostIsNull_shouldThrowAnException() throws Exception {
+
+        commentService.block(null);
+        fail("Should throw an exception, when post is null.");
+    }
+
+    @Test
+    public void testBlock_whenPostsCommentsAreAllowed_shouldReturnFalse() throws Exception {
+
+        Post post = new Post();
+        post.setCommentsAllowed(true);
+        when(postDao.save(post)).thenReturn(post);
+        boolean result = commentService.block(post);
+        assertFalse("Should block comments and return false - comments are no allowed.", result);
+    }
+
+    @Test
+    public void testBlock_whenPostsCommentsBlocked_shouldReturnTrue() throws Exception {
+
+        Post post = new Post();
+        post.setCommentsAllowed(false);
+        when(postDao.save(post)).thenReturn(post);
+        boolean result = commentService.block(post);
+        assertTrue("Should block comments and return false - comments are no allowed.", result);
     }
 }

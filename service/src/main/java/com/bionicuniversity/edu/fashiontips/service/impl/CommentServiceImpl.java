@@ -3,8 +3,12 @@ package com.bionicuniversity.edu.fashiontips.service.impl;
 import com.bionicuniversity.edu.fashiontips.dao.CommentDao;
 import com.bionicuniversity.edu.fashiontips.dao.PostDao;
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
+import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.service.CommentService;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotAllowedActionException;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,7 +36,14 @@ public class CommentServiceImpl implements CommentService {
     public Comment save(Comment comment, long postId) {
 
         if(!postDao.exists(postId)) throw new NotFoundException(String.format("Post with id '%d' was not found.", postId));
-        comment.setPost(postDao.getReference(postId));
+
+        Post post = postDao.getById(postId);
+
+        if(!post.isCommentsAllowed()) {
+            throw new NotAllowedActionException(String.format("Post Id '%d': author prohibited to comment.", postId));
+        }
+
+        comment.setPost(post);
         comment.setCreated(LocalDateTime.now());
         return commentDao.save(comment);
     }
@@ -42,5 +53,15 @@ public class CommentServiceImpl implements CommentService {
 
         Objects.requireNonNull(postId, "The post id cannot be null");
         return commentDao.findAllByPost(postDao.getReference(postId));
+    }
+
+    @Override
+    @PreAuthorize("#post.user.login == authentication.name")
+    public boolean block(@P("post") Post post) {
+        Objects.requireNonNull(post, "Post cannot be null.");
+        boolean blockedStatus = post.isCommentsAllowed();
+        post.setCommentsAllowed(!blockedStatus);
+        post = postDao.save(post);
+        return post.isCommentsAllowed();
     }
 }

@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.service;
 
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
+import com.bionicuniversity.edu.fashiontips.entity.Post;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -31,4 +32,12 @@ public interface CommentService {
      */
     @Transactional
     List<Comment> findAllByPostId(Long postId);
+
+    /**
+     * Toggles the status of post's comments - they could be allowed or blocked, depends on user's choice.
+     *
+     * @param post post to block/allow comments
+     * @return the current block comments status
+     */
+    boolean block(Post post);
 }

@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
+import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.CommentService;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
@@ -77,5 +78,20 @@ public class PostCommentController {
         List<Comment> comments = commentService.findAllByPostId(postId);
         comments.stream().forEach(comment -> ImageUtil.createUrlNameForUserAvatar(comment.getUser()));
         return comments;
+    }
+
+    /**
+     * Allows or prohibits posts to be commented.
+     *
+     * @param postId post's id
+     * @return actual status of ability to comment post after all done manipulations
+     */
+    @RequestMapping(value = "/block", method = RequestMethod.POST)
+    public boolean block(@PathVariable long postId) {
+
+        Post post = postService.get(postId)
+                .orElseThrow(() -> new NotFoundException(String.format("Post with id '%d' was not found.", postId)));
+
+        return commentService.block(post);
     }
 }

@@ -1,13 +1,14 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.dao.CommentDao;
+import com.bionicuniversity.edu.fashiontips.dao.PostDao;
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
+import com.bionicuniversity.edu.fashiontips.entity.Post;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
@@ -50,15 +51,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 })
 @ActiveProfiles("dev")
 @Transactional
-@Rollback
+@WithMockUser("login1")
 public class PostCommentControllerTest {
 
     private static final String COMMENTS_API_URL = "/posts/1/comments";
-    private static final String TEST_USER_LOGIN = "login1";
-    private static final String TEST_USER_PASSWORD = "1111";
 
     @Inject
     private CommentDao commentDao;
+
+    @Inject
+    private PostDao postDao;
 
     @Inject
     private WebApplicationContext webApplicationContext;
@@ -83,7 +85,6 @@ public class PostCommentControllerTest {
     }
 
     @Test
-    @WithMockUser(TEST_USER_LOGIN)
     public void testSave() throws Exception {
         Comment testComment = new Comment("Test", comment1.getPost(), comment1.getUser());
 
@@ -101,7 +102,22 @@ public class PostCommentControllerTest {
     }
 
     @Test
-    @WithMockUser(TEST_USER_LOGIN)
+    public void testSave_whenCommentsBlocked_shouldReturnStatus403Forbidden() throws Exception {
+
+        Post post = postDao.getById(1L);
+        post.setCommentsAllowed(false);
+        postDao.save(post);
+
+        mockMvc.perform(post(COMMENTS_API_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json(comment1))
+        )
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.error").exists())
+                .andExpect(jsonPath("$.message").exists());
+    }
+
+    @Test
     public void testGetAll() throws Exception {
         mockMvc.perform(get(COMMENTS_API_URL))
                 .andExpect(status().isOk())
@@ -112,5 +128,30 @@ public class PostCommentControllerTest {
                         comment1.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
                 )
                 .andExpect(jsonPath("$[0].author.login", is(comment1.getUser().getLogin())));
+    }
+
+    @Test
+    public void testBlock_whenPostIdOfNonexistentPost_shouldReturnStatus404NotFound() throws Exception {
+
+        mockMvc.perform(post("/posts/-1/comments/block").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(contentType));
+    }
+
+    @Test
+    @WithMockUser("someAnotherUser")
+    public void testBlock_whenPostOfAnotherAuthor_shouldReturnStatus403Forbidden() throws Exception {
+
+        mockMvc.perform(post("/posts/1/comments/block").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType(contentType));
+    }
+
+    @Test
+    public void testBlock_whenPostsCommentsAllowed_shouldReturnFalse() throws Exception {
+
+        mockMvc.perform(post(COMMENTS_API_URL + "/block").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(Boolean.FALSE.toString()));
     }
 }
