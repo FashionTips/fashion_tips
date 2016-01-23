@@ -1,5 +1,5 @@
-var PostController = ['$scope', 'postService', 'sessionService', '$location',
-    function ($scope, postService, sessionService, $location) {
+var PostController = ['$scope', 'postService', 'sessionService', '$location', '$filter',
+    function ($scope, postService, sessionService, $location, $filter) {
 
         /* if postId is present, then upload post by id */
         var absUrl = $location.absUrl();
@@ -120,6 +120,22 @@ var PostController = ['$scope', 'postService', 'sessionService', '$location',
             result.then(function (data) {
                 $scope.post.comments.push(data);
                 $scope.commentText = "";
+            });
+        };
+
+        /**
+         * Deletes comment with given id.
+         *
+         * @param id
+         */
+        $scope.deleteComment = function(id) {
+
+            postService.deleteComment($scope.post.id, id, function(data) {
+                var comment = $filter('filter')($scope.post.comments, {id: id})[0];
+                comment.available = false;
+            }, function(data){
+                // temporary do nothing
+                console.log("Error occurred");
             });
         };
 

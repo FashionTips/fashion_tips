@@ -155,6 +155,25 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
     };
 
     /**
+     * Deletes comment.
+     *
+     * @param postId
+     * @param commentId
+     * @param success
+     * @param error
+     */
+    this.deleteComment = function(postId, commentId, success, error) {
+
+        var Comments = $resource(urlApi + '/posts/:postId/comments/:commentId', {postId: postId});
+
+        Comments.delete({commentId:commentId}, function(response) {
+            success && success(response);
+        }, function(response) {
+            error && error(response);
+        });
+    };
+
+    /**
      * Toggles liked status of post on api
      *
      * @param postId

@@ -11,16 +11,29 @@
 
             <div class="list-group" data-ng-repeat="comment in post.comments">
                 <div class="list-group-item">
-                    <div class="media">
+                    <div data-ng-hide="comment.available">
+                        <p>This comment was deleted by its author.</p>
+                    </div>
+                    <div data-ng-show="comment.available" class="media">
                         <div class="media-left">
                             <img data-ng-src="{{ comment.author.avatar || 'http://placehold.it/64x64' }}" height="64" class="media-object"/>
                         </div>
                         <div class="media-body">
                             <div class="media-heading">
-                                <p class="col-md-6"><a href="/user/{{comment.author.login}}">{{ comment.author.login }}</a></p>
+                                <p class="col-md-5"><a href="/user/{{comment.author.login}}">{{ comment.author.login
+                                    }}</a></p>
                                 <p class="col-md-6 text-right">{{ comment.created | date:'medium' }}</p>
+                                <p data-ng-show="comment.author.login === username()" class="col-md-1">
+                                    <a href data-ng-click="deleteComment(comment.id)">
+                                        <span class="text-danger glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    </a>
+                                </p>
                             </div>
-                            {{ comment.text }}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>{{ comment.text }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
