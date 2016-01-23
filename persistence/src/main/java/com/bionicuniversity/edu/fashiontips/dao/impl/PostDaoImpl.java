@@ -6,6 +6,7 @@ import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.bionicuniversity.edu.fashiontips.entity.Post.Category;
@@ -22,27 +23,37 @@ public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
 
     @Override
     public List<Post> findByUser(User user) {
-        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :user ORDER BY p.created DESC", Post.class);
-        return query.setParameter("user", user).getResultList();
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :user AND p.status = :published ORDER BY p.publicationTime DESC", Post.class);
+        return query.setParameter("user", user).setParameter("published", Post.Status.PUBLISHED).getResultList();
+    }
+
+    @Override
+    public List<Post> findMine(User author) {
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :author ORDER BY p.publicationTime DESC", Post.class);
+        return query.setParameter("author", author).getResultList();
     }
 
     @Override
     public List<Post> findByWord(String word) {
-        TypedQuery<Post> query =
-                em.createQuery("SELECT p FROM Post p WHERE p.textMessage LIKE :pattern ORDER BY p.created DESC", Post.class);
-
-        return query.setParameter("pattern", "%" + word + "%").getResultList();
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.textMessage LIKE :pattern AND p.status = :published ORDER BY p.publicationTime DESC", Post.class);
+        return query.setParameter("pattern", "%" + word + "%").setParameter("published", Post.Status.PUBLISHED).getResultList();
     }
 
     @Override
     public List<Post> findByCategory(Category category) {
-        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.category = :category ORDER BY p.created DESC", Post.class);
-        return query.setParameter("category", category).getResultList();
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.category = :category AND p.status = :published ORDER BY p.publicationTime DESC", Post.class);
+        return query.setParameter("category", category).setParameter("published", Post.Status.PUBLISHED).getResultList();
     }
 
     @Override
     public List<Post> findAll() {
-        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p ORDER BY p.created DESC", Post.class);
-        return query.getResultList();
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.status = :published ORDER BY p.publicationTime DESC", Post.class);
+        return query.setParameter("published", Post.Status.PUBLISHED).getResultList();
+    }
+
+    @Override
+    public List<Post> findUnpublished() {
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.status =:wait AND p.publicationTime < :now ORDER BY p.publicationTime ASC ", Post.class);
+        return query.setParameter("wait", Post.Status.WAIT).setParameter("now", LocalDateTime.now()).getResultList();
     }
 }

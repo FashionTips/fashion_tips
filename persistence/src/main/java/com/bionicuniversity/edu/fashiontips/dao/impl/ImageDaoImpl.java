@@ -44,4 +44,9 @@ public class ImageDaoImpl implements ImageDao {
         Files.write(path, image.getData(), StandardOpenOption.CREATE_NEW);
         return image;
     }
+
+    @Override
+    public Image getById(Long id) {
+        return em.find(Image.class, id);
+    }
 }

@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS verification_token;
 DROP TABLE IF EXISTS tag_parameters;
 DROP TABLE IF EXISTS tags_tag_lines;
 DROP TABLE IF EXISTS tags;
@@ -64,7 +65,9 @@ CREATE TABLE posts (
   title VARCHAR NOT NULL ,
   user_post VARCHAR,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  publication_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   category VARCHAR(64) NOT NULL ,
+  status VARCHAR(64) NOT NULL,
   is_comments_allowed BOOLEAN DEFAULT TRUE,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "post_id" PRIMARY KEY (id)
@@ -73,6 +76,8 @@ CREATE TABLE posts (
 CREATE TABLE images (
   id BIGSERIAL,
   img_name VARCHAR NOT NULL,
+  user_id BIGINT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
   CONSTRAINT "img_id" PRIMARY KEY (id)
 );
 
@@ -87,7 +92,7 @@ CREATE TABLE post_images (
 CREATE TABLE user_images (
   user_id BIGINT NOT NULL,
   img_id BIGINT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES posts (id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
   FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE,
   CONSTRAINT user_pictures_idx UNIQUE (user_id, img_id)
 );
@@ -122,9 +127,9 @@ CREATE UNIQUE INDEX clothes_name ON clothes (name);
 
 CREATE TABLE tag_lines (
   id BIGSERIAL,
-  post_id BIGINT NOT NULL,
+  image_id BIGINT NOT NULL,
   clothes_id BIGINT NOT NULL,
-  FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
+  FOREIGN KEY (image_id) REFERENCES images (id) ON DELETE CASCADE,
   FOREIGN KEY (clothes_id) REFERENCES clothes (id) ON DELETE CASCADE,
   CONSTRAINT "tag_line_id" PRIMARY KEY (id)
 );
@@ -158,4 +163,12 @@ CREATE TABLE tags_tag_lines (
   FOREIGN KEY (tag_line_id) REFERENCES tag_lines (id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT tags_lines_stores_idx UNIQUE (tag_line_id,tag_id)
+);
+
+CREATE TABLE verification_token (
+  email VARCHAR NOT NULL,
+  token VARCHAR NOT NULL,
+  expaired_time TIMESTAMP,
+  verified BOOLEAN DEFAULT FALSE,
+  CONSTRAINT verification_token_email UNIQUE (email)
 );

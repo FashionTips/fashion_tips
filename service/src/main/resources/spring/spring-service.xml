@@ -1,13 +1,43 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task-4.2.xsd">
 
     <!--Enable bean configuration throw annotations-->
     <context:annotation-config/>
 
     <!--Create service beans-->
     <context:component-scan base-package="com.bionicuniversity.edu.fashiontips.service"/>
+    <!--Create tasks scheduler-->
+    <task:scheduler id="scheduler"/>
+    <task:scheduled-tasks scheduler="scheduler">
+        <task:scheduled ref="postsPublicationScheduler" method="publication" cron="0 0/1 * * * *"/>
+    </task:scheduled-tasks>
+
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com" />
+        <property name="port" value="587" />
+        <property name="username" value="edufashiontips@gmail.com" />
+        <property name="password" value="BionicUnivercity" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+                <!--<prop key="mail.transport.protocol">smtp</prop>-->
+                <prop key="mail.debug">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <context:property-placeholder
+            location="classpath:/mail.properties"
+            ignore-unresolvable="true"
+            system-properties-mode="OVERRIDE"/>
 
 </beans>

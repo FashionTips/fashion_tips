@@ -5,6 +5,7 @@ import com.bionicuniversity.edu.fashiontips.service.util.exception.NotAllowedAct
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -80,5 +81,17 @@ public class GlobalExceptionHandler {
 
         ErrorInformation error = new ErrorInformation(e.getClass().toString(), stringBuilder.toString().trim());
         return ResponseEntity.unprocessableEntity().body(error);
+    }
+
+    /**
+     * Handler for exceptions, caused by bad requests from client side.
+     *
+     * @param e exception
+     * @return response with detailed error
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity badRequest(HttpMessageNotReadableException e) {
+        ErrorInformation error = new ErrorInformation(e.getClass().toString(), e.getMessage());
+        return ResponseEntity.badRequest().body(error);
     }
 }

@@ -1,19 +1,22 @@
 package com.bionicuniversity.edu.fashiontips.service.impl;
 
 import com.bionicuniversity.edu.fashiontips.dao.ClothesDao;
-import com.bionicuniversity.edu.fashiontips.dao.PostDao;
 import com.bionicuniversity.edu.fashiontips.dao.TagLineDao;
 import com.bionicuniversity.edu.fashiontips.dao.TagTypeDao;
-import com.bionicuniversity.edu.fashiontips.entity.Post;
+import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.TagLine;
+import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.service.ImageService;
 import com.bionicuniversity.edu.fashiontips.service.TagLineService;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
@@ -30,8 +33,7 @@ public class TagLineServiceImplTest {
     @InjectMocks
     private TagLineService tagLineService = new TagLineServiceImpl();
 
-    @Mock
-    private TagLineDao tagLineDao;
+    @Mock    private TagLineDao tagLineDao;
 
     @Mock
     private ClothesDao clothesDao;
@@ -40,7 +42,7 @@ public class TagLineServiceImplTest {
     private TagTypeDao tagTypeDao;
 
     @Mock
-    private PostDao postDao;
+    ImageService imageService;
 
     @Test
     public void testGetAvailableTypeOfClothes() throws Exception {
@@ -54,36 +56,30 @@ public class TagLineServiceImplTest {
         verify(tagTypeDao, times(1)).getAll();
     }
 
-    @Test(expected = NotFoundException.class)
-    public void testSave_whenPostDoesNotExist_shouldThrowException() throws Exception {
-
-        long postId = 523L;
-        when(postDao.exists(1L)).thenReturn(false);
-        tagLineService.save(new TagLine(), postId);
-        fail("Should throw exception, when post does not exist.");
+    @Test(expected = NullPointerException.class)
+    public void testSave_whenTagLineIsNull_shouldThrowException() throws Exception {
+        tagLineService.save(null, 100L, new User());
+        fail("Should throw exception, when tag line is null.");
     }
 
     @Test(expected = NullPointerException.class)
-    public void testSave_whenTagLineIsNull_shouldThrowException() throws Exception {
-        tagLineService.save(null, 243L);
+    public void testSave_whenTagLineIsNull_shouldThrowError() throws Exception {
+        tagLineService.save(new TagLine(), 10L, new User());
         fail("Should throw exception, when tag line is null.");
     }
 
     @Test
-    public void testSave_whenArgsAreCorrect_shouldSaveTagLineToDao() throws Exception {
+    public void testSave_whenUserIsWrong_shouldSaveTagLineToDao() throws Exception {
 
-        long postId = 523L;
         TagLine tagLine = new TagLine();
-        Post post = new Post();
+        Long imageId = 100L;
+        Optional<Image> image = Optional.of(new Image());
+        User loggedUser = new User();
+        image.get().setOwner(new User());
 
-        when(postDao.exists(postId)).thenReturn(true);
-        when(postDao.getReference(postId)).thenReturn(post);
+        when(imageService.findOne(imageId)).thenReturn(image);
+        tagLineService.save(tagLine, imageId, loggedUser);
 
-        tagLineService.save(tagLine, postId);
-
-        InOrder inOrderPostDao = inOrder(postDao);
-        inOrderPostDao.verify(postDao).exists(postId);
-        inOrderPostDao.verify(postDao).getReference(postId);
         verify(tagLineDao, times(1)).save(tagLine);
     }
 
@@ -92,5 +88,25 @@ public class TagLineServiceImplTest {
         long id = 523L;
         tagLineService.get(id);
         verify(tagLineDao, times(1)).getById(id);
+    }
+
+    @Test
+    public void testDelete_whenArgsAreCorrect() throws Exception {
+        long id = 500L;
+        User user = new User();
+        TagLine tagLine = new TagLine();
+        tagLine.setImage(new Image());
+        tagLine.getImage().setOwner(user);
+
+        when(tagLineDao.getById(id)).thenReturn(tagLine);
+        tagLineService.delete(id, user);
+        verify(tagLineDao, times(1)).getById(id);
+        verify(tagLineDao, times(1)).delete(id);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testDelete_whenIdIsNotExist() throws Exception {;
+        tagLineService.delete(10L, new User());
+        fail("Should throw exception, when tag line is null.");
     }
 }

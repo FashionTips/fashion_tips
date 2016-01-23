@@ -2,6 +2,11 @@ package com.bionicuniversity.edu.fashiontips;
 
 import com.bionicuniversity.edu.fashiontips.entity.Image;
 
+import java.util.Arrays;
+
+import static com.bionicuniversity.edu.fashiontips.TagLineTestData.*;
+
+
 /**
  * This class stores default and test values for Image entity
  *
@@ -21,5 +26,13 @@ public class ImageTestData {
     public static final String TEST_IMAGE_DIRECTORY = "../test_images/";
 
     public static final Image IMAGE_NEW = new Image(null, "newImage.jpg");
+    public static final Long IMAGE_NEW_ID = 7L;
+
+    static {
+        IMAGE1.setTagLines(Arrays.asList(TAG_LINE1, TAG_LINE2));
+        IMAGE2.setTagLines(Arrays.asList(TAG_LINE3));
+        NEW_TAG_LINE_BEFORE_SAVE.setImage(IMAGE3);
+        NEW_TAG_LINE_AFTER_SAVE.setImage(IMAGE3);
+    }
 
 }

@@ -5,8 +5,11 @@ import com.bionicuniversity.edu.fashiontips.annotation.Create;
 import com.bionicuniversity.edu.fashiontips.annotation.Update;
 import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
 import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
+import com.bionicuniversity.edu.fashiontips.service.VerificationTokenService;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +17,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.inject.Inject;
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Controller for users.
@@ -29,6 +34,9 @@ public class UserController {
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private VerificationTokenService verificationTokenService;
 
     /**
      * Returns user with given id, status OK.
@@ -69,8 +77,14 @@ public class UserController {
      * @return created user
      */
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity createUser(@Validated(Create.class) @RequestBody User user) {
+    public ResponseEntity createUser(@Validated(Create.class) @RequestBody User user,
+                                     @RequestParam String token) {
+        VerificationToken verificationToken = verificationTokenService.getByToken(token)
+                .orElseThrow(() -> new NotFoundException("This token does not exist"));
+        if (verificationToken.isVerified()) return new ResponseEntity(HttpStatus.FORBIDDEN); //TODO accept it???
+        verificationToken.setVerified(true);
         User savedUser = userService.save(user);
+        verificationTokenService.update(verificationToken);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("users/" + savedUser.getId())
@@ -113,4 +127,34 @@ public class UserController {
         // at this step email is always != null
         return login != null && userService.checkLogin(login) && userService.checkEmail(email);
     }
+
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public ResponseEntity signUp(@Validated(Create.class) @RequestBody VerificationToken token) {
+        Optional<VerificationToken> verifiedToken = null;
+        if (!(verifiedToken = verificationTokenService.getToken(token)).isPresent()) {
+            verificationTokenService.registrateNewToken(token);
+            return ResponseEntity.ok().build();
+        }
+        VerificationToken verificationToken = verifiedToken.get();
+        if (verificationToken.getExpairedTime() != null
+                && LocalDateTime.now().isBefore(verificationToken.getExpairedTime()))
+            return ResponseEntity.ok().build();
+
+        verificationTokenService.resentToken(verificationToken);
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "/token", method = RequestMethod.POST)
+    public boolean checkToken(@RequestBody VerificationToken token) {
+
+        if (token.getToken() == null) throw new NotFoundException("Token does not present");
+
+        VerificationToken verificationToken =
+                verificationTokenService.getByToken(token.getToken()).
+                        orElseThrow(() -> new NotFoundException("Token not found"));
+
+        if (verificationToken.isVerified()) return false;
+        return true;
+    }
+
 }
