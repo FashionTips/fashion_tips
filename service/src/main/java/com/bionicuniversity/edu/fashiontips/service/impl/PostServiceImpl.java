@@ -31,51 +31,57 @@ public class PostServiceImpl implements PostService {
     @Inject private PostDao postDao;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Post> findAllByUser(User user, User loggedUser) {
         List<Post> posts = postDao.findByUser(user);
         PostUtil.normalizeForClient(posts, loggedUser);
+        PostUtil.handleDeletedMessages(posts);
         return posts;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Post> findAllByHashTag(String hashTag, User loggedUser) {
         List<Post> posts = postDao.findByWord(hashTag).stream().filter(post -> {
             String text = post.getTextMessage();
             return Arrays.asList(text.split("\\s")).stream().anyMatch(s -> s.matches(hashTag + "\\W*"));
         }).collect(Collectors.toList());
         PostUtil.normalizeForClient(posts, loggedUser);
+        PostUtil.handleDeletedMessages(posts);
         return posts;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Post> findAllByCategory(Post.Category category, User loggedUser) {
         List<Post> posts = postDao.findByCategory(category);
         PostUtil.normalizeForClient(posts, loggedUser);
+        PostUtil.handleDeletedMessages(posts);
         return posts;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Post> findAll(User loggedUser) {
         List<Post> posts = postDao.findAll();
         PostUtil.normalizeForClient(posts, loggedUser);
+        PostUtil.handleDeletedMessages(posts);
         return posts;
     }
 
     @Override
     @Transactional
+    // don't have message handle
     public Optional<Post> get(long id) {
         return Optional.ofNullable(postDao.getById(id));
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<Post> get(long id, User loggedUser) {
         Post post = postDao.getById(id);
         PostUtil.normalizeForClient(post, loggedUser);
+        PostUtil.handleDeletedMessages(post);
         return Optional.ofNullable(post);
     }
 
