@@ -52,6 +52,14 @@
                     QUESTION
                 </label>
 
+                    <%-- Block Comments --%>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" data-ng-init="postForm.commentsAllowed = true"
+                                   data-ng-model="postForm.commentsAllowed">Allow comments
+                        </label>
+                    </div>
+
                 <%-- Pictures --%>
                 <div class="form-group">
                     <label>Add Photos</label>

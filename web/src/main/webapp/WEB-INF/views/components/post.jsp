@@ -4,6 +4,7 @@
         <div class="col-md-6 col-md-offset-3">
             <data-ft-post></data-ft-post>
 
+            <div data-ng-show="post.commentsAllowed">
             <hr/>
             <h4 class="text-capitalize text-center">COMMENTS ({{ post.comments.length }})</h4>
             <hr/>
@@ -35,7 +36,7 @@
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
-
+            </div>
         </div>
     </div>
 </div>
