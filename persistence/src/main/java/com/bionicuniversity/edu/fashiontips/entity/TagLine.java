@@ -17,8 +17,8 @@ public class TagLine extends BaseEntity<Long> {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
+    @JoinColumn(name = "image_id", nullable = false)
+    private Image image;
 
     @NotNull(message = "TagLine should contain 'Clothes'")
     @ManyToOne(fetch = FetchType.EAGER)
@@ -41,23 +41,29 @@ public class TagLine extends BaseEntity<Long> {
     /**
      * Constructs tag line with given parameters.
      *
-     * @param post linked entity Post
+     * @param image linked entity Post
      * @param clothes linked entity Clothes
      * @param tags Set of linked Tag entities
      */
-    public TagLine(Long id, Post post, Clothes clothes, List<Tag> tags) {
+    public TagLine(Long id, Image image, Clothes clothes, List<Tag> tags) {
         this.id = id;
-        this.post = post;
+        this.image = image;
         this.clothes = clothes;
         this.tags = tags;
     }
 
-    public Post getPost() {
-        return post;
+    public TagLine(Long id, Clothes clothes, List<Tag> tags) {
+        this.id = id;
+        this.clothes = clothes;
+        this.tags = tags;
     }
 
-    public void setPost(Post post) {
-        this.post = post;
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public Clothes getClothes() {

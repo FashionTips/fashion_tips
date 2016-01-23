@@ -1,0 +1,16 @@
+<div class="modal-header">
+        <b>Add Tag to photo</b>
+</div>
+<div class="modal-body">
+        <select data-ng-model="currentTagLine.clothes" data-ng-options="clothesItem.name for clothesItem in clothes"></select>
+        <table>
+            <tr data-ng-repeat="tagType in tagTypes">
+                <td><input type="checkbox" data-ng-model="isActive" data-ng-click="activateTag(this)" data-ng-disabled="!currentTagLine.clothes">{{tagType.type}}</td>
+                <td><input type="text" data-ng-model="tagText" data-ng-change="setTagText(this)" data-ng-disabled="!isActive"></td>
+            </tr>
+        </table>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-ng-click="cancel()">Cancel</button>
+    <button type="button" class="btn btn-success" data-ng-click="saveTag()">Add tag</button>
+</div>

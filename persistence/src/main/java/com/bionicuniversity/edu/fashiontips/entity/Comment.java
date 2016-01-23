@@ -93,10 +93,9 @@ public class Comment extends BaseEntity<Long> {
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @Column(name = "created", nullable = false, insertable = false)
+    @Column(name = "created", nullable = false, insertable = false, updatable = false)
     private LocalDateTime created;
 
-    @JsonIgnore
     private boolean available;
 
     public LocalDateTime getCreated() {

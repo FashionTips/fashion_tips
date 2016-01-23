@@ -1,7 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
-import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
@@ -60,8 +59,8 @@ public class PostController {
     /**
      * Without parameters returned all posts.
      *
-     * @param login   optional parameter. If present then returned list user's (login = "login") posts
-     * @param hashTag optional parameter. If present then returned list of posts with this hashtag
+     * @param login    optional parameter. If present then returned list user's (login = "login") posts
+     * @param hashTag  optional parameter. If present then returned list of posts with this hashtag
      * @param category optional parameter. If present then returned list of posts with preset category
      * @return list of all posts with such parameters
      */
@@ -79,7 +78,7 @@ public class PostController {
             posts = postService.findAllByHashTag(hashTag, user);
         } else if (category != null) {
             posts = postService.findAllByCategory(category, user);
-        } else  {
+        } else {
             posts = postService.findAll(user);
         }
         return ImageUtil.createUrlNameForPosts(posts);
@@ -111,10 +110,10 @@ public class PostController {
      * @param id post's id
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deletePost(@PathVariable long id) {
-        Post post = postService.get(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Post with id '%d' was not found.", id)));
-        postService.delete(post);
+    public void deletePost(@PathVariable long id, Principal principal) {
+        User user = userService.findOne(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Cannot find the logged in user in db!"));
+        postService.delete(id, user);
     }
 
     /**
@@ -128,23 +127,13 @@ public class PostController {
 
         Post post = postService.get(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Post with id '%d' was not found.", id)));
-        String title = postData.getTitle();
-        if (title != null) post.setTitle(title);
-        String message = postData.getTextMessage();
-        if (message != null) post.setTextMessage(message);
-        Post.Category category = postData.getCategory();
-        if (category != null) post.setCategory(category);
-        List<Image> images = postData.getImages();
-        if (images != null) post.setImages(images);
-        boolean commentsAllowed = postData.isCommentsAllowed();
-        post.setCommentsAllowed(commentsAllowed);
-        postService.update(post);
+        postService.update(postData, post);
     }
 
     /**
      * Toggles "liked" status for post
      *
-     * @param id post ID
+     * @param id        post ID
      * @param principal name of logged user
      */
     @RequestMapping(value = "/{id}/liked", method = RequestMethod.POST)

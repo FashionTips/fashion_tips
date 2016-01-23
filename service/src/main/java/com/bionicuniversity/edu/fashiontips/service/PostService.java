@@ -49,14 +49,15 @@ public interface PostService {
     void toggleLikedStatus(long id, User loggedUser);
 
     @PreAuthorize("#post.user.login == authentication.name")
-    void update(Post post);
+    void update(Post update, Post post);
 
     /**
      * Deletes given post from persistence.
      *
-     * @param post post to delete
+     * @param id post to delete
+     * @param loggedUser
      */
-    void delete(Post post);
+    void delete(long id, User loggedUser);
 
     @Transactional
     Post save(Post post);

@@ -1,0 +1,47 @@
+<div class="list-group-item">
+    <div data-ng-hide="comment.available">
+        <p>This comment was deleted by its author.</p>
+    </div>
+    <div data-ng-show="comment.available" class="media">
+        <div class="media-left">
+            <img data-ng-src="{{ comment.author.avatar || 'http://placehold.it/64x64' }}" height="64"
+                 class="media-object"/>
+        </div>
+        <div class="media-body">
+            <div class="media-heading">
+                <p class="col-md-4"><a href="/user/{{comment.author.login}}">{{ comment.author.login
+                    }}</a></p>
+                <p class="col-md-6 text-right">
+                    <small>{{ comment.created | date:'medium' }}</small>
+                </p>
+                <p data-ng-show="comment.author.login === username" class="col-md-2">
+                    <a data-ng-init="editMode = false" href data-ng-click="showForm()">
+                        <span class="text-warning glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    </a>
+                    <a href data-ng-click="deleteComment()">
+                        <span class="text-danger glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                </p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <p data-ng-hide="editMode">{{ comment.text }}</p>
+                </div>
+            </div>
+
+            <form data-ng-show="editMode" data-ng-submit="updateComment()">
+                <p data-ng-show="error" class="text-danger">There was error: {{ error }}</p>
+                <div class="form-group">
+                    <textarea class="form-control" data-ng-model="commentData.text" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <a class="btn btn-sm btn-default" data-ng-click="hideForm()">
+                        Cancel
+                    </a>
+                    <input type="submit" class="btn btn-sm btn-info" value="Save">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

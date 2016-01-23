@@ -1,0 +1,77 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="/?category={{post.category}}">
+                    <span class="label"
+                          data-ng-class="{'label-info': post.category === 'POST', 'label-warning': post.category === 'QUESTION'}">
+                        {{ post.category }}
+                    </span>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <div class="pull-right" data-ng-show="post.author.login === username && !feed">
+                    <button type="button" class="btn btn-xs btn-warning" data-ng-click="edit()">
+                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;
+                    </button>
+                    <button type="button" class="btn btn-xs btn-danger" data-ng-click="delete()">
+                        <span class="glyphicon glyphicon-remove"></span>&nbsp;
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="page-header">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2>
+                        <a data-ng-show="feed === 'true'" href="/post/{{ post.id }}">{{ post.title }}</a>
+                        <span data-ng-hide="feed === 'true'">{{ post.title }}</span>
+                        <small>by <a href="/user/{{post.author.login}}">{{ post.author.login }}</a></small>
+                    </h2>
+                </div>
+                <div class="col-md-4">
+                    <p class="text-muted text-right">{{ post.publicationTime | date:'short' }}</p>
+                    <h4 class="text-right">
+                        Likes:{{post.likes}}
+                    <span data-ng-show="post.isLikedByAuthUser !== null" class="glyphicon glyphicon-thumbs-up"
+                          data-ng-class="{liked:post.isLikedByAuthUser}"
+                          data-ng-click="toggleLikedStatus(post.id)"></span>
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active image -->
+        <img class="img-responsive" data-ng-src="{{activeImage.imgUrl}}" data-ng-show="activeImage.imgUrl"/>
+
+        <!--Tags -->
+        <div class="form-group">
+            <span data-ng-repeat="tagLine in activeImage.tagLines">
+                <strong>{{tagLine.clothes.name}}</strong> -
+                <span data-ng-repeat="tag in tagLine.tags">
+                   <i>{{tag.tagType.type}}</i>:{{tag.value}}
+                </span>
+                <br/>
+            </span>
+        </div>
+
+
+        <div class="row well well-sm" data-ng-show="post.images.length">
+            <div class="col-sm-2" data-ng-class="{active:activeImage.id === image.id}"
+                 data-ng-repeat="image in post.images" data-ng-click="showImage(image)">
+                <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}">
+            </div>
+        </div>
+
+        <!-- Comments -->
+        <hr/>
+        <p data-ng-bind-html="(post.textMessage | hashtag)"></p>
+
+        <!-- Bottom buttons panel -->
+        <p>
+            <a data-ng-show="feed === 'true' && post.commentsAllowed && loggedIn()" data-ng-href="/post/{{ post.id }}" >
+                <small>reply</small>
+            </a>
+        </p>
+    </div>
+</div>

@@ -1,11 +1,13 @@
 package com.bionicuniversity.edu.fashiontips.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Entity Class Image
@@ -37,6 +39,21 @@ public class Image extends BaseEntity<Long> {
     @Transient
     private String imgUrl;
 
+    /**
+     * List of posts tag lines
+     */
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "image")
+    @OrderBy(value = "id ASC")
+    private List<TagLine> tagLines = new ArrayList<>();
+
+    /*
+    * User, who loaded image
+    * */
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User owner;
+
     public Image() {
     }
 
@@ -49,12 +66,25 @@ public class Image extends BaseEntity<Long> {
         this.imgName = imgName;
     }
 
+    public Image(Long id, String imgName, User owner) {
+        this.id = id;
+        this.imgName = imgName;
+        this.owner = owner;
+    }
+
+    public Image(Long id, String imgName, List<TagLine> tagLines) {
+        this.id = id;
+        this.imgName = imgName;
+        this.tagLines = tagLines;
+    }
+
     @Override
     public String toString() {
         return "Picture{" +
                 "id=" + id +
                 ", imgName='" + imgName + '\'' +
                 ", imgUrl='" + imgUrl + '\'' +
+                ", tagLines=" + tagLines + '\'' +
                 '}';
     }
 
@@ -80,5 +110,21 @@ public class Image extends BaseEntity<Long> {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public List<TagLine> getTagLines() {
+        return tagLines;
+    }
+
+    public void setTagLines(List<TagLine> tagLines) {
+        this.tagLines = tagLines;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 }

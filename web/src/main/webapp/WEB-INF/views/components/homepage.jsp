@@ -4,11 +4,11 @@
         <h1>Welcome to World of Fashion!</h1>
     </div>
 </div>
-<div class="container" data-ng-controller="MainController">
+<div class="container" data-ng-controller="HomeController">
     <div class="row">
         <div class="col-md-8">
             <ul class="list-group" data-ng-repeat="post in posts">
-                <div data-ft-post data-feed="true"></div>
+                <ft-post data-post="post" data-feed="true"></ft-post>
             </ul>
         </div>
     </div>
