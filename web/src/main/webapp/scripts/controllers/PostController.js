@@ -21,6 +21,7 @@ var PostController = ['$scope', 'postService', 'sessionService', '$location',
         $scope.newPostUrl = undefined;
         $scope.showAddPostErrorMessage = false;
         $scope.imageUploadErrors = [];
+        $scope.postFormErrors = undefined;
 
         /**
          * Saves post.
@@ -36,8 +37,9 @@ var PostController = ['$scope', 'postService', 'sessionService', '$location',
                 $scope.postForm.images = [];
                 angular.element("#images-input").val(null); // clear file form input
                 window.location.href = $scope.newPostUrl;
-            }, function () {
+            }, function (data) {
                 $scope.showAddPostErrorMessage = true;
+                $scope.postFormErrors = data.data.message;
             });
         };
 

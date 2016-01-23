@@ -9,7 +9,7 @@
             <div class="alert alert-danger" role="alert" data-ng-show="showAddPostErrorMessage">
                 Errors occurred:
                 <br/>
-                {{ postForm.errors }}
+                {{ postFormErrors }}
             </div>
             <div class="page-header">
                 <h2>Post: {{ postForm.title }}</h2>
@@ -115,7 +115,7 @@
                     </div>
                 </div>
 
-                <input type="submit" class="btn btn-success" data-ng-disabled="addPostForm.$invalid"
+                <input type="submit" class="btn btn-success" data-ng-disabled="addPostForm.$invalid || postForm.images.length === 0"
                            value="Create">
             </form>
         </div>

@@ -60,8 +60,8 @@ var postService = ['$resource', '$http', '$q', 'sessionService', function ($reso
 
         Posts.save(data, function (data) {
             result.resolve(data);
-        }, function () {
-            result.reject();
+        }, function (response) {
+            result.reject(response.data);
         });
 
         return result.promise;
