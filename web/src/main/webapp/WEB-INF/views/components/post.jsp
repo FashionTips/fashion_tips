@@ -2,7 +2,7 @@
 <div class="container" data-ng-controller="PostController">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <data-ft-post></data-ft-post>
+            <div data-ft-post data-feed="false"></div>
 
             <div data-ng-show="post.commentsAllowed">
             <hr/>

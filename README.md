@@ -8,7 +8,7 @@ In Windows 7/8/10 - Run next line in command prompt:
 After setting environment variable you need to restart IDE or other application from which you are going to launch App
 
 # Run locally API
-`mvn tomcat7:run -pl :fashion-tips-api -am -Dspring.profiles.active=dev,initImgFolder`
+`mvn tomcat7:run -pl :fashion-tips-api -am -Dspring.profiles.active=dev,initImgFolder -P dev`
 
 # Run locally WEB
 `mvn tomcat7:run -pl :fashion-tips-web`

@@ -46,8 +46,13 @@ app.filter("hashtag", [function () {
 /* Directives */
 app.directive('ftPost', [function () {
     return {
-        restrict: 'E',
-        templateUrl: '/scripts/directives/post.html'
+        restrict: 'A',
+        templateUrl: '/scripts/directives/_post.tpl.html',
+        link: function(scope, element, attrs) {
+
+            /* is the directive on a feed page */
+            scope.feed = attrs.feed === 'true';
+        }
     };
 }]);
 

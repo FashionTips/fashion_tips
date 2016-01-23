@@ -67,6 +67,11 @@
         </div>
         <hr/>
         <p data-ng-bind-html="(post.textMessage | hashtag)"></p>
+
+        <!-- Bottom buttons panel -->
+        <p>
+            <a data-ng-show="feed && post.commentsAllowed && loggedIn()" data-ng-href="/post/{{ post.id }}" ><small>reply</small></a>
+        </p>
     </div>
 </div>
 
