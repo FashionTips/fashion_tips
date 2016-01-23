@@ -136,6 +136,8 @@ public class PostController {
         if (category != null) post.setCategory(category);
         List<Image> images = postData.getImages();
         if (images != null) post.setImages(images);
+        boolean commentsAllowed = postData.isCommentsAllowed();
+        post.setCommentsAllowed(commentsAllowed);
         postService.update(post);
     }
 
