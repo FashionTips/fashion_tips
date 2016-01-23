@@ -14,6 +14,8 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,15 +54,15 @@ public class CommentServiceImplTest {
         Comment savedComment = new Comment(1L, comment.getText(), post, user, LocalDateTime.now());
 
         when(postDao.exists(postId)).thenReturn(true);
-        when(postDao.getById(postId)).thenReturn(post);
+        when(postDao.getReference(postId)).thenReturn(post);
         when(commentDao.save(comment)).thenReturn(savedComment);
 
         assertEquals("Comments should be equal.", savedComment, commentService.save(comment, postId));
 
         InOrder inOrderPostDao = inOrder(postDao);
         inOrderPostDao.verify(postDao).exists(postId);
-        inOrderPostDao.verify(postDao).getById(postId);
-        verify(commentDao, atMost(1)).getById(postId);
+        inOrderPostDao.verify(postDao).getReference(postId);
+        verify(commentDao, atMost(1)).getReference(postId);
     }
 
     @Test(expected = NotFoundException.class)
@@ -82,7 +84,7 @@ public class CommentServiceImplTest {
         Comment comment = new Comment();
 
         when(postDao.exists(postId)).thenReturn(true);
-        when(postDao.getById(postId)).thenReturn(post);
+        when(postDao.getReference(postId)).thenReturn(post);
         when(commentDao.save(comment)).thenReturn(comment);
 
         commentService.save(comment, postId);
@@ -140,5 +142,30 @@ public class CommentServiceImplTest {
         when(postDao.save(post)).thenReturn(post);
         boolean result = commentService.block(post);
         assertTrue("Should block comments and return false - comments are no allowed.", result);
+    }
+    
+    @Test(expected = AccessDeniedException.class)
+    public void testHideById_whenPassInappropriateLoginAgainstCommentsOwner_shouldThrowException() throws Exception {
+        User user = new User();
+        user.setLogin("login1");
+        Comment comment = new Comment(1L, "cool", null, user);
+        when(commentDao.getById(anyLong())).thenReturn(comment);
+        commentService.hideById(1L, "login4444");
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testHideById_whenPassNotExistentCommentId_shouldThrowException() throws Exception {
+        when(commentDao.getById(anyLong())).thenReturn(null);
+        commentService.hideById(anyLong(), "no matter");
+    }
+
+    @Test
+    public void testHideById_whenArgsAreValid_shouldCallMethodSave() throws Exception {
+        User user = new User();
+        user.setLogin("login");
+        Comment comment = new Comment(1L, "some texr", null, user, LocalDateTime.now());
+        when(commentDao.getById(anyLong())).thenReturn(comment);
+        commentService.hideById(1L, "login");
+        verify(commentDao).save(comment);
     }
 }

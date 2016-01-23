@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.service.util;
 
 
+import com.bionicuniversity.edu.fashiontips.entity.Comment;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 
@@ -31,5 +32,21 @@ public class PostUtil {
 
     public static void normalizeForClient(List<Post> posts, User loggedUser) {
         posts.stream().forEach(post -> normalizeForClient(post,loggedUser));
+    }
+
+    public static void handleDeletedMessages(List<Post> posts) {
+        for (Post post : posts) {
+            handleDeletedMessages(post);
+        }
+    }
+
+    public static void handleDeletedMessages(Post post) {
+        if (!post.getComments().isEmpty()) {
+            for (Comment comment : post.getComments()) {
+                if (!comment.isAvailable()) {
+                    comment.setText("");
+                }
+            }
+        }
     }
 }

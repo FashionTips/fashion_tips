@@ -27,6 +27,7 @@ import static com.bionicuniversity.edu.fashiontips.util.TestUtil.json;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -55,6 +56,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PostCommentControllerTest {
 
     private static final String COMMENTS_API_URL = "/posts/1/comments";
+    private static final String TEST_USER_LOGIN = "login1";
 
     @Inject
     private CommentDao commentDao;
@@ -153,5 +155,25 @@ public class PostCommentControllerTest {
         mockMvc.perform(post(COMMENTS_API_URL + "/block").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(Boolean.FALSE.toString()));
+    }
+    
+    @Test
+    @WithMockUser(TEST_USER_LOGIN)
+    public void testDeleteWithValidDataAndUser() throws Exception {
+        mockMvc.perform(delete(COMMENTS_API_URL + "/1"))
+                .andExpect(status().isOk());
+    }
+    @Test
+    @WithMockUser("login2")
+    public void testDeleteWithValidDataAndInappropriateUser() throws Exception {
+        mockMvc.perform(delete(COMMENTS_API_URL + "/1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(TEST_USER_LOGIN)
+    public void testDeleteWithNotValidCommentIdAndAppropriateUser() throws Exception {
+        mockMvc.perform(delete(COMMENTS_API_URL + "/99999"))
+                .andExpect(status().isNotFound());
     }
 }

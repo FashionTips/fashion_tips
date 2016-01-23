@@ -152,6 +152,9 @@
                     <version>${hsqldb.version}</version>
                 </dependency>
             </dependencies>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
         <profile>
             <id>postgres</id>
