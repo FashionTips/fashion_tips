@@ -112,9 +112,7 @@ public class PostController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deletePost(@PathVariable long id) {
-        Post post = postService.get(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Post with id '%d' was not found.", id)));
-        postService.delete(post);
+        postService.delete(id);
     }
 
     /**

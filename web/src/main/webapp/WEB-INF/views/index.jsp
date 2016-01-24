@@ -13,33 +13,34 @@
 
     <!-- JS scripts here to hide angular code shows on preload -->
     <!-- lib's js -->
-    <script src="/scripts/lib/jquery-1.11.3.min.js"></script>
-    <script src="/scripts/lib/bootstrap.min.js"></script>
+    <script src="/vendor/jquery-1.11.3.min.js"></script>
+    <script src="/vendor/bootstrap.min.js"></script>
     <script>$(function () {
         $('[data-toggle="tooltip"]').tooltip()  // initialize tooltips
     })</script>
-    <script src="/scripts/lib/angular.min.js"></script>
-    <script src="/scripts/lib/angular-route.min.js"></script>
-    <script src="/scripts/lib/angular-messages.min.js"></script>
-    <script src="/scripts/lib/angular-resource.min.js"></script>
-    <script src="/scripts/lib/angular-cookies.min.js"></script>
-    <script src="/scripts/lib/angular-sanitize.min.js"></script>
+    <script src="/vendor/angular.min.js"></script>
+    <script src="/vendor/ui-bootstrap-tpls-1.1.0.min.js"></script>
+    <script src="/vendor/angular-messages.min.js"></script>
+    <script src="/vendor/angular-resource.min.js"></script>
+    <script src="/vendor/angular-cookies.min.js"></script>
+    <script src="/vendor/angular-sanitize.min.js"></script>
 
     <!-- Custom scripts-->
-    <script src="/scripts/services/SessionService.js"></script>
-    <script src="/scripts/services/AuthService.js"></script>
-    <script src="/scripts/services/PostService.js"></script>
-    <script src="/scripts/services/UserService.js"></script>
-    <script src="/scripts/services/DictionaryService.js"></script>
-    <script src="/scripts/services/TagService.js"></script>
-    <script src="/scripts/controllers/MainController.js"></script>
-    <script src="/scripts/controllers/ProfileController.js"></script>
-    <script src="/scripts/controllers/PostController.js"></script>
-    <script src="/scripts/controllers/MenuController.js"></script>
-    <script src="/scripts/controllers/TagController.js"></script>
-    <script src="/scripts/app.js"></script>
+    <script src="/ng/common/validation/validation.js"></script>
+    <script src="/ng/common/dictionary/dictionary.js"></script>
+    <script src="/ng/common/security/session.js"></script>
+    <script src="/ng/common/security/auth.js"></script>
+    <script src="/ng/common/security/security.js"></script>
+    <script src="/ng/app/posts/comments/comments.js"></script>
+    <script src="/ng/app/posts/tags/tags.js"></script>
+    <script src="/ng/app/posts/posts.js"></script>
+    <script src="/ng/app/home/home.js"></script>
+    <script src="/ng/app/login/login.js"></script>
+    <script src="/ng/app/register/register.js"></script>
+    <script src="/ng/app/users/users.js"></script>
+    <script src="/ng/app/app.js"></script>
 </head>
-<body data-ng-app="fashion-tips-web" data-ng-strict-di>
+<body data-ng-app="ft" >
 
 <header>
     <div class="container">
@@ -93,23 +94,7 @@
                                 In
                             </a>
                             <div class="dropdown-menu">
-                                <form name="signinForm" accept-charset="UTF-8" data-ng-submit="login()">
-                                    <p class="text-danger" data-ng-show="showLoginErrorMessage">Invalid login or
-                                        password!</p>
-                                    <div class="form-group has-feedback"
-                                         data-ng-class="{ 'has-error': signinForm.username.$invalid && signinForm.username.$dirty }">
-                                        <input class="form-control" type="text" placeholder="Username" name="username"
-                                               data-ng-model="credentials.username" required autofocus>
-                                    </div>
-                                    <div class="form-group has-feedback"
-                                         data-ng-class="{ 'has-error': signinForm.password.$invalid && signinForm.password.$dirty }">
-                                        <input type="password" class="form-control" placeholder="Password" id="password"
-                                               name="password"
-                                               data-ng-model="credentials.password" required>
-                                    </div>
-                                    <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Sign In"
-                                    data-ng-disabled="signinForm.$invalid">
-                                </form>
+                                <ft-login-form data-to-home="false"></ft-login-form>
                             </div>
                         </li>
                         <li data-ng-show="!loggedIn()">

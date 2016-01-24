@@ -4,15 +4,16 @@ import com.bionicuniversity.edu.fashiontips.dao.PostDao;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Test cases for {@link PostServiceImpl} class.
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class PostServiceImplTest {
 
+    @Spy
     @InjectMocks
     private PostService postService = new PostServiceImpl();
 
@@ -57,6 +59,28 @@ public class PostServiceImplTest {
     public void testUpdate() throws Exception {
         postService.update(new Post());
         verify(postDao, times(1)).save(new Post());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testDeleteById_whenIdOfNonexistentPost_shouldThrowAnException() throws Exception {
+        long id = 1L;
+        when(postDao.exists(id)).thenReturn(false);
+        postService.delete(id);
+        fail("Should throw an exception, when post does not exist");
+    }
+
+    @Test
+    public void testDeleteById_whenIdIsCorrect_shouldCallDeleteByPost() throws Exception {
+        long id = 1L;
+        Post post = new Post();
+        post.setId(id);
+        when(postDao.exists(id)).thenReturn(true);
+        when(postDao.getById(id)).thenReturn(post);
+        doNothing().when(postService).delete(post);
+        postService.delete(id);
+        verify(postDao).exists(id);
+        verify(postDao).getById(id);
+        verify(postService).delete(post);
     }
 
     @Test

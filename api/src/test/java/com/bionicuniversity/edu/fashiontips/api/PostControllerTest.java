@@ -203,7 +203,6 @@ public class PostControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @Ignore("Should be debugged up.")
     @Test
     @WithMockUser(TEST_USER_LOGIN)
     public void testDeleteExistingPostUserAuthorised() throws Exception {

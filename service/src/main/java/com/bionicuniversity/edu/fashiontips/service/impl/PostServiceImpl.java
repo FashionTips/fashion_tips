@@ -5,6 +5,7 @@ import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.util.PostUtil;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,6 +90,13 @@ public class PostServiceImpl implements PostService {
     @PreAuthorize("#post.user.login == authentication.name")
     public void update(Post post) {
         postDao.save(post);
+    }
+
+    @Override
+    @Transactional
+    public void delete(long id) {
+        if(!postDao.exists(id)) throw new NotFoundException(String.format("Post with id '%d' was not found.", id));
+        delete(postDao.getById(id));
     }
 
     @Override
