@@ -111,8 +111,10 @@ public class PostController {
      * @param id post's id
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deletePost(@PathVariable long id) {
-        postService.delete(id);
+    public void deletePost(@PathVariable long id, Principal principal) {
+        User user = userService.findOne(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Cannot find the logged in user in db!"));
+        postService.delete(id, user);
     }
 
     /**

@@ -41,9 +41,6 @@ public interface PostService {
     List<Post> findAllByCategory(Post.Category category, User loggedUser);
     List<Post> findAll(User loggedUser);
 
-    @PreAuthorize("#post.user.login == authentication.name")
-    void delete(@P("post") Post post);
-
     /**
      * Handles requests for changing "like" status of post.
      *
@@ -59,8 +56,9 @@ public interface PostService {
      * Deletes given post from persistence.
      *
      * @param id post to delete
+     * @param loggedUser
      */
-    void delete(long id);
+    void delete(long id, User loggedUser);
 
     @Transactional
     Post save(Post post);

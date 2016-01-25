@@ -65,7 +65,7 @@ public class PostServiceImplTest {
     public void testDeleteById_whenIdOfNonexistentPost_shouldThrowAnException() throws Exception {
         long id = 1L;
         when(postDao.exists(id)).thenReturn(false);
-        postService.delete(id);
+        postService.delete(id, new User());
         fail("Should throw an exception, when post does not exist");
     }
 
@@ -74,26 +74,15 @@ public class PostServiceImplTest {
         long id = 1L;
         Post post = new Post();
         post.setId(id);
+        User loggedUser = new User();
+        loggedUser.setId(1L);
+        post.setUser(loggedUser);
         when(postDao.exists(id)).thenReturn(true);
         when(postDao.getById(id)).thenReturn(post);
-        doNothing().when(postService).delete(post);
-        postService.delete(id);
-        verify(postDao).exists(id);
-        verify(postDao).getById(id);
-        verify(postService).delete(post);
+        postService.delete(id, loggedUser);
+        verify(postDao).delete(id);
     }
 
-    @Test
-    public void testDelete_whenPostExists_shouldDeleteFromDao() throws Exception {
-        postService.delete(new Post());
-        verify(postDao, times(1)).delete(new Post());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testDelete_whenPostIsNull_shouldThrowException() throws Exception {
-        postService.delete(null);
-        fail("Should throw an exception, when post is null");
-    }
 
     @Test(expected = NullPointerException.class)
     public void testSave_whenPostIsNull_shouldThrowAnException() throws Exception {

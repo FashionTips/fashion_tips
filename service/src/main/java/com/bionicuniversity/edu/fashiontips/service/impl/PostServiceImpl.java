@@ -6,7 +6,7 @@ import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.util.PostUtil;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
-import org.springframework.security.access.method.P;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,16 +94,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void delete(long id) {
-        if(!postDao.exists(id)) throw new NotFoundException(String.format("Post with id '%d' was not found.", id));
-        delete(postDao.getById(id));
-    }
-
-    @Override
-    @PreAuthorize("#post.user.login == authentication.name")
-    public void delete(@P("post") Post post) {
-        Objects.requireNonNull(post, "Post cannot be null.");
-        postDao.delete(post);
+    public void delete(long id, User loggedUser) {
+        Post post = postDao.getById(id);
+        if (post == null) throw new NotFoundException(String.format("Post with id '%d' was not found.", id));
+        if (!(post.getUser().equals(loggedUser))) throw  new AccessDeniedException("Post belongs to different user.");
+        postDao.delete(id);
     }
 
     @Override

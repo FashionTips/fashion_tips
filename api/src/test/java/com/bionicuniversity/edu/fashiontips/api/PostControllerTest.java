@@ -56,11 +56,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(scripts = {"classpath:db/filloutHSQLDB.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
         config = @SqlConfig(encoding = "UTF-8"))
+@Transactional
 @ActiveProfiles("dev")
 public class PostControllerTest {
 
     private static final String POSTS_API_URL = "/posts";
-    private static final String TEST_USER_LOGIN = "login1";
+    private static final String TEST_USER_LOGIN_1 = "login1";
+    private static final String TEST_USER_LOGIN_2 = "login2";
     private static final String TEST_USER_PASSWORD = "1111";
 
     @Inject
@@ -100,7 +102,6 @@ public class PostControllerTest {
     }
 
     @Test
-    @Transactional
     public void testGetPostUserAuthorised() throws Exception {
         mockMvc.perform(get(POSTS_API_URL + "/" + post1.getId()))
                 .andExpect(status().isOk())
@@ -114,7 +115,6 @@ public class PostControllerTest {
     }
 
     @Test
-    @Transactional
     public void testGetPostUserUnauthorised() throws Exception {
         mockMvc.perform(get(POSTS_API_URL + "/" + post1.getId()))
                 .andExpect(status().isOk())
@@ -136,8 +136,7 @@ public class PostControllerTest {
 
     @Ignore("Issue: the order of posts is different whenever run test in single mode or all together.")
     @Test
-    @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
+    @WithMockUser(TEST_USER_LOGIN_1)
     public void testGetPostsUserAuthorised() throws Exception {
         mockMvc.perform(get(POSTS_API_URL))
                 .andExpect(status().isOk())
@@ -164,7 +163,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(TEST_USER_LOGIN)
+    @WithMockUser(TEST_USER_LOGIN_1)
     public void testSaveNewPostWithValidDataUserAuthorised() throws Exception {
 
         Post post = new Post(user, "Some title", "what fits me with these pants?", Post.Category.QUESTION);
@@ -179,7 +178,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(TEST_USER_LOGIN)
+    @WithMockUser(TEST_USER_LOGIN_1)
     public void testSaveNewPostWithNotValidDataUserAuthorised() throws Exception {
         Post post = new Post(user, "", "", Post.Category.QUESTION);
 
@@ -204,28 +203,28 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(TEST_USER_LOGIN)
+    @WithMockUser(TEST_USER_LOGIN_1)
     public void testDeleteExistingPostUserAuthorised() throws Exception {
         mockMvc.perform(delete(POSTS_API_URL + "/" + post1.getId()))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(TEST_USER_LOGIN)
+    @WithMockUser(TEST_USER_LOGIN_1)
     public void testDeleteNonexistentPost() throws Exception {
         mockMvc.perform(delete(POSTS_API_URL + "/-1"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser("notTheAuthor")
+    @WithMockUser(TEST_USER_LOGIN_2)
     public void testDeletePostByNotAuthor() throws Exception {
         mockMvc.perform(delete(POSTS_API_URL + "/" + post1.getId()))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(TEST_USER_LOGIN)
+    @WithMockUser(TEST_USER_LOGIN_1)
     public void testUpdateExistingPostUserAuthorised() throws Exception {
         post1.setTextMessage("Some another message");
         post1.setTitle("Some another title.");
@@ -236,10 +235,11 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(TEST_USER_LOGIN)
+    @WithMockUser(TEST_USER_LOGIN_1)
     public void testUpdateNonexistentPost() throws Exception {
         Post post = new Post(user, "Some title", "what fits me with these pants?", Post.Category.QUESTION);
         post.setCreated(LocalDateTime.now());
+        post.setImages(asList(new Image()));
 
         mockMvc.perform(put(POSTS_API_URL + "/-1")
                 .contentType(contentType).content(json(post)))
@@ -259,14 +259,14 @@ public class PostControllerTest {
     }
 
     @Test
-    @WithMockUser(TEST_USER_LOGIN)
+    @WithMockUser(TEST_USER_LOGIN_1)
     public void testToggleLikedStatusOwnPost() throws Exception {
         mockMvc.perform(post(POSTS_API_URL + "/1/liked"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(TEST_USER_LOGIN)
+    @WithMockUser(TEST_USER_LOGIN_1)
     public void testToggleLikedStatus() throws Exception {
         mockMvc.perform(post(POSTS_API_URL + "/2/liked"))
                 .andExpect(status().isOk());
