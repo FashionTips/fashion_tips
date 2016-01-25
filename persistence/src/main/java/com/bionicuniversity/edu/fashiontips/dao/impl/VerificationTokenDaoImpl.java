@@ -50,15 +50,15 @@ public class VerificationTokenDaoImpl implements VerificationTokenDao {
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public VerificationToken save(VerificationToken verificationToken) {
-        if (verificationToken == null) {
-            throw new IllegalArgumentException();
+//        Objects.requireNonNull(verificationToken);
+        if (verificationToken == null && verificationToken.getEmail() == null) {
+            throw new IllegalArgumentException("Email could not be empty");
         }
 //        if (verificationToken.getEmail() == null) {
 //            em.persist(verificationToken);
 //            return verificationToken;
 //        }
 //        return em.merge(verificationToken);
-        if (verificationToken.getEmail() == null) throw new IllegalArgumentException("Email could not be empty");
         em.persist(verificationToken);
         return verificationToken;
     }

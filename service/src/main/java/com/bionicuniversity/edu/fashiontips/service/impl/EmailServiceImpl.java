@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 
@@ -36,6 +38,7 @@ public class EmailServiceImpl implements EmailService {
     private String refEnd;
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public void sentEmail(String email, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(fromAddress);

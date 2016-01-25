@@ -28,9 +28,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Override
     @Transactional(readOnly = true)
     public VerificationToken getByEmail(String email) {
-        //TODO Catch Exception Do another logic
-        VerificationToken verificationToken = null;
-        verificationToken = verificationTokenDao.getByEmail(email);
+        VerificationToken verificationToken = verificationTokenDao.getByEmail(email);
         if (verificationToken == null) throw new NotFoundException();
         return verificationToken;
     }
@@ -73,9 +71,9 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
     @Override
     @Transactional
-    public VerificationToken generateToken(String email) {
-        VerificationToken verificationToken = new VerificationToken(email);
-        String unhashedToken = email + LocalDateTime.now();
+    public VerificationToken generateToken(VerificationToken verificationToken) {
+//        VerificationToken verificationToken = new VerificationToken(email);
+        String unhashedToken = verificationToken.getEmail() + LocalDateTime.now();
         String token = VerificationTokenUtil.getHash(unhashedToken, VerificationTokenUtil.SHA_256);
         verificationToken.setToken(token);
         return verificationTokenDao.save(verificationToken);
@@ -83,11 +81,28 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
     @Override
     @Transactional(timeout = 60)
-    public VerificationToken createNewToken(String email) {
-        VerificationToken verificationToken = new VerificationToken(email);
-        String unhashedToken = email + LocalDateTime.now();
+    public VerificationToken createNewToken(VerificationToken verificationToken) {
+//        VerificationToken verificationToken = new VerificationToken(email);
+        String unhashedToken = verificationToken.getEmail() + LocalDateTime.now();
         String token = VerificationTokenUtil.getHash(unhashedToken, VerificationTokenUtil.SHA_256);
         verificationToken.setToken(token);
         return verificationTokenDao.update(verificationToken);
+    }
+
+    @Override
+    @Transactional(timeout = 60)
+    public VerificationToken registrateNewToken(VerificationToken verificationToken) {
+//        VerificationToken verificationToken = generateToken(email);
+        generateToken(verificationToken);
+        emailService.sentEmail(verificationToken.getEmail(), verificationToken.getToken());
+        return verificationToken;
+    }
+
+    @Override
+    @Transactional(timeout = 60)
+    public VerificationToken resentToken(VerificationToken verificationToken) {
+        createNewToken(verificationToken);
+        emailService.sentEmail(verificationToken.getEmail(), verificationToken.getToken());
+        return verificationToken;
     }
 }

@@ -35,7 +35,7 @@ public class VerificationToken implements Serializable {
     @UniqueEmail(groups = Create.class)
     private String email;
 
-    @JsonIgnore
+    //@JsonIgnore
     @JsonProperty(value = "token")
     private String token;
 

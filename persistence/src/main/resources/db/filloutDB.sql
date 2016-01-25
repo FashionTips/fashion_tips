@@ -338,3 +338,9 @@ INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://finchwear.com.u
 
 INSERT INTO verification_token (email, token)
     VALUES ('arusich2008@ukr.net', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261');
+INSERT INTO verification_token (email, token)
+    VALUES ('email1@example.com', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000002222');
+INSERT INTO verification_token (email, token)
+    VALUES ('email4@example.com', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000004444');
+INSERT INTO verification_token (email, token)
+    VALUES ('some@email.com', 'bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f9cf74086510');

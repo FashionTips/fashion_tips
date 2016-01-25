@@ -79,9 +79,9 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createUser(@Validated(Create.class) @RequestBody User user,
                                      @RequestParam String token) {
-        if (token == null) return new ResponseEntity(HttpStatus.FORBIDDEN);
         VerificationToken verificationToken = verificationTokenService.getByToken(token)
                 .orElseThrow(() -> new NotFoundException("This token does not exist"));
+        if (verificationToken.isVerified()) return new ResponseEntity(HttpStatus.FORBIDDEN); //TODO accept it???
         verificationToken.setVerified(true);
         User savedUser = userService.save(user);
         verificationTokenService.update(verificationToken);
@@ -129,20 +129,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    //If email is already present then return MethodArgumentNotValidException with message "Email is already in use."
     public ResponseEntity signUp(@Validated(Create.class) @RequestBody VerificationToken token) {
-        //Retrieve token with boolean flag if duplicated button push has had
-//        if (!verificationTokenService.isPresent(incomingToken)) {
         Optional<VerificationToken> verifiedToken = null;
         if (!(verifiedToken = verificationTokenService.getToken(token)).isPresent()) {
-            VerificationToken newToken = null;
-            try {
-                newToken = verificationTokenService.generateToken(token.getEmail());
-            } catch (Exception ex) {
-                //throw new DuplicateTokenGeneration("Too fast required");
-                return new ResponseEntity(HttpStatus.OK);//TODO ????
-            }
-            verificationTokenService.sendEmailRegistrationToken(newToken);
+            verificationTokenService.registrateNewToken(token);
             return ResponseEntity.ok().build();
         }
         VerificationToken verificationToken = verifiedToken.get();
@@ -150,16 +140,14 @@ public class UserController {
                 && LocalDateTime.now().isBefore(verificationToken.getExpairedTime()))
             return ResponseEntity.ok().build();
 
-        //at this point !verificationToken.isVerified()
-        VerificationToken newToken = verificationTokenService.createNewToken(verificationToken.getEmail());
-        verificationTokenService.sendEmailRegistrationToken(newToken);
+        verificationTokenService.resentToken(verificationToken);
         return ResponseEntity.ok().build();
     }
 
     @RequestMapping(value = "/token", method = RequestMethod.POST)
     public boolean checkToken(@RequestBody VerificationToken token) {
 
-        if (token.getToken() == null) /*return false*/ throw new NotFoundException("Token does not present");
+        if (token.getToken() == null) throw new NotFoundException("Token does not present");
 
         VerificationToken verificationToken =
                 verificationTokenService.getByToken(token.getToken()).

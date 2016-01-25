@@ -29,6 +29,9 @@
         <!-- Let everybody can get dictionary data -->
         <intercept-url pattern="/dictionary/**" method="GET" access="permitAll"/>
 
+        <!--Permit posts POST to /token url-->
+        <intercept-url pattern="/users/token" method="POST" access="permitAll"/>
+
         <!-- Only authenticated users can access the api methods -->
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <logout success-handler-ref="logoutSuccessHandler"/>

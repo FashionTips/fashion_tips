@@ -23,8 +23,12 @@ public interface VerificationTokenService {
 
     Optional<VerificationToken> getToken(VerificationToken token);
 
-    VerificationToken generateToken(String email);
+    VerificationToken generateToken(VerificationToken verificationToken);
 
-    VerificationToken createNewToken(String email);
+    VerificationToken createNewToken(VerificationToken verificationToken);
+
+    VerificationToken registrateNewToken(VerificationToken verificationToken);
+
+    VerificationToken resentToken(VerificationToken verificationToken);
 
 }
