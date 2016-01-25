@@ -10,4 +10,19 @@
     <!--Create service beans-->
     <context:component-scan base-package="com.bionicuniversity.edu.fashiontips.service"/>
 
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com" />
+        <property name="port" value="587" />
+        <property name="username" value="slav9nin@gmail.com" />
+        <property name="password" value="ElektrichkoUbijz21990" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+                <prop key=""
+            </props>
+        </property>
+    </bean>
+
 </beans>

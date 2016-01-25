@@ -6,6 +6,7 @@ import com.bionicuniversity.edu.fashiontips.annotation.Update;
 import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
+import com.bionicuniversity.edu.fashiontips.service.VerificationTokenService;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +30,9 @@ public class UserController {
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private VerificationTokenService verificationTokenService;
 
     /**
      * Returns user with given id, status OK.
@@ -112,5 +116,15 @@ public class UserController {
 
         // at this step email is always != null
         return login != null && userService.checkLogin(login) && userService.checkEmail(email);
+    }
+
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public ResponseEntity signUp(@RequestBody String email) {
+
+    }
+
+    @RequestMapping(value = "verified", method = RequestMethod.POST)
+    public ResponseEntity checkToken(@RequestParam String token) {
+
     }
 }
