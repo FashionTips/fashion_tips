@@ -84,7 +84,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers("/css/**")
                 .antMatchers("/fonts/**")
-                .antMatchers("/scripts/**");
+                .antMatchers("/ng/**")
+                .antMatchers("/vendor/**");
     }
 
     @Autowired

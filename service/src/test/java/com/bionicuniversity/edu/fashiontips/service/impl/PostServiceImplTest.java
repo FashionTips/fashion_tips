@@ -4,15 +4,16 @@ import com.bionicuniversity.edu.fashiontips.dao.PostDao;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Test cases for {@link PostServiceImpl} class.
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class PostServiceImplTest {
 
+    @Spy
     @InjectMocks
     private PostService postService = new PostServiceImpl();
 
@@ -59,17 +61,28 @@ public class PostServiceImplTest {
         verify(postDao, times(1)).save(new Post());
     }
 
-    @Test
-    public void testDelete_whenPostExists_shouldDeleteFromDao() throws Exception {
-        postService.delete(new Post());
-        verify(postDao, times(1)).delete(new Post());
+    @Test(expected = NotFoundException.class)
+    public void testDeleteById_whenIdOfNonexistentPost_shouldThrowAnException() throws Exception {
+        long id = 1L;
+        when(postDao.exists(id)).thenReturn(false);
+        postService.delete(id, new User());
+        fail("Should throw an exception, when post does not exist");
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testDelete_whenPostIsNull_shouldThrowException() throws Exception {
-        postService.delete(null);
-        fail("Should throw an exception, when post is null");
+    @Test
+    public void testDeleteById_whenIdIsCorrect_shouldCallDeleteByPost() throws Exception {
+        long id = 1L;
+        Post post = new Post();
+        post.setId(id);
+        User loggedUser = new User();
+        loggedUser.setId(1L);
+        post.setUser(loggedUser);
+        when(postDao.exists(id)).thenReturn(true);
+        when(postDao.getById(id)).thenReturn(post);
+        postService.delete(id, loggedUser);
+        verify(postDao).delete(id);
     }
+
 
     @Test(expected = NullPointerException.class)
     public void testSave_whenPostIsNull_shouldThrowAnException() throws Exception {

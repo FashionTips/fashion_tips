@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<div class="container" data-ng-controller="PostController">
+<div class="container">
     <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <div data-ft-post data-feed="false"></div>
+        <div class="col-md-6 col-md-offset-3" data-ng-controller="PostController">
+            <ft-post data-id="${id}" data-post="post"></ft-post>
 
             <div data-ng-show="post.commentsAllowed">
             <hr/>
@@ -40,7 +40,11 @@
             </div>
 
             <div data-ng-show="loggedIn()">
-                <form data-ng-submit="addComment()">
+                <form data-ng-submit="saveComment()">
+                    <div data-ng-show="commentFormError" class="alert alert-danger">
+                        <p>Something went wrong:</p>
+                        {{ commentFormError }}
+                    </div>
                     <div class="form-group">
                         <label for="inputCommentText">Have thoughts? Type them here:</label>
                         <textarea id="inputCommentText" class="form-control" rows="3"

@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -43,10 +44,17 @@ public class TagLineDaoTest {
 
     @Test
     @Transactional
-    public void saveTagLine(){
+    public void testSaveTagLine(){
         TagLine testTagLine = tagLineDao.save(TAG_LINE_MATCHER.deepClone(NEW_TAG_LINE_BEFORE_SAVE));
         assertReflectionEquals(NEW_TAG_LINE_AFTER_SAVE, testTagLine,IGNORE_DEFAULTS);
         List<TagLine> testListOfTagLines = tagLineDao.getAll();
         assertReflectionEquals(LIST_WITH_NEW_TAG_LINE, testListOfTagLines,IGNORE_DEFAULTS, LENIENT_ORDER);
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteTagLine() {
+        tagLineDao.delete(1L);
+        assertReflectionEquals(Arrays.asList(TAG_LINE2, TAG_LINE3), tagLineDao.getAll(), IGNORE_DEFAULTS, LENIENT_ORDER);
     }
 }

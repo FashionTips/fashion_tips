@@ -8,6 +8,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 
@@ -16,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.bionicuniversity.edu.fashiontips.ImageTestData.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 
 /**
@@ -38,6 +40,7 @@ public class ImageDaoTest {
     private String imageDirectory;
 
     @Test
+    @Transactional
     public void testSave() throws Exception {
         Path testImagePath = Paths.get(
                 String.format("%s%s%s", imageDirectory, TEST_IMAGE_DIRECTORY, IMAGE_NEW.getImgName()));
@@ -45,5 +48,6 @@ public class ImageDaoTest {
         imageDao.save(IMAGE_NEW);
         Path createdFile = Paths.get(imageDirectory + IMAGE_NEW.getImgName());
         Files.delete(createdFile);
+        assertReflectionEquals(IMAGE_NEW, imageDao.getById(IMAGE_NEW_ID));
     }
 }

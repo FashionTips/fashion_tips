@@ -121,14 +121,6 @@ public class Post extends BaseEntity<Long> {
     @Transient
     private Boolean isLikedByAuthUser;
 
-    /**
-    * List of posts tag lines
-    */
-    @Valid
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "post")
-    @Fetch(FetchMode.SELECT)
-    @OrderBy(value = "id ASC")
-    private List<TagLine> tagLines;
 
     /**
      * Default Constructor
@@ -259,13 +251,6 @@ public class Post extends BaseEntity<Long> {
         isLikedByAuthUser = likedByAuthUser;
     }
 
-    public List<TagLine> getTagLines() {
-        return tagLines;
-    }
-
-    public void setTagLines(List<TagLine> tagLines) {
-        this.tagLines = tagLines;
-    }
 
     @Override
     public String toString() {
@@ -280,7 +265,6 @@ public class Post extends BaseEntity<Long> {
                 ", comments=" + comments +
                 ", likes=" + likes +
                 ", isLikedByAuthUser=" + isLikedByAuthUser +
-                ", tagLines=" + tagLines +
                 '}';
     }
 

@@ -6,10 +6,15 @@
     background-color: lightgray;
 }
 
+.active {
+    background-color: darkcyan;
+}
+
 .btn-file {
     position: relative;
     overflow: hidden;
 }
+
 .btn-file input[type=file] {
     position: absolute;
     top: 0;
@@ -24,4 +29,8 @@
     background: white;
     cursor: inherit;
     display: block;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
 }

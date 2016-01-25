@@ -250,12 +250,12 @@ INSERT INTO posts (user_id, title, user_post, category, created) VALUES ( (SELEC
 INSERT INTO posts (user_id, title, user_post, category, created) VALUES ( (SELECT DISTINCT u.id FROM users AS u WHERE u.login = 'login2') , 'title2', 'what hat does put on? Again', 'POST', '2015-12-16 12:04:00');
 INSERT INTO posts (user_id, title, user_post, category, created) VALUES ( (SELECT DISTINCT u.id FROM users AS u WHERE u.login = 'login3') , 'title3', 'red is cool? Again', 'POST', '2015-12-16 12:05:00');
 
-INSERT INTO images (img_name) VALUES ('1-1kurtka.jpg');
-INSERT INTO images (img_name) VALUES ('2-13235_huge_weman_shoes_0.jpg');
-INSERT INTO images (img_name) VALUES ('3-jeans1.jpg');
-INSERT INTO images (img_name) VALUES ('4-jeans2.jpg');
-INSERT INTO images (img_name) VALUES ('5-kurtka.jpg');
-INSERT INTO images (img_name) VALUES ('6-sapogi.jpeg');
+INSERT INTO images (img_name, user_id) VALUES ('1-1kurtka.jpg', 1);
+INSERT INTO images (img_name, user_id) VALUES ('2-13235_huge_weman_shoes_0.jpg', 1);
+INSERT INTO images (img_name, user_id) VALUES ('3-jeans1.jpg', 1);
+INSERT INTO images (img_name, user_id) VALUES ('4-jeans2.jpg', 2);
+INSERT INTO images (img_name, user_id) VALUES ('5-kurtka.jpg', 2);
+INSERT INTO images (img_name, user_id) VALUES ('6-sapogi.jpeg', 3);
 
 INSERT INTO post_images (post_id, img_id) VALUES (1,1);
 INSERT INTO post_images (post_id, img_id) VALUES (1,2);
@@ -316,9 +316,9 @@ INSERT INTO clothes (name) VALUES
   ('Wallets'),
   ('Watches');
 
-INSERT INTO tag_lines (POST_ID, CLOTHES_ID) VALUES (1,3);
-INSERT INTO tag_lines (POST_ID, CLOTHES_ID) VALUES (1,2);
-INSERT INTO tag_lines (POST_ID, CLOTHES_ID) VALUES (1,4);
+INSERT INTO tag_lines (IMAGE_ID, CLOTHES_ID) VALUES (1,3);
+INSERT INTO tag_lines (IMAGE_ID, CLOTHES_ID) VALUES (1,2);
+INSERT INTO tag_lines (IMAGE_ID, CLOTHES_ID) VALUES (2,4);
 
 INSERT INTO TAG_TYPES (TYPE) VALUES ('brand');
 INSERT INTO TAG_TYPES (TYPE) VALUES ('store');

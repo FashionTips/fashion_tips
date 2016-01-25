@@ -8,7 +8,6 @@ import java.time.Month;
 import java.util.*;
 
 import static com.bionicuniversity.edu.fashiontips.ImageTestData.*;
-import static com.bionicuniversity.edu.fashiontips.TagLineTestData.*;
 import static com.bionicuniversity.edu.fashiontips.UserTestData.*;
 
 /**
@@ -68,7 +67,6 @@ public class PostAndCommentTestData {
     public static final List<Comment> LIST_IF_UPDATE_COMMENT3 = Arrays.asList(COMMENT1, COMMENT2_HIDDEN, UPDATE_COMMENT3, COMMENT_4);
 
     static {
-        POST1.setTagLines(Arrays.asList(TAG_LINE1, TAG_LINE2, TAG_LINE3));
         POST1.setComments(Arrays.asList(COMMENT1, COMMENT2_HIDDEN));
         POST1_AFTER_DELETE_COMMENT1.setComments(Arrays.asList(COMMENT2_HIDDEN_AFTER_DELETE_COMMENT1));
         POST2.setComments(Arrays.asList(COMMENT_3));
@@ -78,15 +76,5 @@ public class PostAndCommentTestData {
         POST2_AFTER_UPDATE_COMMENT3.setComments(Arrays.asList(UPDATE_COMMENT3));
 
         UPDATE_POST1.setComments(Arrays.asList(COMMENT1_AFTER_UPDATE_POST1, COMMENT2_HIDDEN_AFTER_UPDATE_POST1));
-        UPDATE_POST1.setTagLines(Arrays.asList(UPDATED_TAG_LINE_FOR_POST, TAG_LINE2, TAG_LINE3));
-
-        POST2.setTagLines(new ArrayList<>());
-        POST3.setTagLines(new ArrayList<>());
-        POST4.setTagLines(new ArrayList<>());
-        POST5.setTagLines(new ArrayList<>());
-        POST6.setTagLines(new ArrayList<>());
-
-        NEW_POST_BEFORE_SAVE.setTagLines(Arrays.asList(NEW_TAG_LINE_FOR_POST));
-        NEW_POST_AFTER_SAVE.setTagLines(Arrays.asList(ADDED_TAG_LINE_FOR_POST));
     }
 }
