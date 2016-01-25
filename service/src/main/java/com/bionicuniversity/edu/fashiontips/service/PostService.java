@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.service;
 
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,9 +55,10 @@ public interface PostService {
     /**
      * Deletes given post from persistence.
      *
-     * @param post post to delete
+     * @param id post to delete
+     * @param loggedUser
      */
-    void delete(Post post);
+    void delete(long id, User loggedUser);
 
     @Transactional
     Post save(Post post);
