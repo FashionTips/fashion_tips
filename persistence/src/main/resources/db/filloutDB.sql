@@ -1,3 +1,4 @@
+DELETE FROM verification_token;
 DELETE FROM tag_parameters;
 DELETE FROM tags_tag_lines;
 DELETE FROM tags;
@@ -334,3 +335,6 @@ INSERT INTO TAGS_TAG_LINES (TAG_LINE_ID,TAG_ID) VALUES (1, 3);
 INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://untitledandco.com/collections/womens', 'site', 1);
 INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://www.karmaloop.com/product/The-Hey-Ma-Tee-in-White/549232', 'url', 1);
 INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://finchwear.com.ua/', 'site', 1);
+
+INSERT INTO verification_token (email, token)
+    VALUES ('arusich2008@ukr.net', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261');

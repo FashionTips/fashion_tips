@@ -165,6 +165,6 @@ CREATE TABLE verification_token (
   email VARCHAR NOT NULL,
   token VARCHAR NOT NULL,
   expaired_time TIMESTAMP,
-  BOOLEAN verified DEFAULT FALSE,
+  verified BOOLEAN DEFAULT FALSE,
   CONSTRAINT verification_token_email UNIQUE (email)
 );

@@ -2,32 +2,41 @@ package com.bionicuniversity.edu.fashiontips.entity;
 
 import com.bionicuniversity.edu.fashiontips.annotation.Create;
 import com.bionicuniversity.edu.fashiontips.annotation.UniqueEmail;
-import com.bionicuniversity.edu.fashiontips.annotation.Update;
 import com.bionicuniversity.edu.fashiontips.entity.util.LocalDateTimeDeserializer;
 import com.bionicuniversity.edu.fashiontips.entity.util.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * @author Alexandr Laktionov
  */
 @Entity
-@Table(value = "verification_token", uniqueConstraints = {@UniqueConstraint(name = "email", columnNames = "email")})
-public class VerificationToken {
+@Table(name = "verification_token", uniqueConstraints =
+        {@UniqueConstraint(name = "verification_token_email", columnNames = "email")})
+public class VerificationToken implements Serializable {
+
+    /**
+     * Avoid duplicate invoking generate a new token
+     */
+    public static final long EXPAIRED_PERIOD = 60L;
 
     @Id
+    @JsonProperty(value = "email")
     @NotBlank(message = "Email could not be empty.", groups = {Create.class})
-    @Email(message = "The given string is not email.", groups = {Create.class, Update.class})
+    @Email(message = "The given string is not email.", groups = {Create.class})
     @UniqueEmail(groups = Create.class)
     private String email;
 
     @JsonIgnore
+    @JsonProperty(value = "token")
     private String token;
 
     @JsonIgnore
@@ -35,6 +44,26 @@ public class VerificationToken {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "expaired_time")
     private LocalDateTime expairedTime;
+
+    @JsonIgnore
+    @Column(name = "verified")
+    private boolean verified;
+
+    public VerificationToken() {
+        this.expairedTime = LocalDateTime.now().plusSeconds(EXPAIRED_PERIOD);
+        this.verified = false;
+    }
+
+    public VerificationToken(String email) {
+        this();
+        this.email = email;
+    }
+
+    public VerificationToken(String email, String token) {
+        this();
+        this.email = email;
+        this.token = token;
+    }
 
     public String getEmail() {
         return email;
@@ -58,6 +87,18 @@ public class VerificationToken {
 
     public void setExpairedTime(LocalDateTime expairedTime) {
         this.expairedTime = expairedTime;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public void clear() {
+        this.expairedTime = null;
     }
 
     @Override

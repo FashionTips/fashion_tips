@@ -5,9 +5,11 @@ import com.bionicuniversity.edu.fashiontips.annotation.Create;
 import com.bionicuniversity.edu.fashiontips.annotation.Update;
 import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
 import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import com.bionicuniversity.edu.fashiontips.service.VerificationTokenService;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.inject.Inject;
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Controller for users.
@@ -73,8 +77,14 @@ public class UserController {
      * @return created user
      */
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity createUser(@Validated(Create.class) @RequestBody User user) {
+    public ResponseEntity createUser(@Validated(Create.class) @RequestBody User user,
+                                     @RequestParam String token) {
+        if (token == null) return new ResponseEntity(HttpStatus.FORBIDDEN);
+        VerificationToken verificationToken = verificationTokenService.getByToken(token)
+                .orElseThrow(() -> new NotFoundException("This token does not exist"));
+        verificationToken.setVerified(true);
         User savedUser = userService.save(user);
+        verificationTokenService.update(verificationToken);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("users/" + savedUser.getId())
@@ -119,12 +129,44 @@ public class UserController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public ResponseEntity signUp(@RequestBody String email) {
+    //If email is already present then return MethodArgumentNotValidException with message "Email is already in use."
+    public ResponseEntity signUp(@Validated(Create.class) @RequestBody VerificationToken token) {
+        //Retrieve token with boolean flag if duplicated button push has had
+//        if (!verificationTokenService.isPresent(incomingToken)) {
+        Optional<VerificationToken> verifiedToken = null;
+        if (!(verifiedToken = verificationTokenService.getToken(token)).isPresent()) {
+            VerificationToken newToken = null;
+            try {
+                newToken = verificationTokenService.generateToken(token.getEmail());
+            } catch (Exception ex) {
+                //throw new DuplicateTokenGeneration("Too fast required");
+                return new ResponseEntity(HttpStatus.OK);//TODO ????
+            }
+            verificationTokenService.sendEmailRegistrationToken(newToken);
+            return ResponseEntity.ok().build();
+        }
+        VerificationToken verificationToken = verifiedToken.get();
+        if (verificationToken.getExpairedTime() != null
+                && LocalDateTime.now().isBefore(verificationToken.getExpairedTime()))
+            return ResponseEntity.ok().build();
 
+        //at this point !verificationToken.isVerified()
+        VerificationToken newToken = verificationTokenService.createNewToken(verificationToken.getEmail());
+        verificationTokenService.sendEmailRegistrationToken(newToken);
+        return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "verified", method = RequestMethod.POST)
-    public ResponseEntity checkToken(@RequestParam String token) {
+    @RequestMapping(value = "/token", method = RequestMethod.POST)
+    public boolean checkToken(@RequestBody VerificationToken token) {
 
+        if (token.getToken() == null) /*return false*/ throw new NotFoundException("Token does not present");
+
+        VerificationToken verificationToken =
+                verificationTokenService.getByToken(token.getToken()).
+                        orElseThrow(() -> new NotFoundException("Token not found"));
+
+        if (verificationToken.isVerified()) return false;
+        return true;
     }
+
 }
