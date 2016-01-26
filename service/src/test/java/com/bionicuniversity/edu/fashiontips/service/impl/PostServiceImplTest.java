@@ -32,8 +32,13 @@ public class PostServiceImplTest {
     private PostDao postDao;
 
     @Test
-    public void testFindAllByUser() throws Exception {
+    public void testFindAllByMe() throws Exception {
         postService.findAllByUser(new User(), new User());
+        verify(postDao, times(1)).findMine(new User());
+    }
+    @Test
+    public void testFindAllByUser() throws Exception {
+        postService.findAllByUser(new User(), new User(28L,"loggedUser", "email", "1111", null));
         verify(postDao, times(1)).findByUser(new User());
     }
 
@@ -57,7 +62,7 @@ public class PostServiceImplTest {
 
     @Test
     public void testUpdate() throws Exception {
-        postService.update(new Post());
+        postService.update(new Post(), new Post());
         verify(postDao, times(1)).save(new Post());
     }
 

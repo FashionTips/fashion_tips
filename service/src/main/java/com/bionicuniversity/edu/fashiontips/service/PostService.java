@@ -2,7 +2,6 @@ package com.bionicuniversity.edu.fashiontips.service;
 
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +49,7 @@ public interface PostService {
     void toggleLikedStatus(long id, User loggedUser);
 
     @PreAuthorize("#post.user.login == authentication.name")
-    void update(Post post);
+    void update(Post update, Post post);
 
     /**
      * Deletes given post from persistence.

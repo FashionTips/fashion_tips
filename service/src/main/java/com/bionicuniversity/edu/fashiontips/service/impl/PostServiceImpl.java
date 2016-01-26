@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.service.impl;
 
 import com.bionicuniversity.edu.fashiontips.dao.PostDao;
+import com.bionicuniversity.edu.fashiontips.entity.Image;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -29,12 +31,18 @@ import java.util.stream.Collectors;
 @Named
 public class PostServiceImpl implements PostService {
 
-    @Inject private PostDao postDao;
+    @Inject
+    private PostDao postDao;
 
     @Override
     @Transactional(readOnly = true)
     public List<Post> findAllByUser(User user, User loggedUser) {
-        List<Post> posts = postDao.findByUser(user);
+        List<Post> posts;
+        if (!user.equals(loggedUser)) {
+            posts = postDao.findByUser(user);
+        } else {
+            posts = postDao.findMine(user);
+        }
         PostUtil.normalizeForClient(posts, loggedUser);
         PostUtil.handleDeletedMessages(posts);
         return posts;
@@ -88,7 +96,70 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @PreAuthorize("#post.user.login == authentication.name")
-    public void update(Post post) {
+    public void update(Post update, Post post) {
+
+        String title = update.getTitle();
+        if (title != null) post.setTitle(title);
+        String message = update.getTextMessage();
+        if (message != null) post.setTextMessage(message);
+        Post.Category category = update.getCategory();
+        if (category != null) post.setCategory(category);
+        List<Image> images = update.getImages();
+        if (images != null) post.setImages(images);
+        boolean commentsAllowed = update.isCommentsAllowed();
+        post.setCommentsAllowed(commentsAllowed);
+
+        //Set status and publication time
+        Post.Status status = update.getStatus();
+        LocalDateTime updatePublicationTime = update.getPublicationTime();
+
+        if (updatePublicationTime != null && !updatePublicationTime.equals(post.getPublicationTime())) {
+            if (updatePublicationTime.isAfter(LocalDateTime.now())) {
+                if (post.getStatus() == Post.Status.NEW || post.getStatus() == Post.Status.WAIT) {
+                    post.setStatus(Post.Status.WAIT);
+                    post.setPublicationTime(updatePublicationTime);
+                    post.setCommentsAllowed(false);
+                } else {
+                    throw new IllegalArgumentException("Status or publication time have invalid value.");
+                }
+            } else {
+                if (post.getStatus() == Post.Status.NEW || post.getStatus() == Post.Status.WAIT) {
+                    post.setStatus(Post.Status.PUBLISHED);
+                    post.setPublicationTime(LocalDateTime.now());
+                } else {
+                    throw new IllegalArgumentException("Status or publication time have invalid value.");
+                }
+            }
+        } else if (status != null) {
+            switch (post.getStatus()) {
+                case NEW:
+                case WAIT:
+                    if (status == Post.Status.PUBLISHED) {
+                        post.setPublicationTime(LocalDateTime.now());
+                        post.setStatus(status);
+                    } else if (status == Post.Status.NEW || status == Post.Status.WAIT) {
+                        post.setCommentsAllowed(false);
+                    } else {
+                        throw new IllegalArgumentException("Status have invalid value.");
+                    }
+                    break;
+                case PUBLISHED:
+                    if (status == Post.Status.HIDDEN) {
+                        post.setStatus(status);
+                        post.setCommentsAllowed(false);
+                    } else if (status != Post.Status.PUBLISHED) {
+                        throw new IllegalArgumentException("Status have invalid value.");
+                    }
+                    break;
+                case HIDDEN:
+                    if (status == Post.Status.PUBLISHED) {
+                        post.setStatus(status);
+                    } else if (status != Post.Status.HIDDEN) {
+                        throw new IllegalArgumentException("Status have invalid value.");
+                    }
+                    break;
+            }
+        }
         postDao.save(post);
     }
 
@@ -97,7 +168,7 @@ public class PostServiceImpl implements PostService {
     public void delete(long id, User loggedUser) {
         Post post = postDao.getById(id);
         if (post == null) throw new NotFoundException(String.format("Post with id '%d' was not found.", id));
-        if (!(post.getUser().equals(loggedUser))) throw  new AccessDeniedException("Post belongs to different user.");
+        if (!(post.getUser().equals(loggedUser))) throw new AccessDeniedException("Post belongs to different user.");
         postDao.delete(id);
     }
 
@@ -121,6 +192,19 @@ public class PostServiceImpl implements PostService {
         Objects.requireNonNull(post);
         if (post.getTagLines() != null && post.getTagLines().size() > 0) {
             post.getTagLines().stream().forEach(tagLine -> tagLine.setPost(post));
+        }
+
+        //Set status and publication time
+        if(post.getPublicationTime() != null && post.getPublicationTime().isAfter(LocalDateTime.now())){
+            post.setStatus(Post.Status.WAIT);
+            post.setCommentsAllowed(false);
+        } else{
+            if(post.getStatus() != null){
+                post.setPublicationTime(LocalDateTime.now());
+            } else{
+                post.setStatus(Post.Status.PUBLISHED);
+                post.setPublicationTime(LocalDateTime.now());
+            }
         }
         return postDao.save(post);
     }

@@ -30,7 +30,7 @@
                     </h2>
                 </div>
                 <div class="col-md-4">
-                    <p class="text-muted text-right">{{ post.created | date:'short' }}</p>
+                    <p class="text-muted text-right">{{ post.publicationTime | date:'short' }}</p>
                     <h4 class="text-right">
                         Likes:{{post.likes}}
                     <span data-ng-show="post.isLikedByAuthUser !== null" class="glyphicon glyphicon-thumbs-up"
