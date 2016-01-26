@@ -19,30 +19,33 @@ public class PostAndCommentTestData {
     public static final ModelMatcher<Post, String> POST_MATCHER = new ModelMatcher<>(Post::toString);
     public static final ModelMatcher<Comment, String> COMMENT_MATCHER = new ModelMatcher<>(Comment::toString);
 
-    public static final Post POST1 = new Post(1L, USER1, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 0), "title1", "what fits me with these pants?", Post.Category.QUESTION, Arrays.asList(IMAGE1, IMAGE2, IMAGE3), new ArrayList<>(), new HashSet<>(Arrays.asList(USER2, USER3)), null, null);
-    public static final Post POST2 = new Post(2L, USER2, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 1), "title2", "what hat does put on?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(Arrays.asList(USER3)), null, null);
-    public static final Post POST3 = new Post(3L, USER3, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 2), "title3", "red is cool?", Post.Category.QUESTION, Collections.singletonList(IMAGE6), new ArrayList<>(), new HashSet<>(Arrays.asList(USER1, USER2)), null, null);
-    public static final Post POST4 = new Post(4L, USER1, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 3), "title1", "what fits me with these pants? Again", Post.Category.POST, new ArrayList<>(), new ArrayList<>(), new HashSet<>(), null, null);
-    public static final Post POST5 = new Post(5L, USER2, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 4), "title2", "what hat does put on? Again", Post.Category.POST, new ArrayList<>(), new ArrayList<>(), new HashSet<>(), null, null);
-    public static final Post POST6 = new Post(6L, USER3, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 5), "title3", "red is cool? Again", Post.Category.POST, new ArrayList<>(), new ArrayList<>(), new HashSet<>(), null, null);
+    public static final Post POST1 = new Post(1L, USER1, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 0), "title1", "what fits me with these pants?", Post.Category.QUESTION, Arrays.asList(IMAGE1, IMAGE2, IMAGE3), new ArrayList<>(), new HashSet<>(Arrays.asList(USER2, USER3)), null, null, Post.Status.PUBLISHED, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 0));
+    public static final Post POST2 = new Post(2L, USER2, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 1), "title2", "what hat does put on?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(Arrays.asList(USER3)), null, null, Post.Status.PUBLISHED, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 1));
+    public static final Post POST3 = new Post(3L, USER3, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 2), "title3", "red is cool?", Post.Category.QUESTION, Collections.singletonList(IMAGE6), new ArrayList<>(), new HashSet<>(Arrays.asList(USER1, USER2)), null, null, Post.Status.PUBLISHED, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 2));
+    public static final Post POST4 = new Post(4L, USER1, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 3), "title1", "what fits me with these pants? Again", Post.Category.POST, new ArrayList<>(), new ArrayList<>(), new HashSet<>(), null, null, Post.Status.PUBLISHED, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 3));
+    public static final Post POST5 = new Post(5L, USER2, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 4), "title2", "what hat does put on? Again", Post.Category.POST, new ArrayList<>(), new ArrayList<>(), new HashSet<>(), null, null, Post.Status.PUBLISHED, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 4));
+    public static final Post POST6 = new Post(6L, USER3, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 5), "title3", "red is cool? Again", Post.Category.POST, new ArrayList<>(), new ArrayList<>(), new HashSet<>(), null, null, Post.Status.PUBLISHED, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 5));
 
-    public static final Post POST3_AFTER_ADD_NEW_COMMENT = new Post(3L, USER3, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 2), "title3", "red is cool?", Post.Category.QUESTION, Collections.singletonList(IMAGE6), new ArrayList<>(), new HashSet<>(Arrays.asList(USER1, USER2)), null, null);
-    public static final Post POST2_AFTER_UPDATE_COMMENT3 = new Post(2L, USER2, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 1), "title2", "what hat does put on?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(Arrays.asList(USER3)), null, null);
-    public static final Post NEW_POST_BEFORE_SAVE = new Post(null, USER1, LocalDateTime.of(2015, Month.DECEMBER, 18, 12, 5), "title_new", "How are you?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(), null, null);
-    public static final Post NEW_POST_AFTER_SAVE = new Post(7L, USER1, LocalDateTime.of(2015, Month.DECEMBER, 18, 12, 5), "title_new", "How are you?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(), null, null);
-    public static final Post UPDATE_POST1 = new Post(1L, USER1, POST1.getCreated(), "UPDATE title", "UPDATE what fits me with these pants?", Post.Category.QUESTION, Arrays.asList(IMAGE1, IMAGE2, IMAGE3), new ArrayList<>(), new HashSet<>(Arrays.asList(USER2, USER3)), null, null);
+    public static final Post POST3_AFTER_ADD_NEW_COMMENT = new Post(3L, USER3, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 2), "title3", "red is cool?", Post.Category.QUESTION, Collections.singletonList(IMAGE6), new ArrayList<>(), new HashSet<>(Arrays.asList(USER1, USER2)), null, null, Post.Status.PUBLISHED, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 2));
+    public static final Post POST2_AFTER_UPDATE_COMMENT3 = new Post(2L, USER2, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 1), "title2", "what hat does put on?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(Arrays.asList(USER3)), null, null, Post.Status.PUBLISHED, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 1));
+    public static final Post NEW_POST_BEFORE_SAVE = new Post(null, USER1, LocalDateTime.of(2015, Month.DECEMBER, 18, 12, 5), "title_new", "How are you?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(), null, null, Post.Status.PUBLISHED, LocalDateTime.of(2015, Month.DECEMBER, 18, 12, 5));
+    public static final Post NEW_POST_AFTER_SAVE = new Post(9L, USER1, LocalDateTime.of(2015, Month.DECEMBER, 18, 12, 5), "title_new", "How are you?", Post.Category.QUESTION, Arrays.asList(IMAGE4, IMAGE5), new ArrayList<>(), new HashSet<>(), null, null, Post.Status.PUBLISHED, LocalDateTime.of(2015, Month.DECEMBER, 18, 12, 5));
+    public static final Post UPDATE_POST1 = new Post(1L, USER1, POST1.getCreated(), "UPDATE title", "UPDATE what fits me with these pants?", Post.Category.QUESTION, Arrays.asList(IMAGE1, IMAGE2, IMAGE3), new ArrayList<>(), new HashSet<>(Arrays.asList(USER2, USER3)), null, null, Post.Status.PUBLISHED, POST1.getPublicationTime());
     public static final Post NOT_VALID_POST = new Post(USER1, "", "", Post.Category.POST);
-    public static final Post POST1_AFTER_DELETE_COMMENT1 = new Post(1L, USER1, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 0), "title1", "what fits me with these pants?", Post.Category.QUESTION, Arrays.asList(IMAGE1, IMAGE2, IMAGE3), new ArrayList<>(), new HashSet<>(Arrays.asList(USER2, USER3)), null, null);
+    public static final Post POST1_AFTER_DELETE_COMMENT1 = new Post(1L, USER1, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 0), "title1", "what fits me with these pants?", Post.Category.QUESTION, Arrays.asList(IMAGE1, IMAGE2, IMAGE3), new ArrayList<>(), new HashSet<>(Arrays.asList(USER2, USER3)), null, null, Post.Status.PUBLISHED, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 0));
+
+    public static final Post HIDDEN_POST = new Post(7L, USER3, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 15), "hidden", "hidden. Again", Post.Category.QUESTION, Arrays.asList(IMAGE1), new ArrayList<>(), new HashSet<>(), null, null, Post.Status.HIDDEN, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 15));
+    public static final Post WAIT_POST = new Post(8L, USER3, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 16), "wait", "wait", Post.Category.QUESTION, Arrays.asList(IMAGE1), new ArrayList<>(), new HashSet<>(), null, null,  Post.Status.WAIT, LocalDateTime.of(2015, Month.DECEMBER, 16, 12, 16));
 
     public static final List<Post> LIST_IF_DELETE_FIRST_POST = Arrays.asList(POST2, POST3, POST4, POST5, POST6);
-    public static final List<Post> LIST_OF_POSTS = Arrays.asList(POST1, POST2, POST3, POST4, POST5, POST6);
+    public static final List<Post> LIST_OF_POSTS = Arrays.asList(POST1, POST2, POST3, POST4, POST5, POST6, HIDDEN_POST, WAIT_POST);
     public static final List<Post> LIST_WITH_NEW_POST = Arrays.asList(POST1, POST2, POST3, POST4, POST5, POST6, NEW_POST_AFTER_SAVE);
     public static final List<Post> LIST_IF_UPDATE_FIRST_POST = Arrays.asList(UPDATE_POST1, POST2, POST3, POST4, POST5, POST6);
     public static final List<Post> FIND_BY_CATEGORY_QUESTION = Arrays.asList(POST3, POST2, POST1);
     public static final List<Post> FIND_BY_CATEGORY_POST = Arrays.asList(POST6, POST5, POST4);
 
     public static final List<Post> FIND_BY_USER3_SORTED_BY_CREATED = Arrays.asList(POST6, POST3);
-
+    public static final List<Post> FIND_BY_USER3_WITH_HIDDEN_POSTS = Arrays.asList(WAIT_POST, HIDDEN_POST, POST6, POST3);
     public static final List<Post> FIND_BY_WORD_AGAIN_SORTED_BY_CREATED = Arrays.asList(POST6, POST5, POST4);
     public static final List<Post> FIND_ALL_SORTED_BY_CREATED = Arrays.asList(POST6, POST5, POST4, POST3, POST2, POST1);
 
