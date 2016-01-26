@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -167,5 +166,50 @@ public class CommentServiceImplTest {
         when(commentDao.getById(anyLong())).thenReturn(comment);
         commentService.hideById(1L, "login");
         verify(commentDao).save(comment);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testUpdate_whenCommentIdIsInvalid_shouldThrowException() throws Exception {
+        Comment comment = new Comment();
+        comment.setId(1L);
+
+        when(commentDao.exists(comment.getId())).thenReturn(false);
+
+        commentService.update(comment, "no matter");
+
+        fail("Should throw an exception, when the id of non existent comment was passed");
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void testUpdate_whenPassInappropriateLoginAgainstCommentsOwner_shouldThrowException() throws Exception {
+        User user = new User();
+        user.setLogin("valid login");
+        Comment comment = new Comment();
+        comment.setId(1L);
+        comment.setUser(user);
+
+        when(commentDao.exists(comment.getId())).thenReturn(true);
+        when(commentDao.getById(comment.getId())).thenReturn(comment);
+
+        commentService.update(comment, "not valid login");
+        fail("Should throw an exception, when login is inappropriate");
+    }
+
+    @Test
+    public void testUpdate_whenArgsAreValid_should_shouldReturnUpdatedComment() throws Exception {
+        User user = new User();
+        user.setLogin("valid login");
+        Comment comment = new Comment(1L, "new text", null, user);
+
+        when(commentDao.exists(comment.getId())).thenReturn(true);
+        when(commentDao.getById(comment.getId())).thenReturn(comment);
+        when(commentDao.save(comment)).thenReturn(comment);
+
+        assertEquals("Comments should be equal.", comment, commentService.update(comment, "valid login"));
+
+        InOrder inOrderCommDao = inOrder(commentDao);
+        inOrderCommDao.verify(commentDao).exists(comment.getId());
+        inOrderCommDao.verify(commentDao).getById(comment.getId());
+        inOrderCommDao.verify(commentDao).save(comment);
     }
 }

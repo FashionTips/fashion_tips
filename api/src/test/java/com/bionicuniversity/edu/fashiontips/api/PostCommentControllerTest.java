@@ -29,9 +29,7 @@ import static com.bionicuniversity.edu.fashiontips.util.TestUtil.json;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -180,5 +178,32 @@ public class PostCommentControllerTest {
     public void testDeleteWithNotValidCommentIdAndAppropriateUser() throws Exception {
         mockMvc.perform(delete(COMMENTS_API_URL + "/99999"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(TEST_USER_LOGIN)
+    public void testUpdate_whenArgsAreValid_shouldReturnHttpStatus202Accepted() throws Exception {
+        Comment testComment = new Comment();
+        testComment.setText("test");
+        String requestedCommentsId = "/1";
+        mockMvc.perform(put(COMMENTS_API_URL + requestedCommentsId)
+                .content(json(testComment))
+                .contentType(contentType))
+                    .andExpect(status().isAccepted())
+                    .andExpect(jsonPath("$.id", is(1)))
+                    .andExpect(jsonPath("$.text", is("test")))
+                    .andExpect(jsonPath("$.created", is(notNullValue())))
+                    .andExpect(jsonPath("$.author.login", is(comment1.getUser().getLogin())));
+    }
+
+    @Test
+    @WithMockUser("someAnotherUser")
+    public void testUpdate_WithValidDataAndInappropriateUser() throws Exception {
+        Comment testComment = new Comment();
+        testComment.setText("test");
+        mockMvc.perform(put(COMMENTS_API_URL + "/1")
+                .content(json(testComment))
+                .contentType(contentType))
+                    .andExpect(status().isForbidden());
     }
 }
