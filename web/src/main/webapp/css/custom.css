@@ -6,6 +6,10 @@
     background-color: lightgray;
 }
 
+.active {
+    background-color: darkcyan;
+}
+
 .btn-file {
     position: relative;
     overflow: hidden;

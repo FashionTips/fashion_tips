@@ -24,7 +24,7 @@
                    data-ng-model="post.title" autofocus required maxlength="100">
             <div data-ng-messages="postForm.title.$error" role="alert"
                  data-ng-show="postForm.title.$dirty">
-                <div data-ng-messages-include="messages.html"></div>
+                <div data-ng-messages-include="/messages.html"></div>
             </div>
         </div>
 
@@ -37,7 +37,7 @@
                           name="textMessage" title="Text Message" required maxlength="1000"></textarea>
             <div data-ng-messages="postForm.textMessage.$error" role="alert"
                  data-ng-show="postForm.textMessage.$dirty">
-                <div data-ng-messages-include="messages.html"></div>
+                <div data-ng-messages-include="/messages.html"></div>
             </div>
         </div>
 
@@ -63,64 +63,40 @@
         <div class="form-group">
             <label>Add Photos</label>
             <div>
-                        <span class="btn btn-info btn-sm btn-file">
-                            Browse... <input type="file" data-custom-on-change="uploadImages" accept="image/*"
-                                             multiple/>
-                        </span>
+                <span class="btn btn-info btn-sm btn-file">
+                    Browse... <input type="file" data-custom-on-change="uploadImages" accept="image/*"
+                                     multiple/>
+                </span>
             </div>
             <div class="alert alert-danger" data-ng-repeat="imageUploadError in imageUploadErrors">
                 {{imageUploadError}}
             </div>
             <div class="row">
-                <div class="col-sm-2" data-ng-repeat="image in post.images">
+                <div class="col-sm-2" data-ng-repeat="image in post.images" data-ng-click="showImage(image)">
                     <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}"/>
                     <a href="#" data-ng-click="removeImage(image.id)"><span class="glyphicon glyphicon-remove"
                                                                             aria-hidden="true"></span></a>
                 </div>
             </div>
+            <label data-ng-show="post.images.length && !activeImage">Click on thumbnail to add tags to photo</label>
         </div>
 
         <!-- Tags -->
         <div class="form-group">
-            <label>Tags</label>
-            <div>
-                <p data-ng-hide="post.tagLines.length !== 0">No tags</p>
-                        <span data-ng-repeat="tagLine in post.tagLines">
-                            <strong>{{tagLine.clothes.name}}</strong> -
-                            <span data-ng-repeat="tag in tagLine.tags">
-                               <i>{{tag.tagType.type}}</i>:{{tag.value}}
-                            </span>
-                            <a href="#" data-ng-click="removeTagLine(tagLine)"><span class="glyphicon glyphicon-remove"
-                                                                                     aria-hidden="true"></span></a>
-                            <br/>
-                        </span>
+            <div class="well well-sm" data-ng-show="activeImage">
+                <img class="img-responsive" data-ng-src="{{activeImage.imgUrl}}" data-ng-show="activeImage.imgUrl"/>
+                <span data-ng-repeat="tagLine in activeImage.tagLines">
+                    <strong>{{tagLine.clothes.name}}</strong> -
+                    <span data-ng-repeat="tag in tagLine.tags">
+                       <i>{{tag.tagType.type}}</i>:{{tag.value}}
+                    </span>
+                    <a href="" data-ng-click="removeTagLine(tagLine.id)"><span class="glyphicon glyphicon-remove"
+                                                                             aria-hidden="true"></span></a>
+                    <br/>
+                </span>
             </div>
-        </div>
-
-        <!-- Add Tags section -->
-        <div data-ng-controller="TagController" class="form-group">
-            <button type="button" class="btn btn-info btn-sm" data-ng-hide="tagFormActive"
-                    data-ng-click="tagFormActive = true">Add tag
-            </button>
-            <div data-ng-show="tagFormActive">
-                <label>Add Tag</label>
-                <div>
-                    <select data-ng-model="currentTagLine.clothes"
-                            data-ng-options="clothesItem.name for clothesItem in clothes"></select>
-                    <table>
-                        <tr data-ng-repeat="tagType in tagTypes">
-                            <td><input type="checkbox" data-ng-model="isActive" data-ng-click="activateTag(this)"
-                                       data-ng-disabled="!currentTagLine.clothes">{{tagType.type}}
-                            </td>
-                            <td><input type="text" data-ng-model="tagText" data-ng-change="setTagText(this)"
-                                       data-ng-disabled="!isActive"></td>
-                        </tr>
-                    </table>
-                </div>
-                <button type="button" data-ng-click="addTagLineToPost()" data-ng-disabled="!currentTagLine.clothes"
-                        class="btn btn-info btn-sm">Add
-                </button>
-            </div>
+            <!-- Add Tags section -->
+            <button type="button" data-ng-click="openModalAddTag()" data-ng-show="activeImage.id" class="btn btn-info btn-sm">Add Tag to photo</button>
         </div>
     </div>
 

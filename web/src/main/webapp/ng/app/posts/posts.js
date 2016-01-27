@@ -204,8 +204,15 @@ angular.module('ft.posts', [
             controller: function ($scope, sessionService, postService, $uibModal) {
 
                 if ($scope.id) {
-                    $scope.post = postService.get($scope.id);
+                    var result = postService.get($scope.id);
+                    result.$promise.then(function (data) {
+                        $scope.post = data;
+                        $scope.activeImage = $scope.post.images[0];
+                    });
+                } else {
+                    $scope.activeImage = $scope.post.images[0];
                 }
+
 
                 $scope.$watch(function () {
                     return sessionService.getUsername();
@@ -241,6 +248,11 @@ angular.module('ft.posts', [
                     }, function () {
 
                     });
+                };
+
+                /* Make particular image active */
+                $scope.showImage = function (image) {
+                    $scope.activeImage = image;
                 };
 
                 /**
@@ -324,13 +336,12 @@ angular.module('ft.posts', [
                 modal: '@',
                 post: '='
             },
-            controller: function ($scope, postService) {
+            controller: function ($scope, $uibModal, postService, tagService) {
 
                 if (!$scope.post) {
 
                     $scope.post = {
-                        images: [],
-                        tagLines: []
+                        images: []
                     };
                 }
 
@@ -379,6 +390,11 @@ angular.module('ft.posts', [
                     }
                 };
 
+                /* Make particular image active */
+                $scope.showImage = function (image) {
+                    $scope.activeImage = image;
+                };
+
                 /**
                  * Remove image from post form.
                  * @param id
@@ -392,17 +408,41 @@ angular.module('ft.posts', [
                             break;
                         }
                     }
+                    if ($scope.activeImage.id === $scope.post.images[index].id) $scope.activeImage = null;
                     $scope.post.images.splice(index, 1);
                 };
 
 
-                $scope.removeTagLine = function (tagLine) {
-                    for (var i = 0; i < $scope.post.tagLines.length; i++) {
-                        if (tagLine === $scope.post.tagLines[i]) {
-                            $scope.post.tagLines.splice(i, 1);
-                            break;
+                $scope.removeTagLine = function (tagLineId) {
+                    var result = tagService.delete(tagLineId);
+
+                    result.then(function () {
+                        for (var i = 0; i < $scope.activeImage.tagLines.length; i++) {
+                            if (tagLineId === $scope.activeImage.tagLines[i].id) {
+                                $scope.activeImage.tagLines.splice(i, 1);
+                                break;
+                            }
                         }
-                    }
+                    }, function () {
+                        alert('Error: TagLine has not been deleted.');
+                    });
+                };
+
+                $scope.openModalAddTag = function () {
+
+                    var modal = $uibModal.open({
+                        templateUrl: '/ng/app/posts/tags/_addTag.tpl.html',
+                        controller: 'TagController',
+                        resolve: {
+                            imageId: function () {
+                                return $scope.activeImage.id;
+                            }
+                        }
+                    });
+
+                    modal.result.then(function (data) {
+                        $scope.activeImage.tagLines.push(data);
+                        });
                 };
 
                 /* MODAL */

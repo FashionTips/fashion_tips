@@ -190,9 +190,6 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public Post save(Post post) {
         Objects.requireNonNull(post);
-        if (post.getTagLines() != null && post.getTagLines().size() > 0) {
-            post.getTagLines().stream().forEach(tagLine -> tagLine.setPost(post));
-        }
 
         //Set status and publication time
         if(post.getPublicationTime() != null && post.getPublicationTime().isAfter(LocalDateTime.now())){

@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Service class for working with Images
@@ -25,5 +26,10 @@ public class ImageServiceImpl implements ImageService {
     public Image save(Image image) throws IOException {
         Objects.requireNonNull(image);
         return imageDao.save(image);
+    }
+
+    @Override
+    public Optional<Image> findOne(long id) {
+        return Optional.ofNullable(imageDao.getById(id));
     }
 }

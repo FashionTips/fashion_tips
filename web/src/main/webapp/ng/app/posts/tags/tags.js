@@ -8,7 +8,7 @@ angular.module('ft.posts.tags', [])
         service.getClothes = function () {
             var result = $q.defer();
 
-            var clothesUrl = urlApi + "/posts/tag_lines/clothes";
+            var clothesUrl = urlApi + "/dictionary/clothes";
 
             $http.get(clothesUrl, {})
                 .then(function (data) {
@@ -22,7 +22,7 @@ angular.module('ft.posts.tags', [])
         service.getTagTypes = function () {
             var result = $q.defer();
 
-            var tagTypesUrl = urlApi + "/posts/tag_lines/tags/types";
+            var tagTypesUrl = urlApi + "/dictionary/tag_types";
 
             $http.get(tagTypesUrl, {})
                 .then(function (data) {
@@ -32,13 +32,43 @@ angular.module('ft.posts.tags', [])
             return result.promise;
         };
 
+        /* Save new tag_line */
+        service.saveTag = function (tagLine, imageId) {
+
+            var result = $q.defer();
+
+            $http.post(urlApi + "/posts/tag_lines/", tagLine, {params: {image_id: imageId}})
+                .then(function (response) {
+                    result.resolve(response.data);
+                }, function () {
+                    result.reject();
+                }
+            );
+
+            return result.promise;
+        };
+
+        /* Delete tag */
+        service.delete = function(tagLineId) {
+            var result = $q.defer();
+
+            $http.delete(urlApi + "/posts/tag_lines/" + tagLineId)
+                .then(function () {
+                    result.resolve();
+                }, function () {
+                    result.reject();
+                }
+            );
+
+            return result.promise;
+        };
+
         return service;
     }])
 
+    .controller('TagController', ['$scope', '$uibModalInstance', 'tagService', 'imageId', function ($scope, $uibModalInstance, tagService, imageId) {
 
-    .controller('TagController', ['$scope', 'tagService', function ($scope, tagService) {
-
-        /* Get available clothes from api and set it to array */
+        /* Get available clothes from api and set them to array */
         $scope.getClothes = function () {
             tagService.getClothes().then(function (data) {
                 $scope.clothes = data;
@@ -47,7 +77,7 @@ angular.module('ft.posts.tags', [])
         $scope.clothes = [];
         $scope.getClothes();
 
-        /* Get available types of tag from api and set it to array */
+        /* Get available types of tag from api and set them to array */
         $scope.getTagTypes = function () {
             tagService.getTagTypes().then(function (data) {
                 $scope.tagTypes = data;
@@ -59,18 +89,16 @@ angular.module('ft.posts.tags', [])
         /* Initialize scope objects */
         $scope.currentTagLine = {};
         $scope.currentTagLine.tags = [];
-        $scope.tagFormActive = false;
 
+        $scope.imageId = imageId;
         /* Adding constructed tagline to post and clear tag data */
-        $scope.addTagLineToPost = function() {
-            $scope.$parent.post.tagLines.push($scope.currentTagLine);
-            $scope.currentTagLine = {};
-            $scope.currentTagLine.tags = [];
-            for(var childScope = $scope.$$childHead; childScope; childScope = childScope.$$nextSibling) {
-                childScope.isActive = false;
-                childScope.tagText = null;
-            }
-            $scope.tagFormActive = false;
+        $scope.saveTag = function() {
+            var savedTag = tagService.saveTag($scope.currentTagLine, imageId);
+
+            savedTag.then(function (data) {
+                $uibModalInstance.close(data);
+            });
+
         };
 
         /* Function for adding new tag to currentTagLine */
@@ -99,6 +127,10 @@ angular.module('ft.posts.tags', [])
                     break;
                 }
             }
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
         };
     }])
 ;

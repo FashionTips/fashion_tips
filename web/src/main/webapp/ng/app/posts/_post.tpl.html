@@ -40,24 +40,13 @@
                 </div>
             </div>
         </div>
-        <div id="post-gallery" class="carousel slide" data-ride="carousel">
-            <!-- Indicators -->
-            <ol class="carousel-indicators">
-                <li data-target="#post-gallery" data-slide-to="{{$index}}" data-ng-class='{active:$first}'
-                    data-ng-repeat="num in post.images"></li>
-            </ol>
 
-            <!-- Wrapper for slides -->
-            <div class="carousel-inner" role="listbox">
-                <div class="item" ng-class='{active:$first}' data-ng-repeat="image in post.images">
-                    <img data-ng-src="{{image.imgUrl}}">
-                </div>
-            </div>
-        </div>
+        <!-- Active image -->
+        <img class="img-responsive" data-ng-src="{{activeImage.imgUrl}}" data-ng-show="activeImage.imgUrl"/>
 
         <!--Tags -->
         <div class="form-group">
-            <span data-ng-repeat="tagLine in post.tagLines">
+            <span data-ng-repeat="tagLine in activeImage.tagLines">
                 <strong>{{tagLine.clothes.name}}</strong> -
                 <span data-ng-repeat="tag in tagLine.tags">
                    <i>{{tag.tagType.type}}</i>:{{tag.value}}
@@ -65,6 +54,16 @@
                 <br/>
             </span>
         </div>
+
+
+        <div class="row well well-sm" data-ng-show="post.images.length">
+            <div class="col-sm-2" data-ng-class="{active:activeImage.id === image.id}"
+                 data-ng-repeat="image in post.images" data-ng-click="showImage(image)">
+                <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}">
+            </div>
+        </div>
+
+        <!-- Comments -->
         <hr/>
         <p data-ng-bind-html="(post.textMessage | hashtag)"></p>
 

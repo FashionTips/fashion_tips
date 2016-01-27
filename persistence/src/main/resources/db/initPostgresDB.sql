@@ -75,6 +75,8 @@ CREATE TABLE posts (
 CREATE TABLE images (
   id BIGSERIAL,
   img_name VARCHAR NOT NULL,
+  user_id BIGINT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
   CONSTRAINT "img_id" PRIMARY KEY (id)
 );
 
@@ -89,7 +91,7 @@ CREATE TABLE post_images (
 CREATE TABLE user_images (
   user_id BIGINT NOT NULL,
   img_id BIGINT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES posts (id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
   FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE,
   CONSTRAINT user_pictures_idx UNIQUE (user_id, img_id)
 );
@@ -124,9 +126,9 @@ CREATE UNIQUE INDEX clothes_name ON clothes (name);
 
 CREATE TABLE tag_lines (
   id BIGSERIAL,
-  post_id BIGINT NOT NULL,
+  image_id BIGINT NOT NULL,
   clothes_id BIGINT NOT NULL,
-  FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
+  FOREIGN KEY (image_id) REFERENCES images (id) ON DELETE CASCADE,
   FOREIGN KEY (clothes_id) REFERENCES clothes (id) ON DELETE CASCADE,
   CONSTRAINT "tag_line_id" PRIMARY KEY (id)
 );
