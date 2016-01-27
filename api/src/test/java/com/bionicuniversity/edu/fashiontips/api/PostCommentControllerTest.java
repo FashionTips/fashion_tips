@@ -182,14 +182,14 @@ public class PostCommentControllerTest {
 
     @Test
     @WithMockUser(TEST_USER_LOGIN)
-    public void testUpdate_whenArgsAreValid_shouldReturnHttpStatus202Accepted() throws Exception {
+    public void testUpdate_whenArgsAreValid_shouldReturnHttpStatus200Ok() throws Exception {
         Comment testComment = new Comment();
         testComment.setText("test");
         String requestedCommentsId = "/1";
         mockMvc.perform(put(COMMENTS_API_URL + requestedCommentsId)
                 .content(json(testComment))
                 .contentType(contentType))
-                    .andExpect(status().isAccepted())
+                    .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id", is(1)))
                     .andExpect(jsonPath("$.text", is("test")))
                     .andExpect(jsonPath("$.created", is(notNullValue())))
