@@ -2,10 +2,8 @@ package com.bionicuniversity.edu.fashiontips.service.impl;
 
 import com.bionicuniversity.edu.fashiontips.dao.RoleDao;
 import com.bionicuniversity.edu.fashiontips.dao.UserDao;
-import com.bionicuniversity.edu.fashiontips.entity.Country;
-import com.bionicuniversity.edu.fashiontips.entity.Image;
-import com.bionicuniversity.edu.fashiontips.entity.Role;
-import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.dao.VerificationTokenDao;
+import com.bionicuniversity.edu.fashiontips.entity.*;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Inject
     private RoleDao roleDao;
+
+    @Inject
+    private VerificationTokenDao verificationTokenDao;
 
     @Override
     @Transactional
