@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
@@ -49,7 +50,7 @@ public class PostCommentController {
      * @return saved comment
      */
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity save(@RequestBody Comment comment, @PathVariable long postId, Principal principal) {
+    public ResponseEntity save(@RequestBody @Valid Comment comment, @PathVariable long postId, Principal principal) {
 
         String login = principal.getName();
         User user = userService.findOne(login).orElseThrow(() ->
@@ -103,7 +104,7 @@ public class PostCommentController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity update(@PathVariable long id, @RequestBody Comment comment, Principal principal) {
+    public ResponseEntity update(@PathVariable long id, @RequestBody @Valid Comment comment, Principal principal) {
         comment.setId(id);
         Comment updatedComment = commentService.update(comment, principal.getName());
         ImageUtil.createUrlNameForUserAvatar(updatedComment.getUser());

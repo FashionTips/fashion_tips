@@ -1,4 +1,5 @@
 angular.module('ft.posts.comments', [
+        'ngMessages',
         'ngResource',
         'ft.security.session'
     ])

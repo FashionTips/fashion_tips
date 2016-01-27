@@ -14,15 +14,24 @@
             </div>
 
             <div data-ng-show="loggedIn()">
-                <form data-ng-submit="saveComment()">
+                <form name="commentForm" data-ng-submit="commentForm.$valid && saveComment()" novalidate
+                      data-ng-class="{'has-error': commentForm.$invalid && commentForm.$submitted}">
                     <div data-ng-show="commentFormError" class="alert alert-danger">
                         <p>Something went wrong:</p>
                         {{ commentFormError }}
                     </div>
-                    <div class="form-group">
+                    <div class="form-group has-feedback"
+                         data-ng-class="{ 'has-error': commentForm.commentText.$invalid && commentForm.commentText.$dirty,
+                          'has-success': commentForm.commentText.$valid && commentForm.commentText.$dirty}">
                         <label for="inputCommentText">Have thoughts? Type them here:</label>
-                        <textarea id="inputCommentText" class="form-control" rows="3"
-                                  data-ng-model="commentText"></textarea>
+                        <textarea id="inputCommentText" name="commentText" class="form-control" rows="3"
+                                  data-ng-model="commentText" required maxlength="255">
+                        </textarea>
+                        <div data-ng-messages="commentForm.commentText.$error" role="alert"
+                             data-ng-show="commentForm.commentText.$dirty">
+                            <div data-ng-messages-include="/messages.html">
+                            </div>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-info">Submit</button>
                 </form>
