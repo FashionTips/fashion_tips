@@ -15,15 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.bionicuniversity.edu.fashiontips.PostAndCommentTestData.*;
 import static com.bionicuniversity.edu.fashiontips.UserTestData.USER3;
 import static org.junit.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
-import static org.unitils.reflectionassert.ReflectionComparatorMode.IGNORE_DEFAULTS;
-import static org.unitils.reflectionassert.ReflectionComparatorMode.LENIENT_DATES;
-import static org.unitils.reflectionassert.ReflectionComparatorMode.LENIENT_ORDER;
+import static org.unitils.reflectionassert.ReflectionComparatorMode.*;
 
 /**
  * Class for testing PostDao
@@ -50,7 +49,7 @@ public class PostDaoTest {
         /*Check that the method Save returns correct value */
         assertReflectionEquals(NEW_POST_AFTER_SAVE, testPost, IGNORE_DEFAULTS);
 
-        List<Post> testList = postDao.getAll();
+        List<Post> testList = postDao.findAll();
         /*Check that the new Post added*/
         assertReflectionEquals(LIST_WITH_NEW_POST, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
@@ -65,7 +64,7 @@ public class PostDaoTest {
 
         assertReflectionEquals(UPDATE_POST1, testPost, IGNORE_DEFAULTS);
 
-        List<Post> testList = postDao.getAll();
+        List<Post> testList = postDao.findAll();
         assertReflectionEquals(LIST_IF_UPDATE_FIRST_POST, testList, IGNORE_DEFAULTS, LENIENT_ORDER, LENIENT_DATES);
     }
 
@@ -73,7 +72,7 @@ public class PostDaoTest {
     public void testDeletePost() {
         /*Delete Post(ID = 1) from DB*/
         postDao.delete(1L);
-        List<Post> testList = postDao.getAll();
+        List<Post> testList = postDao.findAll();
 
         assertReflectionEquals(LIST_IF_DELETE_FIRST_POST, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
     }
@@ -121,5 +120,36 @@ public class PostDaoTest {
         thrown.expect(ConstraintViolationException.class);
         postDao.save(NOT_VALID_POST);
         fail("Should not save not valid entities.");
+    }
+
+    @Test
+    public void testFindWithHiddenPost() {
+       // postDao.save(POST_MATCHER.deepClone(HIDDEN_POST));
+
+        List<Post> testFindByUser3 = postDao.findByUser(USER3);
+        assertReflectionEquals(FIND_BY_USER3_SORTED_BY_CREATED, testFindByUser3, IGNORE_DEFAULTS);
+
+        List<Post> testFindByWordAgain = postDao.findByWord("Again");
+        assertReflectionEquals(FIND_BY_WORD_AGAIN_SORTED_BY_CREATED, testFindByWordAgain, IGNORE_DEFAULTS);
+
+        List<Post> testFindByCategoryPost = postDao.findByCategory(Post.Category.POST);
+        assertReflectionEquals(FIND_BY_CATEGORY_POST, testFindByCategoryPost, IGNORE_DEFAULTS);
+
+        List<Post> testFindAll = postDao.findAll();
+        assertReflectionEquals(FIND_ALL_SORTED_BY_CREATED, testFindAll, IGNORE_DEFAULTS);
+    }
+
+    @Test
+    public void testFindMine() {
+        postDao.save(POST_MATCHER.deepClone(HIDDEN_POST));
+
+        List<Post> testFindMine = postDao.findMine(USER3);
+        assertReflectionEquals(FIND_BY_USER3_WITH_HIDDEN_POSTS, testFindMine, IGNORE_DEFAULTS);
+    }
+
+    @Test
+    public void testFindUnpublished() {
+        List<Post> testFindMine = postDao.findUnpublished();
+        assertReflectionEquals(Arrays.asList(WAIT_POST), testFindMine, IGNORE_DEFAULTS);
     }
 }

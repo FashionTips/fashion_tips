@@ -101,4 +101,12 @@ public class PostCommentController {
         commentService.hideById(id, principal.getName());
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity update(@PathVariable long id, @RequestBody Comment comment, Principal principal) {
+        comment.setId(id);
+        Comment updatedComment = commentService.update(comment, principal.getName());
+        ImageUtil.createUrlNameForUserAvatar(updatedComment.getUser());
+        return ResponseEntity.ok(updatedComment);
+    }
 }

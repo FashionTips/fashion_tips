@@ -54,4 +54,19 @@ public interface CommentService {
      */
     @Transactional
     void hideById(long commentId, String login);
+
+    /**
+     * Updates comment
+     *
+     * @param comment comment for update
+     * @param login user's login
+     * @return updated comment
+     *
+     * @throws org.springframework.security.access.AccessDeniedException
+     *          if user doesn't match to comment's user
+     * @throws NotFoundException
+     *          if comment with passed id doesn't exist
+     */
+    @Transactional
+    Comment update(Comment comment, String login);
 }

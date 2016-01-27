@@ -85,4 +85,16 @@ public class CommentServiceImpl implements CommentService {
             throw new NotFoundException(String.format("Comment not found by id = %d", commentId));
         }
     }
+
+    @Override
+    public Comment update(Comment comment, String login) {
+        if (!commentDao.exists(comment.getId())) throw new NotFoundException(String.format("Comment not found by id = %d", comment.getId()));
+        Comment presentComment = commentDao.getById(comment.getId());
+        if (!presentComment.getUser().getLogin().equals(login))
+            throw new AccessDeniedException(String.format("Comment doesn't belong to user with login = %s", login));
+        comment.setCreated(presentComment.getCreated());
+        comment.setUser(presentComment.getUser());
+        comment.setPost(presentComment.getPost());
+        return commentDao.save(comment);
+    }
 }

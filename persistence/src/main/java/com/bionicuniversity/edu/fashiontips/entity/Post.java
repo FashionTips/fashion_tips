@@ -53,6 +53,10 @@ public class Post extends BaseEntity<Long> {
     @Column(name = "created", nullable = false, insertable = false)
     private LocalDateTime created;
 
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @Column(name = "publication_time", nullable = false)
+    private LocalDateTime publicationTime;
     /**
      * Column TextMessage which represent user's ext-message
      */
@@ -73,6 +77,10 @@ public class Post extends BaseEntity<Long> {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = true, insertable = true)
     private Category category;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, updatable = true, insertable = true)
+    private Status status;
 
     /*
     * List of posts images
@@ -121,7 +129,6 @@ public class Post extends BaseEntity<Long> {
     @Transient
     private Boolean isLikedByAuthUser;
 
-
     /**
      * Default Constructor
      */
@@ -151,6 +158,16 @@ public class Post extends BaseEntity<Long> {
         this.likedByUsers = likedByUsers;
         this.likes = likes;
         this.isLikedByAuthUser = isLikedByAuthUser;
+    }
+
+    public Post(Long id, User user, LocalDateTime created, String title, String textMessage, Category category, List<Image> images, List<Comment> comments, Set<User> likedByUsers, Long likes, Boolean isLikedByAuthUser, Status status) {
+        this(id, user, created, title, textMessage, category, images, comments, likedByUsers, likes, isLikedByAuthUser);
+        this.status = status;
+    }
+
+    public Post(Long id, User user, LocalDateTime created, String title, String textMessage, Category category, List<Image> images, List<Comment> comments, Set<User> likedByUsers, Long likes, Boolean isLikedByAuthUser, Status status, LocalDateTime publicationTime) {
+        this(id, user, created, title, textMessage, category, images, comments, likedByUsers, likes, isLikedByAuthUser, status);
+        this.publicationTime = publicationTime;
     }
 
     public User getUser() {
@@ -252,6 +269,22 @@ public class Post extends BaseEntity<Long> {
     }
 
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getPublicationTime() {
+        return publicationTime;
+    }
+
+    public void setPublicationTime(LocalDateTime publicationTime) {
+        this.publicationTime = publicationTime;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -280,5 +313,19 @@ public class Post extends BaseEntity<Long> {
      */
     public enum Category {
         POST, QUESTION
+    }
+
+    /**
+     * Enum Category represent status of user's posts.
+     * NEW: post created and hidden. Publication time can be set up.
+     * PUBLISHED: published. Post can be hidden. Publication time can't be set up.
+     * HIDDEN: published and hidden. Publication time can't be set up.
+     * WAIT: created with publication postponed and hidden.
+     * Publication time can be set up
+     *
+     * @author Sergiy
+     */
+    public enum Status {
+        NEW, PUBLISHED, HIDDEN, WAIT
     }
 }

@@ -160,14 +160,8 @@ angular.module('ft.posts', [
     }])
 
 
-    .controller('PostController', ['$scope', 'commentService', 'sessionService', '$filter',
-        function ($scope, commentService, sessionService, $filter) {
-
-            /* username of authenticated user */
-            $scope.username = function () {
-                return sessionService.getUsername();
-            };
-
+    .controller('PostController', ['$scope', 'commentService', 'sessionService',
+        function ($scope, commentService, sessionService) {
 
             /**
              * Check if user is logged in.
@@ -189,22 +183,6 @@ angular.module('ft.posts', [
                     $scope.commentText = undefined;
                 }, function (data) {
                     $scope.commentFormError = data.message;
-                });
-            };
-
-            /**
-             * Deletes comment with given id.
-             *
-             * @param id
-             */
-            $scope.deleteComment = function (id) {
-
-                commentService.deleteComment($scope.post.id, id, function (data) {
-                    var comment = $filter('filter')($scope.post.comments, {id: id})[0];
-                    comment.available = false;
-                }, function (data) {
-                    // temporary do nothing
-                    console.log("Error occurred: cannot delete comment");
                 });
             };
         }])
