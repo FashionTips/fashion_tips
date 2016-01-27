@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS verification_token;
 DROP TABLE IF EXISTS tag_parameters;
 DROP TABLE IF EXISTS tags_tag_lines;
 DROP TABLE IF EXISTS tags;
@@ -162,4 +163,12 @@ CREATE TABLE tags_tag_lines (
   FOREIGN KEY (tag_line_id) REFERENCES tag_lines (id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT tags_lines_stores_idx UNIQUE (tag_line_id,tag_id)
+);
+
+CREATE TABLE verification_token (
+  email VARCHAR NOT NULL,
+  token VARCHAR NOT NULL,
+  expaired_time TIMESTAMP,
+  verified BOOLEAN DEFAULT FALSE,
+  CONSTRAINT verification_token_email UNIQUE (email)
 );
