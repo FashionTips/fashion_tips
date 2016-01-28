@@ -47,7 +47,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         @ContextConfiguration(name = "parent", locations = {
                 "classpath:spring/spring-service.xml",
                 "classpath:spring/spring-persistence.xml",
-                "classpath:spring/spring-security.xml"
+                "classpath:spring/spring-security.xml",
+                "classpath:spring/spring-api.xml"
         }),
         @ContextConfiguration(name = "child", locations = {
                 "classpath:spring/spring-mvc.xml"

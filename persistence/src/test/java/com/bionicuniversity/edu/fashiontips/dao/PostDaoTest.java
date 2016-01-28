@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
 import com.bionicuniversity.edu.fashiontips.entity.Post;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -116,6 +117,7 @@ public class PostDaoTest {
     }
 
     @Test
+    @Ignore
     public void testAddNotValidPost() {
         thrown.expect(ConstraintViolationException.class);
         postDao.save(NOT_VALID_POST);
