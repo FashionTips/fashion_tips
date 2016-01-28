@@ -30,10 +30,19 @@
                 </div>
             </div>
 
-            <form data-ng-show="editMode" data-ng-submit="updateComment()">
+            <form name="commentForm" data-ng-show="editMode" data-ng-submit="commentForm.$valid && updateComment()" novalidate
+                  data-ng-class="{'has-error': commentForm.$invalid && commentForm.$submitted}">
                 <p data-ng-show="error" class="text-danger">There was error: {{ error }}</p>
-                <div class="form-group">
-                    <textarea class="form-control" data-ng-model="commentData.text" rows="4"></textarea>
+                <div class="form-group has-feedback" data-ng-class="{ 'has-error': commentForm.text.$invalid && commentForm.text.$dirty,
+                          'has-success': commentForm.text.$valid && commentForm.text.$dirty}">
+                    <textarea class="form-control" name="text" data-ng-model="commentData.text" rows="3" maxlength="255"
+                              required>
+                        </textarea>
+                    <div data-ng-messages="commentForm.text.$error" role="alert"
+                         data-ng-show="commentForm.text.$dirty">
+                        <div data-ng-messages-include="/messages.html"></div>
+                    </div>
+
                 </div>
                 <div class="form-group">
                     <a class="btn btn-sm btn-default" data-ng-click="hideForm()">

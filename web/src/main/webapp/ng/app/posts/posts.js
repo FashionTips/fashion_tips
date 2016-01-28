@@ -181,6 +181,7 @@ angular.module('ft.posts', [
                     $scope.commentFormError = undefined;
                     $scope.post.comments.push(data);
                     $scope.commentText = undefined;
+                    $scope.commentForm.$setPristine();
                 }, function (data) {
                     $scope.commentFormError = data.message;
                 });
