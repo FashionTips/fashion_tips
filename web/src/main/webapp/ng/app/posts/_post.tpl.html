@@ -20,6 +20,14 @@
                 </div>
             </div>
         </div>
+        <div>
+            <span class="label" data-ng-show="post.author.login === username && !feed" data-ng-class="{
+                'label-success':post.status === 'PUBLISHED',
+                'label-info':post.status === 'NEW',
+                'label-default':post.status === 'HIDDEN',
+                'label-warning':post.status === 'SCHEDULED'
+            }">{{post.status}}</span>
+        </div>
         <div class="page-header">
             <div class="row">
                 <div class="col-md-8">
@@ -57,7 +65,7 @@
 
 
         <div class="row well well-sm" data-ng-show="post.images.length">
-            <div class="col-sm-2" data-ng-class="{active:activeImage.id === image.id}"
+            <div class="col-sm-2" data-ng-class="{activeImage:activeImage.id === image.id}"
                  data-ng-repeat="image in post.images" data-ng-click="showImage(image)">
                 <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}">
             </div>

@@ -19,7 +19,6 @@ public class PostsPublicationScheduler {
     public void publication() {
         List<Post> posts = postDao.findUnpublished();
         posts.stream()
-                .peek(post -> post.setCommentsAllowed(true))
                 .peek(post -> post.setStatus(Post.Status.PUBLISHED))
                 .forEach(post -> postDao.save(post));
     }

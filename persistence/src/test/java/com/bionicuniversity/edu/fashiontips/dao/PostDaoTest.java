@@ -150,6 +150,6 @@ public class PostDaoTest {
     @Test
     public void testFindUnpublished() {
         List<Post> testFindMine = postDao.findUnpublished();
-        assertReflectionEquals(Arrays.asList(WAIT_POST), testFindMine, IGNORE_DEFAULTS);
+        assertReflectionEquals(Arrays.asList(SCHEDULED_POST), testFindMine, IGNORE_DEFAULTS);
     }
 }

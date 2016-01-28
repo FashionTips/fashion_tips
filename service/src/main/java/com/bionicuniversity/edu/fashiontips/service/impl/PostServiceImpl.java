@@ -109,44 +109,39 @@ public class PostServiceImpl implements PostService {
         boolean commentsAllowed = update.isCommentsAllowed();
         post.setCommentsAllowed(commentsAllowed);
 
-        //Set status and publication time
+        /* Update logic for status of post */
         Post.Status status = update.getStatus();
-        LocalDateTime updatePublicationTime = update.getPublicationTime();
-
-        if (updatePublicationTime != null && !updatePublicationTime.equals(post.getPublicationTime())) {
-            if (updatePublicationTime.isAfter(LocalDateTime.now())) {
-                if (post.getStatus() == Post.Status.NEW || post.getStatus() == Post.Status.WAIT) {
-                    post.setStatus(Post.Status.WAIT);
-                    post.setPublicationTime(updatePublicationTime);
-                    post.setCommentsAllowed(false);
-                } else {
-                    throw new IllegalArgumentException("Status or publication time have invalid value.");
-                }
-            } else {
-                if (post.getStatus() == Post.Status.NEW || post.getStatus() == Post.Status.WAIT) {
-                    post.setStatus(Post.Status.PUBLISHED);
-                    post.setPublicationTime(LocalDateTime.now());
-                } else {
-                    throw new IllegalArgumentException("Status or publication time have invalid value.");
-                }
-            }
-        } else if (status != null) {
+        if (status != null) {
             switch (post.getStatus()) {
                 case NEW:
-                case WAIT:
                     if (status == Post.Status.PUBLISHED) {
-                        post.setPublicationTime(LocalDateTime.now());
                         post.setStatus(status);
-                    } else if (status == Post.Status.NEW || status == Post.Status.WAIT) {
-                        post.setCommentsAllowed(false);
-                    } else {
+                        post.setPublicationTime(LocalDateTime.now());
+                    } else if (status == Post.Status.SCHEDULED) {
+                        if (update.getPublicationTime() != null && update.getPublicationTime().isAfter(LocalDateTime.now())) {
+                            post.setStatus(status);
+                            post.setPublicationTime(update.getPublicationTime());
+                        } else throw new IllegalArgumentException("Published time is not valid.");
+                    } else if (status != Post.Status.NEW) {
                         throw new IllegalArgumentException("Status have invalid value.");
                     }
+                    break;
+                case SCHEDULED:
+                    if (status == Post.Status.SCHEDULED) {
+                        if (update.getPublicationTime() != null && update.getPublicationTime().isBefore(LocalDateTime.now())) {
+                            post.setPublicationTime(update.getPublicationTime());
+                        } else throw new IllegalArgumentException("Published time is not valid.");
+                    } else if (status == Post.Status.PUBLISHED) {
+                        post.setStatus(status);
+                        post.setPublicationTime(LocalDateTime.now());
+                    } else if (status == Post.Status.NEW) {
+                        post.setStatus(status);
+                        post.setPublicationTime(null);
+                    } else throw new IllegalArgumentException("Status have invalid value.");
                     break;
                 case PUBLISHED:
                     if (status == Post.Status.HIDDEN) {
                         post.setStatus(status);
-                        post.setCommentsAllowed(false);
                     } else if (status != Post.Status.PUBLISHED) {
                         throw new IllegalArgumentException("Status have invalid value.");
                     }
@@ -191,16 +186,25 @@ public class PostServiceImpl implements PostService {
     public Post save(Post post) {
         Objects.requireNonNull(post);
 
-        //Set status and publication time
-        if(post.getPublicationTime() != null && post.getPublicationTime().isAfter(LocalDateTime.now())){
-            post.setStatus(Post.Status.WAIT);
-            post.setCommentsAllowed(false);
-        } else{
-            if(post.getStatus() != null){
-                post.setPublicationTime(LocalDateTime.now());
-            } else{
-                post.setStatus(Post.Status.PUBLISHED);
-                post.setPublicationTime(LocalDateTime.now());
+        /* Status logic, when post is creating */
+        if (post.getStatus() == null) {
+            post.setStatus(Post.Status.PUBLISHED);
+            post.setPublicationTime(LocalDateTime.now());
+        } else {
+            switch (post.getStatus()) {
+                case NEW:
+                    post.setPublicationTime(null);
+                    break;
+                case PUBLISHED:
+                    post.setPublicationTime(LocalDateTime.now());
+                    break;
+                case SCHEDULED:
+                    if (post.getPublicationTime() == null || post.getPublicationTime().isBefore(LocalDateTime.now())) {
+                        throw new IllegalArgumentException("Published time is not valid.");
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Status have invalid value.");
             }
         }
         return postDao.save(post);
