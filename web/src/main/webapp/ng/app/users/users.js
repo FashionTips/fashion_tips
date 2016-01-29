@@ -120,14 +120,24 @@ angular.module('ft.users', [
             controller: function ($scope, userService, sessionService, postService) {
 
                 $scope.user = {};
+                $scope.userPosts = [];
                 $scope.username = sessionService.getUsername();
                 $scope.profileUrl = window.location.href;
 
-                if ($scope.id) {
-                    $scope.user = userService.get($scope.id);
-                } else if ($scope.login) {
-                    $scope.user = userService.getByUsername($scope.login);
-                }
+                /* Function to get all user fields before using them in scope */
+                var initializeUser = function () {
+                    var result;
+                    if ($scope.id) {
+                        result = userService.get($scope.id);
+                    } else if ($scope.login) {
+                        result = userService.getByUsername($scope.login);
+                    }
+                    result.$promise.then(function (data) {
+                        $scope.user = data;
+                        loadPosts();
+                    });
+                };
+                initializeUser();
 
                 /**
                  * Calculates age of user.
@@ -145,14 +155,14 @@ angular.module('ft.users', [
                     return Math.abs(ageDate.getUTCFullYear() - 1970);
                 };
 
-                /* Load recent user posts for profile page */
-                $scope.userPosts = [];
-
-                postService.getAll(undefined, $scope.login, undefined, function(data) {
-                    $scope.userPosts = data;
-                }, function(data){
-                    console.log('Error: cannot load user"s post');
-                });
+                /* Function to load recent user posts for profile page */
+                var loadPosts = function () {
+                    postService.getAll(undefined, $scope.user.login, undefined, function(data) {
+                        $scope.userPosts = data;
+                    }, function(data){
+                        console.log('Error: cannot load user"s post');
+                    });
+                };
             }
         };
     })

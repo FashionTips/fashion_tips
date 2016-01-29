@@ -320,12 +320,12 @@ public class Post extends BaseEntity<Long> {
      * NEW: post created and hidden. Publication time can be set up.
      * PUBLISHED: published. Post can be hidden. Publication time can't be set up.
      * HIDDEN: published and hidden. Publication time can't be set up.
-     * WAIT: created with publication postponed and hidden.
+     * SCHEDULED: created with publication postponed and hidden.
      * Publication time can be set up
      *
      * @author Sergiy
      */
     public enum Status {
-        NEW, PUBLISHED, HIDDEN, WAIT
+        NEW, PUBLISHED, HIDDEN, SCHEDULED
     }
 }

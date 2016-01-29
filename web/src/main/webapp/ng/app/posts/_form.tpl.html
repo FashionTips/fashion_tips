@@ -98,6 +98,25 @@
             <!-- Add Tags section -->
             <button type="button" data-ng-click="openModalAddTag()" data-ng-show="activeImage.id" class="btn btn-info btn-sm">Add Tag to photo</button>
         </div>
+
+        <!-- Block of checkboxes that changing status of post  -->
+        <div class="checkbox" data-ng-show="!statusOfPost || statusOfPost === 'NEW' || statusOfPost === 'SCHEDULED'">
+            <label><input type="checkbox" data-ng-model="post.status" data-ng-true-value="'PUBLISHED'" data-ng-false-value="'NEW'">Publish now</label>
+        </div>
+        <div class="checkbox" data-ng-show="!statusOfPost || statusOfPost === 'NEW' || statusOfPost === 'SCHEDULED'">
+            <label><input type="checkbox" data-ng-model="post.status" data-ng-true-value="'SCHEDULED'" data-ng-false-value="'NEW'">
+                Publish publication at {{post.publicationTime ? post.publicationTime : "..." | date:"yyyy-MM-dd HH:mm"}}
+                <div class="dropdown">
+                    <a class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#" data-ng-show="post.status === 'SCHEDULED'">Click here to show calendar</a>
+                    <ul class="dropdown-menu" role="menu">
+                        <datetimepicker data-ng-model="formPublicationTime" data-ng-change="setPublicationTime()" data-datetimepicker-config="{ dropdownSelector: '#dropdown1' }"/>
+                    </ul>
+                </div>
+            </label>
+        </div>
+        <div class="checkbox" data-ng-show="statusOfPost === 'PUBLISHED' || statusOfPost === 'HIDDEN'">
+            <label><input type="checkbox" data-ng-model="post.status" data-ng-true-value="'HIDDEN'" data-ng-false-value="'PUBLISHED'">Hide Publication</label>
+        </div>
     </div>
 
     <input data-ng-hide="modal" type="submit" class="btn btn-success"

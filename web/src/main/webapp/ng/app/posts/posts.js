@@ -2,6 +2,7 @@ angular.module('ft.posts', [
         'ngMessages',
         'ngResource',
         'ui.bootstrap',
+        'ui.bootstrap.datetimepicker',
         'ft.posts.comments',
         'ft.posts.tags',
         'ft.security.session'
@@ -342,8 +343,11 @@ angular.module('ft.posts', [
                 if (!$scope.post) {
 
                     $scope.post = {
-                        images: []
+                        images: [],
+                        status: 'PUBLISHED'
                     };
+                } else {
+                    $scope.statusOfPost = $scope.post.status;
                 }
 
                 /**
@@ -444,6 +448,11 @@ angular.module('ft.posts', [
                     modal.result.then(function (data) {
                         $scope.activeImage.tagLines.push(data);
                         });
+                };
+
+                $scope.setPublicationTime = function () {
+                    var date = moment($scope.formPublicationTime);
+                    $scope.post.publicationTime = date.format("YYYY-MM-DDTHH:mm");
                 };
 
                 /* MODAL */

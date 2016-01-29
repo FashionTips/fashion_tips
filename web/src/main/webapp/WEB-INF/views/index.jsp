@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/angular-bootstrap-datetimepicker.css">
     <link rel="stylesheet" href="/css/custom.css">
 
     <!-- JS scripts here to hide angular code shows on preload -->
@@ -24,6 +25,8 @@
     <script src="/vendor/angular-resource.min.js"></script>
     <script src="/vendor/angular-cookies.min.js"></script>
     <script src="/vendor/angular-sanitize.min.js"></script>
+    <script src="/vendor/moment.min.js"></script>
+    <script src="/vendor/angular-bootstrap-datetimepicker.js"></script>
 
     <!-- Custom scripts-->
     <script src="/ng/common/validation/validation.js"></script>

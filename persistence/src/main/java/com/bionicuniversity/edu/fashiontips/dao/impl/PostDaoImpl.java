@@ -29,7 +29,7 @@ public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
 
     @Override
     public List<Post> findMine(User author) {
-        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :author ORDER BY p.publicationTime DESC", Post.class);
+        TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :author ORDER BY p.created DESC", Post.class);
         return query.setParameter("author", author).getResultList();
     }
 
@@ -54,6 +54,6 @@ public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
     @Override
     public List<Post> findUnpublished() {
         TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.status =:wait AND p.publicationTime < :now ORDER BY p.publicationTime ASC ", Post.class);
-        return query.setParameter("wait", Post.Status.WAIT).setParameter("now", LocalDateTime.now()).getResultList();
+        return query.setParameter("wait", Post.Status.SCHEDULED).setParameter("now", LocalDateTime.now()).getResultList();
     }
 }

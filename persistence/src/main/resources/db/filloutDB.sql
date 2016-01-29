@@ -250,7 +250,7 @@ INSERT INTO posts (user_id, title, user_post, category, created, publication_tim
 INSERT INTO posts (user_id, title, user_post, category, created, publication_time, status) VALUES ( (SELECT DISTINCT u.id FROM users AS u WHERE u.login = 'login2') , 'title2', 'what hat does put on? Again', 'POST', '2015-12-16 12:04:00', '2015-12-16 12:04:00', 'PUBLISHED');
 INSERT INTO posts (user_id, title, user_post, category, created, publication_time, status) VALUES ( (SELECT DISTINCT u.id FROM users AS u WHERE u.login = 'login3') , 'title3', 'red is cool? Again', 'POST', '2015-12-16 12:05:00', '2015-12-16 12:05:00', 'PUBLISHED');
 INSERT INTO posts (user_id, title, user_post, category, created, publication_time, status) VALUES ( 3 ,'hidden', 'hidden. Again', 'QUESTION', '2015-12-16 12:15:00',  '2015-12-16 12:15:00', 'HIDDEN');
-INSERT INTO posts (user_id, title, user_post, category, created, publication_time, status) VALUES ( 3 ,'wait', 'wait', 'QUESTION', '2015-12-16 12:16:00',  '2015-12-16 12:16:00', 'WAIT');
+INSERT INTO posts (user_id, title, user_post, category, created, publication_time, status) VALUES ( 3 ,'wait', 'wait', 'QUESTION', '2015-12-16 12:16:00',  '2015-12-16 12:16:00', 'SCHEDULED');
 
 INSERT INTO images (img_name, user_id) VALUES ('1-1kurtka.jpg', 1);
 INSERT INTO images (img_name, user_id) VALUES ('2-13235_huge_weman_shoes_0.jpg', 1);
