@@ -19,4 +19,20 @@
     </task:scheduled-tasks>
 
 
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${application.mail.host}" />
+        <property name="port" value="${application.mail.port}" />
+        <property name="username" value="${application.mail.username}" />
+        <property name="password" value="${application.mail.password}" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">${application.mail.smtp.auth}</prop>
+                <prop key="mail.smtp.starttls.enable">${application.mail.smtp.starttls.enable}</prop>
+                <prop key="mail.smtp.ssl.trust">${application.mail.smtp.ssl.trust}</prop>
+                <!--<prop key="mail.transport.protocol">${application.mail.transport.protocol}</prop>-->
+                <prop key="mail.debug">${application.mail.debug}</prop>
+            </props>
+        </property>
+    </bean>
+
 </beans>

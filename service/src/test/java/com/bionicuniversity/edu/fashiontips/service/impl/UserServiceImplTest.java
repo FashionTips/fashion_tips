@@ -2,8 +2,10 @@ package com.bionicuniversity.edu.fashiontips.service.impl;
 
 import com.bionicuniversity.edu.fashiontips.dao.RoleDao;
 import com.bionicuniversity.edu.fashiontips.dao.UserDao;
+import com.bionicuniversity.edu.fashiontips.dao.VerificationTokenDao;
 import com.bionicuniversity.edu.fashiontips.entity.Role;
 import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,9 +39,12 @@ public class UserServiceImplTest {
     @Mock
     private RoleDao roleDao;
 
+    @Mock
+    private VerificationTokenDao verificationTokenDao;
+
     @Test(expected = NullPointerException.class)
     public void testSave_whenUserNull_shouldThrowException() throws Exception {
-        userService.save(null);
+        userService.save(null, null);
         fail("Should throw exception when null was passed.");
     }
 
@@ -49,11 +54,12 @@ public class UserServiceImplTest {
         Role role = new Role(1L, "USER");
         String password = "somePassword";
         User user = new User(1L, "login", "some@email", "somePassword", Collections.singletonList(role));
+        VerificationToken verificationToken = new VerificationToken("some@email", "12345");
 
         when(roleDao.find("ROLE_USER")).thenReturn(role);
         when(userDao.save(user)).thenReturn(user);
 
-        assertEquals("The users should match", user, userService.save(user));
+        assertEquals("The users should match", user, userService.save(user, verificationToken));
         assertNotEquals("Password should be hashed", password, user.getPassword());
         verify(roleDao, atMost(1)).find("ROLE_USER");
         verify(userDao, atMost(1)).save(user);
