@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.api;
 
 import com.bionicuniversity.edu.fashiontips.entity.Country;
 import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +51,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         @ContextConfiguration(name = "parent", locations = {
                 "classpath:spring/spring-service.xml",
                 "classpath:spring/spring-persistence.xml",
-                "classpath:spring/spring-security.xml"
+                "classpath:spring/spring-security.xml",
+                "classpath:spring/spring-api.xml"
         }),
         @ContextConfiguration(name = "child", locations = {
                 "classpath:spring/spring-mvc.xml"
@@ -65,6 +67,7 @@ public class UserControllerTest {
     private static final String USERS_URL = "/users";
     private static final String TEST_USER_LOGIN = "login1";
     private static final String TEST_USER_PASSWORD = "1111";
+    private static final String CHECK_TOKEN_URL = "/tokens/check";
 
     @Inject
     private WebApplicationContext webApplicationContext;
@@ -81,6 +84,11 @@ public class UserControllerTest {
     private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
             Charset.forName("utf8"));
+
+    private String token = "bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f9cf74086510";
+    private String badToken = "bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f90000000000";
+    private String verifiedToken = "b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000002222";
+    private String email = "some@email.com";
 
     @Before
     public void setUp() throws Exception {
@@ -136,6 +144,7 @@ public class UserControllerTest {
         mockMvc.perform(post(USERS_URL)
                 .content(userJson)
                 .contentType(contentType)
+                .param("token", token)
         )
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -207,5 +216,51 @@ public class UserControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().string(Boolean.FALSE.toString()));
+    }
+
+    @Test
+    public void checkTokenTestIfExists() throws Exception {
+
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(token);
+        verificationToken.setExpairedTime(null);
+
+        mockMvc.perform(post(USERS_URL + CHECK_TOKEN_URL)
+                .content(json(verificationToken))
+                .contentType(contentType)
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().string(email));
+
+    }
+
+    @Test
+    public void checkTokenTestIfNotExists() throws Exception {
+
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(badToken);
+        verificationToken.setExpairedTime(null);
+
+        mockMvc.perform(post(USERS_URL + CHECK_TOKEN_URL)
+                .content(json(verificationToken))
+                .contentType(contentType)
+        )
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    public void checkTokenTestIfExistsAndVerified() throws Exception {
+
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(verifiedToken);
+        verificationToken.setExpairedTime(null);
+
+        mockMvc.perform(post(USERS_URL + CHECK_TOKEN_URL)
+                .content(json(verificationToken))
+                .contentType(contentType)
+        )
+                .andExpect(status().isForbidden());
+
     }
 }

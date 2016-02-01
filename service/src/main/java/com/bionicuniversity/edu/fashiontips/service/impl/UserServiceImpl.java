@@ -2,10 +2,8 @@ package com.bionicuniversity.edu.fashiontips.service.impl;
 
 import com.bionicuniversity.edu.fashiontips.dao.RoleDao;
 import com.bionicuniversity.edu.fashiontips.dao.UserDao;
-import com.bionicuniversity.edu.fashiontips.entity.Country;
-import com.bionicuniversity.edu.fashiontips.entity.Image;
-import com.bionicuniversity.edu.fashiontips.entity.Role;
-import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.dao.VerificationTokenDao;
+import com.bionicuniversity.edu.fashiontips.entity.*;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,15 +35,20 @@ public class UserServiceImpl implements UserService {
     @Inject
     private RoleDao roleDao;
 
+    @Inject
+    private VerificationTokenDao verificationTokenDao;
+
     @Override
     @Transactional
-    public User save(User user) {
+    public User save(User user, VerificationToken verificationToken) {
         Objects.requireNonNull(user, "User cannot be null.");
         user.setId(null);   // workaround, because due to id is common
                             // for all entities, and it is impossible
                             // to manage serialization only for User class id;
 
         encodePassword(user);
+        String email = verificationToken.getEmail();
+        user.setEmail(email);
         Role role = roleDao.find("ROLE_USER");
         user.setRoles(Collections.singletonList(role));
         return userDao.save(user);

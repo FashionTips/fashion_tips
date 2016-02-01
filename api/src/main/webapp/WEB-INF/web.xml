@@ -18,6 +18,7 @@
             classpath:spring/spring-persistence.xml
             classpath:spring/spring-service.xml
             classpath:spring/spring-security.xml
+            classpath:spring/spring-api.xml
         </param-value>
     </context-param>
 

@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.service;
 
 import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -42,7 +43,7 @@ public interface UserService {
     boolean checkEmail(String email);
 
     @Transactional
-    User save(User user);
+    User save(User user, VerificationToken verificationToken);
 
     void update(User user);
 
