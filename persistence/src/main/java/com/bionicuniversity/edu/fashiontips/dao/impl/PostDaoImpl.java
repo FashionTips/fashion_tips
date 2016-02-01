@@ -28,7 +28,7 @@ public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
     }
 
     @Override
-    public List<Post> findMine(User author) {
+    public List<Post> findForAuthor(User author) {
         TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.user = :author ORDER BY p.created DESC", Post.class);
         return query.setParameter("author", author).getResultList();
     }

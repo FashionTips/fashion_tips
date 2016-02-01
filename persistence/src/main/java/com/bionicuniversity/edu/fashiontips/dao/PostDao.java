@@ -24,7 +24,7 @@ public interface PostDao extends GenericDao<Post, Long> {
      * @param author
      * @return list of posts
      */
-    List<Post> findMine(User author);
+    List<Post> findForAuthor(User author);
 
     /**
      * Returns all posts with hashTag, sorted by time created.
