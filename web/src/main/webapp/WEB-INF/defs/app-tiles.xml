@@ -22,6 +22,11 @@
         <put-attribute name="body" value="/WEB-INF/views/components/register.jsp"/>
     </definition>
 
+    <definition name="emailVerification" extends="common">
+        <put-attribute name="title" value="Email Verification"/>
+        <put-attribute name="body" value="/WEB-INF/views/components/emailVerification.jsp"/>
+    </definition>
+
     <definition name="user.profile" extends="common">
         <put-attribute name="title" value="User"/>
         <put-attribute name="body" value="/WEB-INF/views/components/profile.jsp"/>

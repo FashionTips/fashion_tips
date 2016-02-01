@@ -1,0 +1,43 @@
+<form name="emailVerificationForm" accept-charset="UTF-8" data-ng-submit="sendVerificationRequest()" class="form-group"
+      data-ng-class="{'has-error': registerForm.$invalid && registerForm.$submitted}" novalidate>
+
+    <div class="form-group has-feedback"
+         data-ng-class="{ 'has-error': emailVerificationForm.email.$invalid && emailVerificationForm.email.$dirty,
+                          'has-success': emailVerificationForm.email.$valid && emailVerificationForm.email.$dirty}">
+        <input class="form-control" type="email" placeholder="Email" name="email"
+               data-ng-model="email" required data-unique-email>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"
+                              data-ng-class="{'glyphicon-ok': emailVerificationForm.email.$valid && emailVerificationForm.email.$dirty,
+                              'glyphicon-remove': emailVerificationForm.email.$invalid && emailVerificationForm.email.$dirty}"></span>
+        <div data-ng-messages="emailVerificationForm.email.$error" role="alert"
+             data-ng-show="emailVerificationForm.email.$dirty">
+            <div data-ng-messages-include="messages.html"></div>
+                            <span class="help-block" data-ng-show="emailVerificationForm.email.$pending.email">
+                                Checking if this email is available...
+                            </span>
+        </div>
+    </div>
+    <input class="btn btn-primary btn-block" type="submit" value="Send verification e-mail"
+           data-ng-disabled="emailVerificationForm.$invalid">
+</form>
+<div class="alert alert-danger" data-ng-show="error">
+    {{error}}
+</div>
+<!-- Success sending registration request-->
+<div id="successEmailVerificationModal" class="modal fade" tabindex="-1" role="dialog" >
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center"><b>Success!</b></h4>
+            </div>
+            <div class="modal-body">
+                <p> Email with registration info has been sent. Please, check your mail.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success center-block" data-dismiss="modal"
+                        data-ng-click="processSuccessEmailVerificationModal()">Ok
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

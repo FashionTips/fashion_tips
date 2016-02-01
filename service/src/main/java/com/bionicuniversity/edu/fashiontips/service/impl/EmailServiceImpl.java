@@ -19,11 +19,11 @@ public class EmailServiceImpl implements EmailService {
     @Inject
     private MailSender mailSender;
 
-    @Value("${application.mail.api.url}")
-    private String apiUrl;
-
     @Value("${application.mail.web.url}")
     private String webUrl;
+
+    @Value("${application.mail.web.RegistraionPath}")
+    private String registraionPath;
 
     @Value("${application.mail.subject}")
     private String subject;
@@ -44,7 +44,7 @@ public class EmailServiceImpl implements EmailService {
         mailMessage.setFrom(fromAddress);
         mailMessage.setTo(email);
         mailMessage.setSubject(subject);
-        StringBuilder sb = new StringBuilder(webUrl).append("?token=").append(message);
+        StringBuilder sb = new StringBuilder(webUrl).append(registraionPath).append("?token=").append(message);
         mailMessage.setText(sb.toString());
         mailSender.send(mailMessage);
     }

@@ -55,13 +55,13 @@ angular.module('ft.security.auth', [
          * @param gender
          * @returns {d.promise|*|promise}
          */
-        service.doRegister = function (credentials, success, error) {
+        service.doRegister = function (credentials, token, success, error) {
 
             $http.post(urlApi + "/users", {
                 login: credentials.username,
                 email: credentials.email,
                 password: credentials.password,
-                gender: credentials.gender})
+                gender: credentials.gender}, {params: {token: token}})
                 //.then(
                 //    function () {
                 //        result.resolve();
@@ -74,6 +74,33 @@ angular.module('ft.security.auth', [
                 }, function(response) {
                     error && error(response);
                 });
+        };
+
+        service.sendVerificationRequest = function (email) {
+
+            var result = $q.defer();
+
+            $http.post(urlApi + "/users/tokens/create", {email: email})
+                .then(function () {
+                    result.resolve();
+                }, function (response) {
+                    result.reject(response);
+                });
+
+            return result.promise;
+        };
+
+        service.getEmailByVerificationToken = function (token) {
+            var result = $q.defer();
+
+            $http.post(urlApi + "/users/tokens/check", {token: token})
+                .then(function (response) {
+                    result.resolve(response.data);
+                }, function (response) {
+                    result.reject(response.data);
+                });
+
+            return result.promise;
         };
 
         return service;

@@ -108,37 +108,16 @@ public class VerificationTokenServiceTest {
         when(verificationTokenService.update(verificationToken)).thenReturn(verificationToken);
 
         VerificationToken gotten = verificationTokenService.getByEmail(email);
-        VerificationToken generated = verificationTokenService.generateToken(verificationToken);
+        verificationTokenService.generateToken(verificationToken);
 
         assertEquals("these object have to matchrd", verificationToken, gotten);
-        assertNotNull("VerificationToken object has not to be null", generated);
-        assertNotNull("token has not to be null", generated.getToken());
+        assertNotNull("VerificationToken object has not to be null", verificationToken);
+        assertNotNull("token has not to be null", verificationToken.getToken());
 
         verify(verificationTokenDao, atMost(1)).save(verificationToken);
         verify(verificationTokenDao, atMost(1)).getByEmail(email);
     }
 
-    @Test
-    public void createNewTokenTest() {
-        String email = "arusich2008@ukr.net";
-        String token = "b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261";
-        LocalDateTime localDateTime = LocalDateTime.now();
-        VerificationToken verificationToken =
-                new VerificationToken(email, token);
-        verificationToken.setExpairedTime(localDateTime);
-
-        when(verificationTokenDao.update(verificationToken)).thenReturn(verificationToken);
-
-        VerificationToken gotten = verificationTokenService.createNewToken(verificationToken);
-
-        assertNotNull(gotten.getExpairedTime());
-        assertFalse(gotten.isVerified());
-        assertNotNull(gotten.getExpairedTime());
-
-        assertEquals(verificationToken, gotten);
-
-        verify(verificationTokenDao, times(1)).update(verificationToken);
-    }
 
     @Test
     public void registrateNewToken_WhenEmailPresent_ShouldReturnVerificationToken() {
