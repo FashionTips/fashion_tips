@@ -70,31 +70,18 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     @Override
-    @Transactional
-    public VerificationToken generateToken(VerificationToken verificationToken) {
-//        VerificationToken verificationToken = new VerificationToken(email);
+    public void generateToken(VerificationToken verificationToken) {
         verificationToken.setExpairedTime(LocalDateTime.now().plusSeconds(VerificationToken.EXPAIRED_PERIOD));
         String unhashedToken = verificationToken.getEmail() + LocalDateTime.now();
         String token = VerificationTokenUtil.getHash(unhashedToken, VerificationTokenUtil.SHA_256);
         verificationToken.setToken(token);
-        return verificationTokenDao.save(verificationToken);
-    }
-
-    @Override
-    @Transactional(timeout = 60)
-    public VerificationToken createNewToken(VerificationToken verificationToken) {
-//        VerificationToken verificationToken = new VerificationToken(email);
-        String unhashedToken = verificationToken.getEmail() + LocalDateTime.now();
-        String token = VerificationTokenUtil.getHash(unhashedToken, VerificationTokenUtil.SHA_256);
-        verificationToken.setToken(token);
-        return verificationTokenDao.update(verificationToken);
     }
 
     @Override
     @Transactional(timeout = 60)
     public VerificationToken registrateNewToken(VerificationToken verificationToken) {
-//        VerificationToken verificationToken = generateToken(email);
         generateToken(verificationToken);
+        verificationTokenDao.save(verificationToken);
         emailService.sentEmail(verificationToken.getEmail(), verificationToken.getToken());
         return verificationToken;
     }
@@ -102,8 +89,9 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Override
     @Transactional(timeout = 60)
     public VerificationToken resentToken(VerificationToken verificationToken) {
-        createNewToken(verificationToken);
-        emailService.sentEmail(verificationToken.getEmail(), verificationToken.getToken());
+        generateToken(verificationToken);
+        VerificationToken updated = verificationTokenDao.update(verificationToken);
+        emailService.sentEmail(updated.getEmail(), updated.getToken());
         return verificationToken;
     }
 }

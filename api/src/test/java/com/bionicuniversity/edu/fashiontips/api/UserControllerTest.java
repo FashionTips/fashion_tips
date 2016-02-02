@@ -230,8 +230,8 @@ public class UserControllerTest {
                 .contentType(contentType)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(email));
-
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.email", is(email)));
     }
 
     @Test

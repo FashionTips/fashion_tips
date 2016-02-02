@@ -58,14 +58,14 @@ public class BaseControllerTest {
 
     @Test
     public void testRegisterForAnonymousUser() throws Exception {
-        mockMvc.perform(get("/register"))
-                .andExpect(view().name("register"));
+        mockMvc.perform(get("/emailVerification"))
+                .andExpect(view().name("emailVerification"));
     }
 
     @Test
     @WithMockUser
     public void testRegisterForLoggedInUser() throws Exception {
-        mockMvc.perform(get("/register"))
+        mockMvc.perform(get("/emailVerification"))
                 .andExpect(redirectedUrl("/"));
     }
 }

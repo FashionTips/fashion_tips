@@ -30,7 +30,7 @@
         <intercept-url pattern="/dictionary/**" method="GET" access="permitAll"/>
 
         <!--Permit posts POST to /token url-->
-        <intercept-url pattern="/users/tokens/check" method="POST" access="permitAll"/>
+        <intercept-url pattern="/users/tokens/**" method="POST" access="permitAll"/>
 
         <!-- Only authenticated users can access the api methods -->
         <intercept-url pattern="/**" access="isAuthenticated()"/>

@@ -102,7 +102,7 @@
                         </li>
                         <li data-ng-show="!loggedIn()">
                             <p class="navbar-btn">
-                                <a href="/register" class="btn btn-default">Join</a>
+                                <a href="/emailVerification" class="btn btn-default">Join</a>
                             </p>
                         </li>
                     </ul>

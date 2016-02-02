@@ -23,9 +23,7 @@ public interface VerificationTokenService {
 
     Optional<VerificationToken> getToken(VerificationToken token);
 
-    VerificationToken generateToken(VerificationToken verificationToken);
-
-    VerificationToken createNewToken(VerificationToken verificationToken);
+    void generateToken(VerificationToken verificationToken);
 
     VerificationToken registrateNewToken(VerificationToken verificationToken);
 

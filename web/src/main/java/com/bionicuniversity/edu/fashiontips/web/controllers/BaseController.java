@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Web controller to handle requests to basic app pages.
@@ -34,8 +35,14 @@ public class BaseController {
      * @return view name
      */
     @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String register() {
+    public String register(@RequestParam(value = "token", required = true) String token, Model model) {
+        model.addAttribute("token", token);
         return isLoggedIn() ? "redirect:/" : "register";
+    }
+
+    @RequestMapping(value = "/emailVerification", method = RequestMethod.GET)
+    public String emailVerificationRequest() {
+        return isLoggedIn() ? "redirect:/" : "emailVerification";
     }
 
     @RequestMapping(value = "/user/{data}", method = RequestMethod.GET)

@@ -8,6 +8,7 @@ import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import com.bionicuniversity.edu.fashiontips.service.VerificationTokenService;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotAllowedActionException;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -138,7 +139,7 @@ public class UserController {
         VerificationToken verificationToken = verifiedToken.get();
         if (verificationToken.getExpairedTime() != null
                 && LocalDateTime.now().isBefore(verificationToken.getExpairedTime()))
-            return ResponseEntity.ok().build();
+            throw new NotAllowedActionException("Verification email was already sent. Resending is possible after 1 minute.");
 
         verificationTokenService.resentToken(verificationToken);
         return ResponseEntity.ok().build();
@@ -151,10 +152,10 @@ public class UserController {
 
         VerificationToken verificationToken =
                 verificationTokenService.getByToken(token.getToken()).
-                        orElseThrow(() -> new NotFoundException("Token not found"));
+                        orElseThrow(() -> new NotFoundException("Your verification code is invalid. Try validate your email one more time."));
 
-        if (verificationToken.isVerified()) return new ResponseEntity(HttpStatus.FORBIDDEN);
-        return new ResponseEntity(verificationToken.getEmail(), HttpStatus.OK);
+        if (verificationToken.isVerified()) throw new IllegalArgumentException("Account with this e-mail is already registered.");
+        return new ResponseEntity(verificationToken, HttpStatus.OK);
     }
 
 }

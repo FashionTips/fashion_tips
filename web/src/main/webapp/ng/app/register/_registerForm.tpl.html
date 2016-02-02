@@ -1,6 +1,11 @@
 <form name="registerForm" accept-charset="UTF-8" data-ng-submit="doRegister()"
-      data-ng-class="{'has-error': registerForm.$invalid && registerForm.$submitted}" novalidate>
+      data-ng-class="{'has-error': registerForm.$invalid && registerForm.$submitted}" data-ng-show="credentials.email" novalidate>
     <p class="text-danger" data-ng-show="error">{{ error }}</p>
+
+    <!-- Email -->
+    <div class="form-group has-feedback">
+        <input class="form-control" type="text" name="email" data-ng-model="credentials.email" disabled>
+    </div>
 
     <!-- Username -->
     <div class="form-group has-feedback"
@@ -18,24 +23,6 @@
             <div data-ng-messages-include="messages.html"></div>
                             <span class="help-block" data-ng-show="registerForm.username.$pending.username">
                                 Checking if this name is available...
-                            </span>
-        </div>
-    </div>
-
-    <!-- Email -->
-    <div class="form-group has-feedback"
-         data-ng-class="{ 'has-error': registerForm.email.$invalid && registerForm.email.$dirty,
-                          'has-success': registerForm.email.$valid && registerForm.email.$dirty}">
-        <input class="form-control" type="email" placeholder="Email" name="email"
-               data-ng-model="credentials.email" required data-unique-email>
-                        <span class="glyphicon form-control-feedback" aria-hidden="true"
-                              data-ng-class="{'glyphicon-ok': registerForm.email.$valid && registerForm.email.$dirty,
-                              'glyphicon-remove': registerForm.email.$invalid && registerForm.email.$dirty}"></span>
-        <div data-ng-messages="registerForm.email.$error" role="alert"
-             data-ng-show="registerForm.email.$dirty">
-            <div data-ng-messages-include="messages.html"></div>
-                            <span class="help-block" data-ng-show="registerForm.email.$pending.email">
-                                Checking if this email is available...
                             </span>
         </div>
     </div>
@@ -92,3 +79,25 @@
     <input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Create an account"
            data-ng-disabled="registerForm.$invalid">
 </form>
+<div class="alert alert-danger" data-ng-show="verificationError">
+    {{verificationError}}
+</div>
+
+<!--Success Registration Modal -->
+<div id="successRegistrationModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center"><b>Congrats!</b></h4>
+            </div>
+            <div class="modal-body">
+                <p> You have been successfully registered.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success center-block" data-dismiss="modal"
+                        data-ng-click="processSuccessRegistration()">Great!
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

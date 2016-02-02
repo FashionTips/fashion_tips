@@ -40,8 +40,6 @@ public class VerificationToken implements Serializable {
     private String token;
 
     @JsonIgnore
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(name = "expaired_time")
     private LocalDateTime expairedTime;
 
