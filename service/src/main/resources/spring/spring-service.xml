@@ -1,0 +1,38 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task-4.2.xsd">
+
+    <!--Enable bean configuration throw annotations-->
+    <context:annotation-config/>
+
+    <!--Create service beans-->
+    <context:component-scan base-package="com.bionicuniversity.edu.fashiontips.service"/>
+    <!--Create tasks scheduler-->
+    <task:scheduler id="scheduler"/>
+    <task:scheduled-tasks scheduler="scheduler">
+        <task:scheduled ref="postsPublicationScheduler" method="publication" cron="0 0/1 * * * *"/>
+    </task:scheduled-tasks>
+
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${application.mail.host}" />
+        <property name="port" value="${application.mail.port}" />
+        <property name="username" value="${application.mail.username}" />
+        <property name="password" value="${application.mail.password}" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">${application.mail.smtp.auth}</prop>
+                <prop key="mail.smtp.starttls.enable">${application.mail.smtp.starttls.enable}</prop>
+                <prop key="mail.smtp.ssl.trust">${application.mail.smtp.ssl.trust}</prop>
+                <!--<prop key="mail.transport.protocol">${application.mail.transport.protocol}</prop>-->
+                <prop key="mail.debug">${application.mail.debug}</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>
