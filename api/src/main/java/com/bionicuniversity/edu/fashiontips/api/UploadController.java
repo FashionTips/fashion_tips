@@ -11,13 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.security.Principal;
 
 /**
- *  This class handles http requests that relate to uploading files
+ * This class handles http requests that relate to uploading files
  *
- *  @author Volodymyr Portianko
+ * @author Volodymyr Portianko
  */
 @RestController
 @CrossOrigin
@@ -32,10 +34,17 @@ public class UploadController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity imageUpload(@RequestParam("file") MultipartFile file, Principal principal) {
-        if(!file.getContentType().startsWith("image/"))
-            throw new ImageUploadExeption(String.format("Cannot load file %s, it is not an image", file.getOriginalFilename()));
 
         if (!file.isEmpty()) {
+            try {
+                //if file is not image(JPG, BMP, GIF, WBMP, PNG, JPEG) ImageIO.read return null
+                if (ImageIO.read(file.getInputStream()) == null) {
+                    throw new ImageUploadExeption(String.format("Cannot load file %s, it is not an image", file.getOriginalFilename()));
+                }
+            } catch (IOException e) {
+                throw new ImageUploadExeption(String.format("Cannot load file %s", file.getOriginalFilename()));
+            }
+
             Image image = new Image(file.getOriginalFilename());
             User user = userService.findOne(principal.getName())
                     .orElseThrow(() -> new RuntimeException("Cannot find the logged in user in db!"));

@@ -142,10 +142,10 @@ public class PostDaoTest {
     }
 
     @Test
-    public void testFindMine() {
+    public void testFindForAuthor() {
         postDao.save(POST_MATCHER.deepClone(HIDDEN_POST));
 
-        List<Post> testFindMine = postDao.findMine(USER3);
+        List<Post> testFindMine = postDao.findForAuthor(USER3);
         assertReflectionEquals(FIND_BY_USER3_WITH_HIDDEN_POSTS, testFindMine, IGNORE_DEFAULTS);
     }
 

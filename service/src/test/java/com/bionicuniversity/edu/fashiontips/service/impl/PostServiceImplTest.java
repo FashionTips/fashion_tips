@@ -12,6 +12,9 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -32,9 +35,9 @@ public class PostServiceImplTest {
     private PostDao postDao;
 
     @Test
-    public void testFindAllByMe() throws Exception {
+    public void testFindAllForAuthor() throws Exception {
         postService.findAllByUser(new User(), new User());
-        verify(postDao, times(1)).findMine(new User());
+        verify(postDao, times(1)).findForAuthor(new User());
     }
     @Test
     public void testFindAllByUser() throws Exception {
@@ -55,8 +58,36 @@ public class PostServiceImplTest {
     }
 
     @Test
-    public void testGetUserById() throws Exception {
+    public void testGetById() throws Exception {
         postService.get(1L);
+        verify(postDao, times(1)).getById(1L);
+    }
+
+    @Test
+    public void testGetHiddenPostByIdForAuthor() throws Exception {
+        long id = 1L;
+        Post post = new Post();
+        post.setId(id);
+        post.setStatus(Post.Status.HIDDEN);
+        post.setLikedByUsers(new HashSet<>());
+        post.setComments(new ArrayList<>());
+        User loggedUser = new User();
+        loggedUser.setId(1L);
+        post.setUser(loggedUser);
+        when(postDao.getById(id)).thenReturn(post);
+        postService.get(1L, loggedUser);
+        verify(postDao, times(1)).getById(1L);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testGetHiddenPostByIdIfLoggedUserIsNotAuthor() throws Exception {
+        long id = 1L;
+        Post post = new Post();
+        post.setId(id);
+        post.setStatus(Post.Status.HIDDEN);
+        post.setUser(new User(1L,"login","email","pass", new ArrayList<>()));
+        when(postDao.getById(id)).thenReturn(post);
+        postService.get(1L, new User());
         verify(postDao, times(1)).getById(1L);
     }
 

@@ -41,7 +41,7 @@ public class PostServiceImpl implements PostService {
         if (!user.equals(loggedUser)) {
             posts = postDao.findByUser(user);
         } else {
-            posts = postDao.findMine(user);
+            posts = postDao.findForAuthor(user);
         }
         PostUtil.normalizeForClient(posts, loggedUser);
         PostUtil.handleDeletedMessages(posts);
@@ -89,6 +89,9 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public Optional<Post> get(long id, User loggedUser) {
         Post post = postDao.getById(id);
+        if(!post.getUser().equals(loggedUser) && post.getStatus() != Post.Status.PUBLISHED){
+            throw new NotFoundException(String.format("Post with id '%d' was not found.", id));
+        }
         PostUtil.normalizeForClient(post, loggedUser);
         PostUtil.handleDeletedMessages(post);
         return Optional.ofNullable(post);
