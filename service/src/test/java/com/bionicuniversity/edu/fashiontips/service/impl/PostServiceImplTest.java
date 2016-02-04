@@ -1,8 +1,10 @@
 package com.bionicuniversity.edu.fashiontips.service.impl;
 
+import com.bionicuniversity.edu.fashiontips.dao.ClothesDao;
 import com.bionicuniversity.edu.fashiontips.dao.PostDao;
-import com.bionicuniversity.edu.fashiontips.entity.Post;
-import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.dao.TagDao;
+import com.bionicuniversity.edu.fashiontips.dao.TagTypeDao;
+import com.bionicuniversity.edu.fashiontips.entity.*;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.junit.Test;
@@ -13,8 +15,11 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -33,6 +38,15 @@ public class PostServiceImplTest {
 
     @Mock
     private PostDao postDao;
+
+    @Mock
+    private TagDao tagDao;
+
+    @Mock
+    private TagTypeDao tagTypeDao;
+
+    @Mock
+    private ClothesDao clothesDao;
 
     @Test
     public void testFindAllForAuthor() throws Exception {
@@ -125,4 +139,92 @@ public class PostServiceImplTest {
         postService.save(null);
         fail("Should throw an exception, when post is null");
     }
+
+    @Test
+    public void testFindAllByTagAndTagTypeValueWithValidArgs() throws Exception {
+        Post post = new Post();
+        List<Post> posts = Collections.singletonList(post);
+        User loggedUser = new User();
+        post.setUser(loggedUser);
+        post.setLikedByUsers(Collections.emptySet());
+        post.setComments(Collections.emptyList());
+        TagType tagType = new TagType();
+        tagType.setType("brand");
+        tagType.setId(1L);
+
+        when(tagDao.existsValue("some value")).thenReturn(true);
+        when(tagTypeDao.findByType(tagType.getType())).thenReturn(tagType);
+        when(postDao.findByTagValueAndTagTypeId("some value", tagType.getId())).thenReturn(posts);
+
+
+        List<Post> actual = postService.findAllByTagAndTagTypeValue("some value", "brand", loggedUser);
+        verify(postDao).findByTagValueAndTagTypeId("some value", tagType.getId());
+        assertEquals(posts, actual);
+    }
+
+    @Test
+    public void testFindAllByTagAndTagTypeValueWithNonexistentTagValue() throws Exception {
+        User loggedUser = new User();
+
+        when(tagDao.existsValue("nonexistent")).thenReturn(false);
+
+        assertEquals(Collections.emptyList(), postService.findAllByTagAndTagTypeValue("nonexistent", "no matter", loggedUser));
+    }
+
+    @Test
+    public void testFindAllByTagAndTagTypeValue_withValidTagValueAndNonexistentTagValue_shouldThrowException() throws Exception{
+        User loggedUser = new User();
+
+        when(tagDao.existsValue("valid")).thenReturn(true);
+        when(tagTypeDao.findByType("nonexistent")).thenReturn(null);
+
+        assertEquals(Collections.emptyList(), postService.findAllByTagAndTagTypeValue("valid", "nonexistent", loggedUser));
+    }
+
+    @Test
+    public void testFindAllByTagTypeValueWithValidArgs() throws Exception {
+        TagType tagType = new TagType();
+        tagType.setType("some type");
+        tagType.setId(1L);
+
+        Post post = new Post();
+        List<Post> posts = Collections.singletonList(post);
+        User loggedUser = new User();
+        post.setUser(loggedUser);
+        post.setLikedByUsers(Collections.emptySet());
+        post.setComments(Collections.emptyList());
+
+        when(tagTypeDao.findByType("some type")).thenReturn(tagType);
+        when(postDao.findByTagTypeId(tagType.getId())).thenReturn(posts);
+
+        assertEquals(posts, postService.findAllByTagTypeValue(tagType.getType(), loggedUser));
+    }
+
+    @Test
+    public void testFindAllByClothes_withValidName() throws Exception {
+        Post post = new Post();
+        List<Post> posts = Collections.singletonList(post);
+        User loggedUser = new User();
+        post.setUser(loggedUser);
+        post.setLikedByUsers(Collections.emptySet());
+        post.setComments(Collections.emptyList());
+        Clothes clothes = new Clothes();
+        clothes.setId(1L);
+        clothes.setName("valid");
+
+        when(clothesDao.findByName(clothes.getName())).thenReturn(clothes);
+        when(postDao.findByClothesId(clothes.getId())).thenReturn(posts);
+
+        assertEquals(posts, postService.findAllByClothes("valid", loggedUser));
+    }
+
+    @Test
+    public void testFindAllByClothes_withNonexistentName_shouldThrowException() throws Exception {
+        User loggedUser = new User();
+
+        when(clothesDao.findByName("404")).thenReturn(null);
+
+        assertEquals(Collections.emptyList(), postService.findAllByClothes("404", loggedUser));
+    }
+
 }

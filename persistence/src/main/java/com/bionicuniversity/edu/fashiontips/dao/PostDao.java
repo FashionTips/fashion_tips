@@ -51,4 +51,29 @@ public interface PostDao extends GenericDao<Post, Long> {
     List<Post> findAll();
 
     List<Post> findUnpublished();
+
+    /**
+     * Returns all PUBLISHED posts with appropriate {@code Tag & TagType}, sorted by time created.
+     * @see com.bionicuniversity.edu.fashiontips.entity.Post.Status
+     * @param value {@code Tag}'s value
+     * @param tagTypeId {@code TagType}'s id
+     * @return list of posts
+     */
+    List<Post> findByTagValueAndTagTypeId(String value,  Long tagTypeId);
+
+    /**
+     * Returns all PUBLISHED posts with appropriate {@code TagType}, sorted by time created.
+     * @param tagTypeId {@code TagType}' id
+     * @return list of posts
+     * @see com.bionicuniversity.edu.fashiontips.entity.Post.Status
+     */
+    List<Post> findByTagTypeId(Long tagTypeId);
+
+    /**
+     * Returns all PUBLISHED posts with appropriate type of {@code Clothes}, sorted by time created.
+     * @param clothesId {@code Clothes}'s id
+     * @return {@code List<Post>}
+     * @see com.bionicuniversity.edu.fashiontips.entity.Post.Status
+     */
+    List<Post> findByClothesId(Long clothesId);
 }

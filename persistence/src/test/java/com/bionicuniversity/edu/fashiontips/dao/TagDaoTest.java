@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
 import com.bionicuniversity.edu.fashiontips.entity.Tag;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
@@ -69,5 +70,10 @@ public class TagDaoTest {
         tagDao.delete(2L);
         List<Tag> testList = tagDao.getAll();
         assertReflectionEquals(LIST_IF_DELETE_SCND_TAG, testList, IGNORE_DEFAULTS, LENIENT_ORDER);
+    }
+
+    @Test
+    public void testExistsValue() throws Exception {
+        Assert.assertEquals(true, tagDao.existsValue("karmaloop"));
     }
 }

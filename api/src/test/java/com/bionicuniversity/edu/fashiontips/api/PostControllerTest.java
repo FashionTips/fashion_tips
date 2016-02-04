@@ -272,4 +272,34 @@ public class PostControllerTest {
         mockMvc.perform(post(POSTS_API_URL + "/2/liked"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @WithMockUser(TEST_USER_LOGIN_1)
+    public void testFindPost_byExistingTag() throws Exception {
+        mockMvc.perform(get(POSTS_API_URL + "?tag=karmaloop&tagType=store"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(post1.getId().intValue())));
+    }
+
+    @Test
+    @WithMockUser(TEST_USER_LOGIN_1)
+    public void testFindPost_byExistingTagType() throws Exception {
+        mockMvc.perform(get(POSTS_API_URL + "?tagType=brand"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(post1.getId().intValue())));
+    }
+
+    @Test
+    @WithMockUser(TEST_USER_LOGIN_1)
+    public void testFindPost_byExistingClothes() throws Exception {
+        mockMvc.perform(get(POSTS_API_URL + "?clothes=Dresses"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(post1.getId().intValue())));
+    }
 }

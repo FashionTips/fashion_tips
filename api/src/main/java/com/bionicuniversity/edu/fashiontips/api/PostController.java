@@ -62,12 +62,18 @@ public class PostController {
      * @param login    optional parameter. If present then returned list user's (login = "login") posts
      * @param hashTag  optional parameter. If present then returned list of posts with this hashtag
      * @param category optional parameter. If present then returned list of posts with preset category
+     * @param tag      optional parameter. If present then returned list of posts with this tag
+     * @param tagType  optional parameter. If present then returned list of posts with this tagType
+     * @param clothes  optional parameter. If present then returned list of posts only with that type of clothes
      * @return list of all posts with such parameters
      */
     @RequestMapping(method = RequestMethod.GET)
     public List<Post> findPosts(@RequestParam(value = "author", required = false) String login,
                                 @RequestParam(value = "hashtag", required = false) String hashTag,
                                 @RequestParam(value = "category", required = false) Post.Category category,
+                                @RequestParam(value = "tag", required = false) String tag,
+                                @RequestParam(value = "tagType", required = false) String tagType,
+                                @RequestParam(value = "clothes", required = false) String clothes,
                                 Principal principal) {
         User user = principal == null ? null : userService.findOne(principal.getName()).get();
         List<Post> posts;
@@ -78,6 +84,12 @@ public class PostController {
             posts = postService.findAllByHashTag(hashTag, user);
         } else if (category != null) {
             posts = postService.findAllByCategory(category, user);
+        } else if (tag != null && tagType != null) {
+            posts = postService.findAllByTagAndTagTypeValue(tag, tagType, user);
+        } else if (tagType != null) {
+            posts = postService.findAllByTagTypeValue(tagType, user);
+        } else if (clothes != null) {
+            posts = postService.findAllByClothes(clothes, user);
         } else {
             posts = postService.findAll(user);
         }
