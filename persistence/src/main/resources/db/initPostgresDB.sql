@@ -119,7 +119,7 @@ CREATE TABLE post_user_likes (
 
 CREATE TABLE clothes (
   id BIGSERIAL,
-  name VARCHAR NOT NULL,
+  name VARCHAR NOT NULL UNIQUE,
   CONSTRAINT "clothes_id" PRIMARY KEY (id)
 );
 
@@ -136,7 +136,7 @@ CREATE TABLE tag_lines (
 
 CREATE TABLE tag_types (
   id BIGSERIAL,
-  type VARCHAR(128) NOT NULL,
+  type VARCHAR(128) NOT NULL UNIQUE,
   CONSTRAINT "tag_type_id" PRIMARY KEY (id)
 );
 

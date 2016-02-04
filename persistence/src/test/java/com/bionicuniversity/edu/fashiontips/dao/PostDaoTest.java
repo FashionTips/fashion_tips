@@ -1,5 +1,6 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
+import com.bionicuniversity.edu.fashiontips.TagTestData;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.bionicuniversity.edu.fashiontips.PostAndCommentTestData.*;
@@ -153,5 +155,23 @@ public class PostDaoTest {
     public void testFindUnpublished() {
         List<Post> testFindMine = postDao.findUnpublished();
         assertReflectionEquals(Arrays.asList(SCHEDULED_POST), testFindMine, IGNORE_DEFAULTS);
+    }
+
+    @Test
+    public void testFindByTagValueAndTagTypeId() {
+        List<Post> testFindByTagValue = postDao.findByTagValueAndTagTypeId("karmaloop", 2L);
+        assertReflectionEquals(Collections.singletonList(POST1), testFindByTagValue, IGNORE_DEFAULTS);
+    }
+
+    @Test
+    public void testFindByTagTypeId() {
+        List<Post> testFindByTagTypeId = postDao.findByTagTypeId(TagTestData.TAG_TYPE_BRAND.getId());
+        assertReflectionEquals(Collections.singletonList(POST1), testFindByTagTypeId, IGNORE_DEFAULTS);
+    }
+
+    @Test
+    public void testFindByClothesId() {
+        List<Post> testFindByClothesId = postDao.findByClothesId(3L);
+        assertReflectionEquals(Collections.singletonList(POST1), testFindByClothesId, IGNORE_DEFAULTS);
     }
 }
