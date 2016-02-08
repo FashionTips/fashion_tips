@@ -151,7 +151,8 @@ public class PostServiceImpl implements PostService {
         if (images != null) post.setImages(images);
         boolean commentsAllowed = update.isCommentsAllowed();
         post.setCommentsAllowed(commentsAllowed);
-
+        boolean notificationEnabled = update.isNotificationEnabled();
+        post.setNotificationEnabled(notificationEnabled);
         /* Update logic for status of post */
         Post.Status status = update.getStatus();
         if (status != null) {

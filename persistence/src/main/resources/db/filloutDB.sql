@@ -1,3 +1,4 @@
+DELETE FROM outbox_emails;
 DELETE FROM verification_token;
 DELETE FROM tag_parameters;
 DELETE FROM tags_tag_lines;
@@ -26,6 +27,7 @@ ALTER SEQUENCE posts_id_seq RESTART WITH 1;
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
 ALTER SEQUENCE roles_id_seq RESTART WITH 1;
 ALTER SEQUENCE countries_id_seq RESTART WITH 1;
+ALTER SEQUENCE outbox_emails_id_seq RESTART WITH 1;
 
 INSERT INTO countries (name) VALUES
   ('Afghanistan'),

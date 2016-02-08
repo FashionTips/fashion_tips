@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS outbox_emails;
 DROP TABLE IF EXISTS verification_token;
 DROP TABLE IF EXISTS tag_parameters;
 DROP TABLE IF EXISTS tags_tag_lines;
@@ -69,6 +70,7 @@ CREATE TABLE posts (
   category VARCHAR(64) NOT NULL ,
   status VARCHAR(64) NOT NULL,
   is_comments_allowed BOOLEAN DEFAULT TRUE,
+  notification_enabled BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "post_id" PRIMARY KEY (id)
 );
@@ -171,4 +173,13 @@ CREATE TABLE verification_token (
   expaired_time TIMESTAMP,
   verified BOOLEAN DEFAULT FALSE,
   CONSTRAINT verification_token_email UNIQUE (email)
+);
+
+CREATE TABLE outbox_emails (
+  id BIGSERIAL,
+  email_from VARCHAR(128),
+  email_to VARCHAR(128),
+  subject VARCHAR(128),
+  text VARCHAR(256),
+  CONSTRAINT outbox_email_id PRIMARY KEY (id)
 );
