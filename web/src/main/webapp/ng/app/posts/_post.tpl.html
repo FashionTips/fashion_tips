@@ -39,12 +39,6 @@
                 </div>
                 <div class="col-md-4">
                     <p class="text-muted text-right">{{ post.publicationTime | date:'short' }}</p>
-                    <h4 class="text-right">
-                        Likes:{{post.likes}}
-                    <span data-ng-show="post.isLikedByAuthUser !== null" class="glyphicon glyphicon-thumbs-up"
-                          data-ng-class="{liked:post.isLikedByAuthUser}"
-                          data-ng-click="toggleLikedStatus(post.id)"></span>
-                    </h4>
                 </div>
             </div>
         </div>
@@ -80,6 +74,15 @@
             <a data-ng-show="feed === 'true' && post.commentsAllowed && loggedIn()" data-ng-href="/post/{{ post.id }}" >
                 <small>reply</small>
             </a>
+            <span class="pull-right">
+                <a data-ng-show="post.isLikedByAuthUser !== null" href data-ng-click="toggleLikedStatus(post.id)">
+                    <small>Like</small>
+                </a>
+            <span data-ng-class="{liked:post.isLikedByAuthUser}" class="glyphicon glyphicon-heart not-liked"
+                  aria-hidden="true">
+            </span>
+            {{ post.likes }}
+            </span>
         </p>
     </div>
 </div>
