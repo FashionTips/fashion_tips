@@ -16,7 +16,6 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -102,6 +101,11 @@ public class Post extends BaseEntity<Long> {
     @Column(name = "is_comments_allowed", nullable = false)
     private boolean commentsAllowed = true;
 
+    /*
+     * Enable notification about new comment
+     * */
+    @Column(name = "notification_enabled", nullable = false)
+    private boolean notificationEnabled = false;
     /*
     * Set of users that liked post
     * */
@@ -283,6 +287,14 @@ public class Post extends BaseEntity<Long> {
 
     public void setPublicationTime(LocalDateTime publicationTime) {
         this.publicationTime = publicationTime;
+    }
+
+    public boolean isNotificationEnabled() {
+        return notificationEnabled;
+    }
+
+    public void setNotificationEnabled(boolean notificationEnabled) {
+        this.notificationEnabled = notificationEnabled;
     }
 
     @Override
