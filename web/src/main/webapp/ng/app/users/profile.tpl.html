@@ -56,18 +56,19 @@
 </ul>
 <div class="list-group" data-ng-show="user.login === username">
     <a href="/post/{{post.id}}" class="list-group-item" data-ng-repeat="post in userPosts">
-        {{post.title}} - Created: {{post.created | date:"dd MMM yyyy 'at' hh:mm"}}
+        {{post.title}} - Created: {{post.created | date:"dd MMM yyyy 'at' HH:mm"}}
         <span class="label" data-ng-class="{
             'label-success':post.status === 'PUBLISHED',
             'label-info':post.status === 'NEW',
             'label-default':post.status === 'HIDDEN',
             'label-warning':post.status === 'SCHEDULED'
         }">{{post.status}}</span>
-        <span class="text-success pull-right" data-ng-show="post.status === 'PUBLISHED'">{{post.publicationTime | date:"dd MMM yyyy hh:mm"}}</span>
+        <span class="text-success pull-right" data-ng-show="post.status === 'PUBLISHED' || post.status === 'HIDDEN'">{{post.publicationTime | date:"dd MMM yyyy HH:mm"}}</span>
+        <span class="text-warning pull-right" data-ng-show="post.status === 'SCHEDULED'">{{"Scheduled on "}}{{ post.publicationTime | date:"dd MMM yyyy HH:mm"}}</span>
     </a>
 </div>
 <div class="list-group" data-ng-hide="user.login === username">
     <a href="/post/{{post.id}}" class="list-group-item" data-ng-repeat="post in userPosts">
-        {{post.title}} <span class="text-success pull-right">{{post.publicationTime | date:"dd MMM yyyy hh:mm"}}</span>
+        {{post.title}} <span class="text-success pull-right">{{post.publicationTime | date:"dd MMM yyyy HH:mm"}}</span>
     </a>
 </div>

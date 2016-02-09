@@ -38,7 +38,7 @@
                     </h2>
                 </div>
                 <div class="col-md-4">
-                    <p class="text-muted text-right">{{ post.publicationTime | date:'short' }}</p>
+                    <p class="text-muted text-right">{{ post.status === 'SCHEDULED' ? "Scheduled on " : ""}}<br data-ng-show="post.status === 'SCHEDULED'"/>{{post.publicationTime | date:"dd MMM yyyy HH:mm" }}</p>
                 </div>
             </div>
         </div>
