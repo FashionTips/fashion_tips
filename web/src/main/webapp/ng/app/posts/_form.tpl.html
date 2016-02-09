@@ -90,7 +90,7 @@
                     <span data-ng-repeat="tag in tagLine.tags">
                        <i>{{tag.tagType.type}}</i>:{{tag.value}}
                     </span>
-                    <a href="" data-ng-click="removeTagLine(tagLine.id)"><span class="glyphicon glyphicon-remove"
+                    <a href="" data-ng-click="openModalRemoveTagLine(tagLine.id)"><span class="glyphicon glyphicon-remove"
                                                                              aria-hidden="true"></span></a>
                     <br/>
                 </span>
