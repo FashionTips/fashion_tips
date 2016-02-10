@@ -59,6 +59,15 @@
             </label>
         </div>
 
+        <!-- Enable notifications -->
+        <div class="checkbox">
+            <label>
+                <input type="checkbox"
+                       data-ng-init="post.notificationEnabled = post.notificationEnabled === undefined ? false : post.notificationEnabled"
+                       data-ng-model="post.notificationEnabled">Send me email notifications about new comments
+            </label>
+        </div>
+
         <!-- Pictures -->
         <div class="form-group">
             <label>Add Photos</label>
