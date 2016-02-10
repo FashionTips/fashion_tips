@@ -418,18 +418,37 @@ angular.module('ft.posts', [
                 };
 
 
-                $scope.removeTagLine = function (tagLineId) {
-                    var result = tagService.delete(tagLineId);
+                $scope.openModalRemoveTagLine = function (tagLineId) {
 
-                    result.then(function () {
-                        for (var i = 0; i < $scope.activeImage.tagLines.length; i++) {
-                            if (tagLineId === $scope.activeImage.tagLines[i].id) {
-                                $scope.activeImage.tagLines.splice(i, 1);
-                                break;
+                    var ModelController = function ($scope, $uibModalInstance) {
+
+                        $scope.ok = function () {
+                            $uibModalInstance.close();
+                        };
+
+                        $scope.cancel = function () {
+                            $uibModalInstance.dismiss('cancel');
+                        };
+                    };
+
+                    var modal = $uibModal.open({
+                        templateUrl: '/ng/app/posts/tags/_deleteTag.tpl.html',
+                        controller: ModelController
+                    });
+
+                    modal.result.then(function () {
+                        var result = tagService.delete(tagLineId);
+
+                        result.then(function () {
+                            for (var i = 0; i < $scope.activeImage.tagLines.length; i++) {
+                                if (tagLineId === $scope.activeImage.tagLines[i].id) {
+                                    $scope.activeImage.tagLines.splice(i, 1);
+                                    break;
+                                }
                             }
-                        }
-                    }, function () {
-                        alert('Error: TagLine has not been deleted.');
+                        }, function () {
+                            alert('Error: TagLine has not been deleted.');
+                        });
                     });
                 };
 
