@@ -36,12 +36,15 @@ angular.module('ft.posts', [
          * @param q
          * @param username
          * @param category
+         * @param clothes
+         * @param tag
          * @param success
          * @param error
          */
-        service.getAll = function (q, username, category, success, error) {
+        service.getAll = function (q, username, category, clothes, tagType, tagValue, success, error) {
 
-            Posts.query({hashtag: q, author: username, category: category}, function(response) {
+            Posts.query({hashtag: q, author: username, category: category, clothes: clothes,
+                tagType: tagType, tag: tagValue }, function(response) {
                 success && success(response);
             }, function(response) {
                 error && error(response);
