@@ -74,4 +74,6 @@ public interface PostService {
 
     @Transactional
     Post save(Post post);
+
+    List<User> getLikedUsers(long id);
 }

@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.dao;
 
 import com.bionicuniversity.edu.fashiontips.TagTestData;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
+import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -173,5 +174,13 @@ public class PostDaoTest {
     public void testFindByClothesId() {
         List<Post> testFindByClothesId = postDao.findByClothesId(3L);
         assertReflectionEquals(Collections.singletonList(POST1), testFindByClothesId, IGNORE_DEFAULTS);
+    }
+
+    @Test
+    public void testGetLikedUsers() {
+        User user2 = new User(2L,"login2", null, null);
+        User user3 = new User(3L,"login3", null, null);
+        List<User> users = postDao.getLikedUsers(1L);
+        assertReflectionEquals(Arrays.asList(user2,user3), users, IGNORE_DEFAULTS);
     }
 }

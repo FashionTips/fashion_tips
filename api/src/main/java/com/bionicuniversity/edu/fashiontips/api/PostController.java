@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Rest Controller to manage requests, which deal with posts.
@@ -153,5 +154,22 @@ public class PostController {
         User user = userService.findOne(principal.getName())
                 .orElseThrow(() -> new RuntimeException("Cannot find the logged in user in db!"));
         postService.toggleLikedStatus(id, user);
+    }
+
+    /**
+     * Return collection of users who liked post
+     *
+     * @param id    Post Id
+     * @return Collection of Users who liked Post with Post_id = id
+     */
+    @RequestMapping(value = "/{id}/liked")
+    public ResponseEntity getLikedUsers(@PathVariable long id) {
+        List<User> likedUsers = postService.getLikedUsers(id);
+        likedUsers.stream().peek((user) -> {
+            if(user.getAvatar() != null && user.getAvatar().getImgName() != null) {
+                ImageUtil.createUrlName(user.getAvatar());
+            }
+        }).collect(Collectors.toList());
+        return new ResponseEntity(likedUsers, HttpStatus.OK);
     }
 }
