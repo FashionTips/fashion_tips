@@ -86,6 +86,7 @@ public class Post extends BaseEntity<Long> {
     * Relationships store in separate table
     * */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderColumn(name = "img_order", nullable = false)
     @JoinTable(
             name = "post_images",
             joinColumns = @JoinColumn(name = "post_id"),

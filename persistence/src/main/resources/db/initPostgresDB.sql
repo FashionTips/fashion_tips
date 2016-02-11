@@ -86,9 +86,9 @@ CREATE TABLE images (
 CREATE TABLE post_images (
   post_id BIGINT NOT NULL,
   img_id BIGINT NOT NULL,
+  img_order BIGINT NOT NULL,
   FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
-  FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE,
-  CONSTRAINT post_pictures_idx UNIQUE (post_id, img_id)
+  FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE
 );
 
 CREATE TABLE user_images (
