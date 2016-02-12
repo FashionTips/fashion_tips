@@ -126,4 +126,9 @@ public class UserServiceImpl implements UserService {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
     }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return Optional.ofNullable(userDao.findByEmail(email));
+    }
 }

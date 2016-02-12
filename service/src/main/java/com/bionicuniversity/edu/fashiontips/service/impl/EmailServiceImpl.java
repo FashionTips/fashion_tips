@@ -4,6 +4,7 @@ import com.bionicuniversity.edu.fashiontips.dao.OutboxEmailDao;
 import com.bionicuniversity.edu.fashiontips.entity.OutboxEmail;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationTokenPK;
 import com.bionicuniversity.edu.fashiontips.service.EmailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -28,12 +29,14 @@ public class EmailServiceImpl implements EmailService {
     @Inject
     private OutboxEmailDao outboxEmailDao;
 
-
     @Value("${application.mail.web.url}")
     private String webUrl;
 
     @Value("${application.mail.web.RegistraionPath}")
     private String registraionPath;
+
+    @Value("${application.mail.web.ResetPasswordPath}")
+    private String resetPasswordPath;
 
     @Value("${application.mail.subject}")
     private String subject;
@@ -47,14 +50,32 @@ public class EmailServiceImpl implements EmailService {
     @Value("${application.mail.refend}")
     private String refEnd;
 
+    private static final String SIGNATURE = "\n\nThanks for using FashionTips!\nThe FashionTips Team";
+
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
-    public void sentVerificationToken(String email, String message) {
+    public void sentVerificationToken(String email, VerificationTokenPK.Type type, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(fromAddress);
         mailMessage.setTo(email);
-        mailMessage.setSubject(subject);
-        mailMessage.setText(webUrl + registraionPath + "?token=" + message);
+        switch (type) {
+            case EMAIL_VERIFICATION:
+                mailMessage.setSubject(subject);
+                mailMessage.setText(webUrl + registraionPath + "?token=" + message + SIGNATURE);
+                break;
+            case PASSWORD_RESET:
+                mailMessage.setSubject("Here's the link to reset your password");
+                mailMessage.setText(
+                        "To reset your FashionTips password, click on the link: "
+                                + webUrl + resetPasswordPath + "?token=" + message
+                                + "\n\nThe link will expire in 24 hours, so be sure to use it right away."
+                                + SIGNATURE);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid type data");
+        }
+
+
         mailSender.send(mailMessage);
     }
 
@@ -66,7 +87,7 @@ public class EmailServiceImpl implements EmailService {
             outboxEmail.setFrom(fromAddress);
             outboxEmail.setTo(post.getUser().getEmail());
             outboxEmail.setSubject(commentAuthor.getLogin() + " commented on your post " + post.getTitle());
-            outboxEmail.setText("To see the comment use the link: " + webUrl + "/post/" + post.getId());
+            outboxEmail.setText("To see the comment use the link: " + webUrl + "/post/" + post.getId() + SIGNATURE);
             outboxEmailDao.save(outboxEmail);
         }
     }

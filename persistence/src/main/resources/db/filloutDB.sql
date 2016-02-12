@@ -342,11 +342,13 @@ INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://untitledandco.c
 INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://www.karmaloop.com/product/The-Hey-Ma-Tee-in-White/549232', 'url', 1);
 INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://finchwear.com.ua/', 'site', 1);
 
-INSERT INTO verification_token (email, token)
-    VALUES ('arusich2008@ukr.net', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261');
-INSERT INTO verification_token (email, token, verified)
-    VALUES ('email1@example.com', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000002222', TRUE );
-INSERT INTO verification_token (email, token)
-    VALUES ('email4@example.com', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000004444');
-INSERT INTO verification_token (email, token)
-    VALUES ('some@email.com', 'bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f9cf74086510');
+INSERT INTO verification_token (email, token, type)
+VALUES ('arusich2008@ukr.net', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261', 'EMAIL_VERIFICATION');
+INSERT INTO verification_token (email, token, type, verified)
+VALUES ('email1@example.com', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000002222', 'EMAIL_VERIFICATION', TRUE);
+INSERT INTO verification_token (email, token, type)
+VALUES ('email4@example.com', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000004444', 'EMAIL_VERIFICATION');
+INSERT INTO verification_token (email, token, type)
+VALUES ('some@email.com', 'bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f9cf74086510', 'EMAIL_VERIFICATION');
+INSERT INTO verification_token (email, token, type, expaired_time)
+VALUES ('some@email.com', 'bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f9cf74086511', 'PASSWORD_RESET', '2016-02-11 12:00:00');
