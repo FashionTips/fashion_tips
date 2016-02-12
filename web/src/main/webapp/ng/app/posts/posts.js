@@ -160,6 +160,26 @@ angular.module('ft.posts', [
             return result.promise;
         };
 
+        /*
+        * Get users who liked post
+        *
+        * @param postId
+        * @returns {d.promise|Function|*|promise}
+        * */
+        service.getUsersWhoLikedPostByPostId = function (postId) {
+            var result = $q.defer();
+            var usersWhoLikedPostByPostIdUrl = urlApi + "/posts/" + postId + "/liked";
+
+            $http.get(usersWhoLikedPostByPostIdUrl)
+                .then( function (response) {
+                    result.resolve(response);
+                }, function (response) {
+                    result.reject(response);
+                });
+
+            return result.promise;
+        };
+
         return service;
     }])
 
@@ -258,6 +278,23 @@ angular.module('ft.posts', [
                 /* Make particular image active */
                 $scope.showImage = function (image) {
                     $scope.activeImage = image;
+                };
+
+                /* Load users who liked post */
+                $scope.showLikedUsers = function () {
+                    $scope.users = [];
+                    $scope.users = [
+                        {
+                            login: "login1"
+                        },
+                        {
+                            login: "login2"
+                        }
+                    ];
+                    //var result = postService.getUsersWhoLikedPostByPostId(postId);
+                    //result.then(function (response) {
+                    //    $scope.users = response.data;
+                    //})
                 };
 
                 /**
