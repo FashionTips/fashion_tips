@@ -49,9 +49,14 @@
         <!--Tags -->
         <div class="form-group">
             <span data-ng-repeat="tagLine in activeImage.tagLines">
-                <strong>{{tagLine.clothes.name}}</strong> -
+                <a href="/?clothes={{tagLine.clothes.name}}">
+                    <strong>{{tagLine.clothes.name}}</strong>
+                </a>
+                -
                 <span data-ng-repeat="tag in tagLine.tags">
-                   <i>{{tag.tagType.type}}</i>:{{tag.value}}
+                    <a href="/?tagType={{tag.tagType.type}}&tagValue={{tag.value}}">
+                        <i>{{tag.tagType.type}}</i>:{{tag.value}}
+                    </a>
                 </span>
                 <br/>
             </span>
