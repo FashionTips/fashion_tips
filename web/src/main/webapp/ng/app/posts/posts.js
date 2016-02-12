@@ -322,6 +322,17 @@ angular.module('ft.posts', [
                     modal.result.then(function (post) {
                         postService.update($scope.post.id, post, function (data) {
                             $scope.post = data;
+
+                            /* Find updated active image */
+                            var updatedActiveImageIndex = 0;
+                            for (var i = 0; i < $scope.post.images.length; i++) {
+                                if ($scope.activeImage.id === $scope.post.images[i].id) {
+                                    $scope.activeImage = $scope.post.images[i];
+                                    break;
+                                }
+                            }
+                            /* if active image was deleted, then show first one */
+                            $scope.activeImage = $scope.post.images[0];
                         }, function (data) {
                             alert('Error: post was not updated');
                         });
@@ -403,6 +414,24 @@ angular.module('ft.posts', [
                     $scope.activeImage = image;
                 };
 
+                /*
+                * Move active image
+                * @param image
+                * @relativePosition relative position to move
+                * */
+                $scope.moveImage = function (image, relativePosition) {
+                    var currentIndex;
+                    var newIndex;
+                    for (var i = 0; i < $scope.post.images.length; i++) {
+                        if (image.id === $scope.post.images[i].id) {
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+                    newIndex = currentIndex + relativePosition;
+                    $scope.post.images.splice(newIndex, 0, $scope.post.images.splice(currentIndex, 1)[0]);
+                };
+
                 /**
                  * Remove image from post form.
                  * @param id
@@ -416,7 +445,7 @@ angular.module('ft.posts', [
                             break;
                         }
                     }
-                    if ($scope.activeImage.id === $scope.post.images[index].id) $scope.activeImage = null;
+                    if ($scope.activeImage && $scope.activeImage.id === $scope.post.images[index].id) $scope.activeImage = null;
                     $scope.post.images.splice(index, 1);
                 };
 

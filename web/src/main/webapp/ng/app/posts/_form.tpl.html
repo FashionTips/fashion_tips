@@ -81,13 +81,22 @@
                 {{imageUploadError}}
             </div>
             <div class="row">
-                <div class="col-sm-2" data-ng-repeat="image in post.images" data-ng-click="showImage(image)">
-                    <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}"/>
+                <div class="col-sm-2" data-ng-repeat="image in post.images">
+                    <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}" data-ng-click="showImage(image)"/>
                     <a href="#" data-ng-click="removeImage(image.id)"><span class="glyphicon glyphicon-remove"
                                                                             aria-hidden="true"></span></a>
                 </div>
             </div>
             <label data-ng-show="post.images.length && !activeImage">Click on thumbnail to add tags to photo</label>
+            <div class="text-center" data-ng-show="post.images.length > 1 && activeImage">
+                <button type="button" class="btn btn-sm" data-ng-click="moveImage(activeImage, -1)" data-ng-show="post.images[0].id !== activeImage.id">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </button>
+                Change photo order
+                <button type="button" class="btn btn-sm" data-ng-click="moveImage(activeImage, 1)" data-ng-show="post.images[post.images.length - 1].id !== activeImage.id">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </button>
+            </div>
         </div>
 
         <!-- Tags -->
