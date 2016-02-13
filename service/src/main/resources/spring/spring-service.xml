@@ -16,10 +16,12 @@
     <task:scheduler id="scheduler"/>
     <task:scheduled-tasks scheduler="scheduler">
         <task:scheduled ref="postsPublicationScheduler" method="publication" cron="0 0/1 * * * *"/>
+        <task:scheduled ref="emailServiceImpl" method="sendAllOutboxEmail" cron="0 0/1 * * * *"/>
     </task:scheduled-tasks>
 
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+
         <property name="host" value="${application.mail.host}" />
         <property name="port" value="${application.mail.port}" />
         <property name="username" value="${application.mail.username}" />

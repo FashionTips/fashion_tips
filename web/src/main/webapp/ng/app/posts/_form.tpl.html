@@ -59,6 +59,15 @@
             </label>
         </div>
 
+        <!-- Enable notifications -->
+        <div class="checkbox">
+            <label>
+                <input type="checkbox"
+                       data-ng-init="post.notificationEnabled = post.notificationEnabled === undefined ? false : post.notificationEnabled"
+                       data-ng-model="post.notificationEnabled">Send me email notifications about new comments
+            </label>
+        </div>
+
         <!-- Pictures -->
         <div class="form-group">
             <label>Add Photos</label>
@@ -72,13 +81,22 @@
                 {{imageUploadError}}
             </div>
             <div class="row">
-                <div class="col-sm-2" data-ng-repeat="image in post.images" data-ng-click="showImage(image)">
-                    <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}"/>
+                <div class="col-sm-2" data-ng-repeat="image in post.images">
+                    <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}" data-ng-click="showImage(image)"/>
                     <a href="#" data-ng-click="removeImage(image.id)"><span class="glyphicon glyphicon-remove"
                                                                             aria-hidden="true"></span></a>
                 </div>
             </div>
             <label data-ng-show="post.images.length && !activeImage">Click on thumbnail to add tags to photo</label>
+            <div class="text-center" data-ng-show="post.images.length > 1 && activeImage">
+                <button type="button" class="btn btn-sm" data-ng-click="moveImage(activeImage, -1)" data-ng-show="post.images[0].id !== activeImage.id">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </button>
+                Change photo order
+                <button type="button" class="btn btn-sm" data-ng-click="moveImage(activeImage, 1)" data-ng-show="post.images[post.images.length - 1].id !== activeImage.id">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </button>
+            </div>
         </div>
 
         <!-- Tags -->
@@ -90,7 +108,7 @@
                     <span data-ng-repeat="tag in tagLine.tags">
                        <i>{{tag.tagType.type}}</i>:{{tag.value}}
                     </span>
-                    <a href="" data-ng-click="removeTagLine(tagLine.id)"><span class="glyphicon glyphicon-remove"
+                    <a href="" data-ng-click="openModalRemoveTagLine(tagLine.id)"><span class="glyphicon glyphicon-remove"
                                                                              aria-hidden="true"></span></a>
                     <br/>
                 </span>
@@ -127,7 +145,7 @@
         <button type="button" class="btn btn-default" data-ng-click="cancel()">
             Cancel
         </button>
-        <button type="button" class="btn btn-success" data-ng-click="ok()" data-ng-disabled="postForm.$invalid">
+        <button type="button" class="btn btn-success" data-ng-click="ok()" data-ng-disabled="postForm.$invalid || post.images.length === 0">
             Save
         </button>
     </div>

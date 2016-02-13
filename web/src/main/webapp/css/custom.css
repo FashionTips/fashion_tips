@@ -2,8 +2,14 @@
     padding: 15px;
 }
 
+.not-liked {
+    opacity: 0.4;
+    color: dodgerblue;
+}
+
 .liked {
-    background-color: lightgray;
+    opacity: 1;
+    color: dodgerblue;
 }
 
 .activeImage {
@@ -29,6 +35,10 @@
     background: white;
     cursor: inherit;
     display: block;
+}
+
+p {
+    word-break: break-all;
 }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
