@@ -253,4 +253,9 @@ public class PostServiceImpl implements PostService {
         }
         return postDao.save(post);
     }
+
+    @Override
+    public List<User> getLikedUsers(long id) {
+        return postDao.getLikedUsers(id);
+    }
 }

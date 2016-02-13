@@ -14,10 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -225,6 +222,16 @@ public class PostServiceImplTest {
         when(clothesDao.findByName("404")).thenReturn(null);
 
         assertEquals(Collections.emptyList(), postService.findAllByClothes("404", loggedUser));
+    }
+
+    @Test
+    public void testGetLikedUsers_where_presents_likes() {
+        User user1 = new User();
+        User user2 = new User();
+        List<User> gettingUsers = Arrays.asList(user1, user2);
+        when(postDao.getLikedUsers(1L)).thenReturn(gettingUsers);
+        assertEquals(gettingUsers, postService.getLikedUsers(1L));
+        verify(postDao, times(1)).getLikedUsers(1L);
     }
 
 }

@@ -76,4 +76,6 @@ public interface PostDao extends GenericDao<Post, Long> {
      * @see com.bionicuniversity.edu.fashiontips.entity.Post.Status
      */
     List<Post> findByClothesId(Long clothesId);
+
+    List<User> getLikedUsers(Long id);
 }

@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips;
 
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
+import com.bionicuniversity.edu.fashiontips.entity.User;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -68,6 +69,8 @@ public class PostAndCommentTestData {
     public static final List<Comment> LIST_WITH_NEW_COMMENT = Arrays.asList(COMMENT1, COMMENT2_HIDDEN, COMMENT_3, COMMENT4_AFTER_ADD_NEW_COMMENT, NEW_COMMENT_AFTER_SAVE);
     public static final List<Comment> LIST_IF_DELETE_FIRST_COMMENT = Arrays.asList(COMMENT2_HIDDEN_AFTER_DELETE_COMMENT1, COMMENT_3, COMMENT_4);
     public static final List<Comment> LIST_IF_UPDATE_COMMENT3 = Arrays.asList(COMMENT1, COMMENT2_HIDDEN, UPDATE_COMMENT3, COMMENT_4);
+
+    public static final List<User> LIST_LIKED_USERS_BY_FIRST_POST = Arrays.asList(USER2, USER3);
 
     static {
         POST1.setComments(Arrays.asList(COMMENT1, COMMENT2_HIDDEN));

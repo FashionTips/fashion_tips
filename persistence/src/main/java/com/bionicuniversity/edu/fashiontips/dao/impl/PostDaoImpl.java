@@ -5,6 +5,7 @@ import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -89,5 +90,16 @@ public class PostDaoImpl extends GenericDaoImpl<Post, Long> implements PostDao {
         return  query.setParameter("clothesId", clothesId).setParameter("published", Post.Status.PUBLISHED).getResultList();
     }
 
+    @Override
+    public List<User> getLikedUsers(Long id) {
+        Query query =
+                em.createNativeQuery("SELECT DISTINCT u.id, u.login, img.id AS img_id, img.img_name FROM users u " +
+                        "   INNER JOIN POST_USER_LIKES pul ON u.id = pul.user_id " +
+                        "   LEFT JOIN USER_IMAGES ui ON ui.user_id = u.id " +
+                        "   LEFT JOIN IMAGES img ON img.id = ui.img_id " +
+                        "   WHERE pul.POST_ID = :id", "post.user.followers").setParameter("id", id);
+        List<User> users = query.getResultList();
+        return users;
+    }
 
 }

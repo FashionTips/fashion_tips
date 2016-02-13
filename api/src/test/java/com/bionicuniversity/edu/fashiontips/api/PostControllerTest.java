@@ -302,4 +302,19 @@ public class PostControllerTest {
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", is(post1.getId().intValue())));
     }
+
+    @Test
+    @WithMockUser(TEST_USER_LOGIN_1)
+    public void testGetLikedUser() throws Exception {
+        User user2 = userDao.getById(2L);
+        User user3 = userDao.getById(3L);
+        mockMvc.perform(get(POSTS_API_URL + "/1/liked"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(user2.getId().intValue())))
+                .andExpect(jsonPath("$[1].id", is(user3.getId().intValue())))
+                .andExpect(jsonPath("$[0].login", is(user2.getLogin())))
+                .andExpect(jsonPath("$[1].login", is(user3.getLogin())));
+    }
 }
