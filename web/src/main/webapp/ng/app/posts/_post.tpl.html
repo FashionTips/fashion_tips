@@ -86,7 +86,12 @@
             <span data-ng-class="{liked:post.isLikedByAuthUser}" class="glyphicon glyphicon-heart not-liked"
                   aria-hidden="true">
             </span>
-            {{ post.likes }}
+                {{ post.likes }}
+                <button type="button" class="btn btn-sm btn-info" data-ng-click="showLikedUsers()" popover-placement="right"
+                        uib-popover-template="'/ng/app/posts/liked_users/_usersWhoLikedPost.tpl.html'" popover-trigger="focus"
+                        data-ng-show="post.likes > 0">
+                    <span class="glyphicon glyphicon-user"></span>
+                </button>
             </span>
         </p>
     </div>

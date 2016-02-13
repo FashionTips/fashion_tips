@@ -162,7 +162,7 @@ public class PostController {
      * @param id    Post Id
      * @return Collection of Users who liked Post with Post_id = id
      */
-    @RequestMapping(value = "/{id}/liked")
+    @RequestMapping(value = "/{id}/liked", method = RequestMethod.GET)
     public ResponseEntity getLikedUsers(@PathVariable long id) {
         List<User> likedUsers = postService.getLikedUsers(id);
         likedUsers.stream().peek((user) -> {

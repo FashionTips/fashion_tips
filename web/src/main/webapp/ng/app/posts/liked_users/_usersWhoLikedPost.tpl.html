@@ -1,0 +1,6 @@
+<div>
+    <div data-ng-repeat="user in users">
+        <img data-ng-src="{{ user.avatar.imgUrl || 'http://placehold.it/200x200' }}" height="64">
+        <a href="/user/{{user.login}}">{{user.login}}</a>
+    </div>
+</div>
