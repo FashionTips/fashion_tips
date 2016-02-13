@@ -12,4 +12,7 @@
             </ul>
         </div>
     </div>
+
+    <a href class='to-top-button' ng-class='{visible: buttonVisibility}' data-ng-click="toTop($event)"><span class='glyphicon glyphicon-chevron-up'></span></a>
 </div>
+
