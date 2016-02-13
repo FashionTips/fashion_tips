@@ -136,7 +136,7 @@
         <button type="button" class="btn btn-default" data-ng-click="cancel()">
             Cancel
         </button>
-        <button type="button" class="btn btn-success" data-ng-click="ok()" data-ng-disabled="postForm.$invalid">
+        <button type="button" class="btn btn-success" data-ng-click="ok()" data-ng-disabled="postForm.$invalid || post.images.length === 0">
             Save
         </button>
     </div>
