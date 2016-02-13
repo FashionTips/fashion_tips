@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.service;
 
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,18 @@ public interface PostService {
     List<Post> findAllByUser(User user, User loggedUser);
     List<Post> findAllByHashTag(String hashTag, User loggedUser);
     List<Post> findAllByCategory(Post.Category category, User loggedUser);
+
+    /**
+     * Returns ist of posts associated with given tag
+     *
+     * @return {@code List<Post>}
+     *
+     * @throws NotFoundException  if the tag does
+     * not exists
+     */
+    List<Post> findAllByTagAndTagTypeValue(String tag, String tagType, User loggedUser);
+    List<Post> findAllByTagTypeValue(String tagType, User loggedUser);
+    List<Post> findAllByClothes(String name, User loggedUser);
     List<Post> findAll(User loggedUser);
 
     /**
@@ -61,4 +74,6 @@ public interface PostService {
 
     @Transactional
     Post save(Post post);
+
+    List<User> getLikedUsers(long id);
 }

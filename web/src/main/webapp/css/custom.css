@@ -2,8 +2,14 @@
     padding: 15px;
 }
 
+.not-liked {
+    opacity: 0.4;
+    color: dodgerblue;
+}
+
 .liked {
-    background-color: lightgray;
+    opacity: 1;
+    color: dodgerblue;
 }
 
 .activeImage {
@@ -33,4 +39,34 @@
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
+}
+
+.to-top-button {
+    transform: translateY(100px);
+    display: inline-block;
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #2aabd2;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+    transition-property: box-shadow, background, transform;
+    transition-duration: 0.2s, 0.2s, 0.4s;
+    transition-timing-function: ease, ease, cubic-bezier(.25,-1.2,.85,.77);
+    text-align: center;
+    line-height: 50px;
+}
+.to-top-button.visible {
+    transform: translateY(0);
+    transition-timing-function: ease, ease, cubic-bezier(.16,.73,.56,1.89);
+}
+.to-top-button:hover {
+    box-shadow: 0 3px 7px 0 rgba(0,0,0,.36);
+    background-color: #4EBDDE;
+}
+.to-top-button>span {
+    color: #000;
+    opacity: 0.5;
 }

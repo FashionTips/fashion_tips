@@ -8,4 +8,5 @@ import com.bionicuniversity.edu.fashiontips.entity.Tag;
  * @author Vadym Golub
  */
 public interface TagDao extends GenericDao<Tag, Long> {
+    boolean existsValue(String value);
 }
