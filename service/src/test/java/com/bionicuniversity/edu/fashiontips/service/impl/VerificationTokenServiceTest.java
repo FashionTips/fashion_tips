@@ -60,7 +60,7 @@ public class VerificationTokenServiceTest {
                 new VerificationToken(email, token);
         verificationToken.setExpairedTime(localDateTime);
 
-        doNothing().when(emailService).sentEmail(email, message);
+        doNothing().when(emailService).sentVerificationToken(email, message);
 
         verificationTokenService.sendEmailRegistrationToken(verificationToken);
 
@@ -129,7 +129,7 @@ public class VerificationTokenServiceTest {
         verificationToken.setExpairedTime(localDateTime);
 
         when(verificationTokenDao.save(verificationToken)).thenReturn(verificationToken);
-        doNothing().when(emailService).sentEmail(email,token);
+        doNothing().when(emailService).sentVerificationToken(email,token);
 
 
         VerificationToken verifiedToken = verificationTokenService.registrateNewToken(verificationToken);
@@ -154,11 +154,11 @@ public class VerificationTokenServiceTest {
         verificationToken.setExpairedTime(localDateTime);
 
         when(verificationTokenDao.update(verificationToken)).thenReturn(verificationToken);
-        doNothing().when(emailService).sentEmail(verificationToken.getEmail(), verificationToken.getToken());
+        doNothing().when(emailService).sentVerificationToken(verificationToken.getEmail(), verificationToken.getToken());
 
         VerificationToken verifiedToken = verificationTokenService.resentToken(verificationToken);
 
-        doNothing().when(emailService).sentEmail(verificationToken.getEmail(), verificationToken.getToken());
+        doNothing().when(emailService).sentVerificationToken(verificationToken.getEmail(), verificationToken.getToken());
 
         assertNotNull(verifiedToken.getToken());
         assertNotEquals(token, verificationToken.getToken());

@@ -2,8 +2,14 @@
     padding: 15px;
 }
 
+.not-liked {
+    opacity: 0.4;
+    color: dodgerblue;
+}
+
 .liked {
-    background-color: lightgray;
+    opacity: 1;
+    color: dodgerblue;
 }
 
 .activeImage {
@@ -33,4 +39,9 @@
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
+}
+
+.post-section .post-img {
+    height: 550px;
+    cursor: pointer;
 }
