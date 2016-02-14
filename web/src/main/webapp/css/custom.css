@@ -2,8 +2,14 @@
     padding: 15px;
 }
 
+.not-liked {
+    opacity: 0.4;
+    color: dodgerblue;
+}
+
 .liked {
-    background-color: lightgray;
+    opacity: 1;
+    color: dodgerblue;
 }
 
 .activeImage {

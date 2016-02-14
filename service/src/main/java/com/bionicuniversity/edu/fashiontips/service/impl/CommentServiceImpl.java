@@ -5,6 +5,7 @@ import com.bionicuniversity.edu.fashiontips.dao.PostDao;
 import com.bionicuniversity.edu.fashiontips.entity.Comment;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.service.CommentService;
+import com.bionicuniversity.edu.fashiontips.service.EmailService;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotAllowedActionException;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.springframework.security.access.AccessDeniedException;
@@ -33,18 +34,27 @@ public class CommentServiceImpl implements CommentService {
     @Inject
     private PostDao postDao;
 
+    @Inject
+    private EmailService emailService;
+
     @Override
     public Comment save(Comment comment, long postId) {
 
-        if(!postDao.exists(postId)) throw new NotFoundException(String.format("Post with id '%d' was not found.", postId));
+        if (!postDao.exists(postId))
+            throw new NotFoundException(String.format("Post with id '%d' was not found.", postId));
         Post post = postDao.getReference(postId);
-        if(!post.isCommentsAllowed()) {
+        if (!post.isCommentsAllowed()) {
             throw new NotAllowedActionException(String.format("Post Id '%d': author prohibited to comment.", postId));
         }
         comment.setAvailable(true);
         comment.setPost(post);
         comment.setCreated(LocalDateTime.now());
-        return commentDao.save(comment);
+
+        comment = commentDao.save(comment);
+
+        //Create email notification about new comment
+        emailService.createNotificationAboutNewComment(post, comment.getUser());
+        return comment;
     }
 
     @Override
@@ -54,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
         commentDao.findAllByPost(postDao.getReference(postId));
         List<Comment> comments = commentDao.findAllByPost(postDao.getReference(postId));
         for (Comment c : comments) {
-            if (!c.isAvailable()){
+            if (!c.isAvailable()) {
                 c.setText("");
             }
         }
@@ -88,7 +98,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment update(Comment comment, String login) {
-        if (!commentDao.exists(comment.getId())) throw new NotFoundException(String.format("Comment not found by id = %d", comment.getId()));
+        if (!commentDao.exists(comment.getId()))
+            throw new NotFoundException(String.format("Comment not found by id = %d", comment.getId()));
         Comment presentComment = commentDao.getById(comment.getId());
         if (!presentComment.getUser().getLogin().equals(login))
             throw new AccessDeniedException(String.format("Comment doesn't belong to user with login = %s", login));

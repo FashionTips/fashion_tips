@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS outbox_emails;
 DROP TABLE IF EXISTS verification_token;
 DROP TABLE IF EXISTS tag_parameters;
 DROP TABLE IF EXISTS tags_tag_lines;
@@ -69,6 +70,7 @@ CREATE TABLE posts (
   category VARCHAR(64) NOT NULL ,
   status VARCHAR(64) NOT NULL,
   is_comments_allowed BOOLEAN DEFAULT TRUE,
+  notification_enabled BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "post_id" PRIMARY KEY (id)
 );
@@ -84,9 +86,9 @@ CREATE TABLE images (
 CREATE TABLE post_images (
   post_id BIGINT NOT NULL,
   img_id BIGINT NOT NULL,
+  img_order BIGINT NOT NULL,
   FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
-  FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE,
-  CONSTRAINT post_pictures_idx UNIQUE (post_id, img_id)
+  FOREIGN KEY (img_id) REFERENCES images (id) ON DELETE CASCADE
 );
 
 CREATE TABLE user_images (
@@ -119,7 +121,7 @@ CREATE TABLE post_user_likes (
 
 CREATE TABLE clothes (
   id BIGSERIAL,
-  name VARCHAR NOT NULL,
+  name VARCHAR NOT NULL UNIQUE,
   CONSTRAINT "clothes_id" PRIMARY KEY (id)
 );
 
@@ -136,7 +138,7 @@ CREATE TABLE tag_lines (
 
 CREATE TABLE tag_types (
   id BIGSERIAL,
-  type VARCHAR(128) NOT NULL,
+  type VARCHAR(128) NOT NULL UNIQUE,
   CONSTRAINT "tag_type_id" PRIMARY KEY (id)
 );
 
@@ -171,4 +173,13 @@ CREATE TABLE verification_token (
   expaired_time TIMESTAMP,
   verified BOOLEAN DEFAULT FALSE,
   CONSTRAINT verification_token_email UNIQUE (email)
+);
+
+CREATE TABLE outbox_emails (
+  id BIGSERIAL,
+  email_from VARCHAR(128),
+  email_to VARCHAR(128),
+  subject VARCHAR(128),
+  text VARCHAR(256),
+  CONSTRAINT outbox_email_id PRIMARY KEY (id)
 );

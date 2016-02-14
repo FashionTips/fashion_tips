@@ -6,6 +6,7 @@ import com.bionicuniversity.edu.fashiontips.entity.Comment;
 import com.bionicuniversity.edu.fashiontips.entity.Post;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.service.CommentService;
+import com.bionicuniversity.edu.fashiontips.service.EmailService;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotAllowedActionException;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.junit.Test;
@@ -40,6 +41,9 @@ public class CommentServiceImplTest {
 
     @Mock
     private PostDao postDao;
+
+    @Mock
+    private EmailService emailService;
 
     @Test
     public void testSave_shouldReturnSavedComment() throws Exception {
@@ -142,7 +146,7 @@ public class CommentServiceImplTest {
         boolean result = commentService.block(post);
         assertTrue("Should block comments and return false - comments are no allowed.", result);
     }
-    
+
     @Test(expected = AccessDeniedException.class)
     public void testHideById_whenPassInappropriateLoginAgainstCommentsOwner_shouldThrowException() throws Exception {
         User user = new User();
