@@ -157,7 +157,7 @@ angular.module('ft.users', [
 
                 /* Function to load recent user posts for profile page */
                 var loadPosts = function () {
-                    postService.getAll(undefined, $scope.user.login, undefined, function(data) {
+                    postService.getAll(null , $scope.user.login, null , null,  null, null, function(data) {
                         $scope.userPosts = data;
                     }, function(data){
                         console.log('Error: cannot load user"s post');

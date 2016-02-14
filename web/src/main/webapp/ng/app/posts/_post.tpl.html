@@ -38,13 +38,7 @@
                     </h2>
                 </div>
                 <div class="col-md-4">
-                    <p class="text-muted text-right">{{ post.publicationTime | date:'short' }}</p>
-                    <h4 class="text-right">
-                        Likes:{{post.likes}}
-                    <span data-ng-show="post.isLikedByAuthUser !== null" class="glyphicon glyphicon-thumbs-up"
-                          data-ng-class="{liked:post.isLikedByAuthUser}"
-                          data-ng-click="toggleLikedStatus(post.id)"></span>
-                    </h4>
+                    <p class="text-muted text-right">{{ post.status === 'SCHEDULED' ? "Scheduled on " : ""}}<br data-ng-show="post.status === 'SCHEDULED'"/>{{post.publicationTime | date:"dd MMM yyyy HH:mm" }}</p>
                 </div>
             </div>
         </div>
@@ -55,9 +49,14 @@
         <!--Tags -->
         <div class="form-group">
             <span data-ng-repeat="tagLine in activeImage.tagLines">
-                <strong>{{tagLine.clothes.name}}</strong> -
+                <a href="/?clothes={{tagLine.clothes.name}}">
+                    <strong>{{tagLine.clothes.name}}</strong>
+                </a>
+                -
                 <span data-ng-repeat="tag in tagLine.tags">
-                   <i>{{tag.tagType.type}}</i>:{{tag.value}}
+                    <a href="/?tagType={{tag.tagType.type}}&tagValue={{tag.value}}">
+                        <i>{{tag.tagType.type}}</i>:{{tag.value}}
+                    </a>
                 </span>
                 <br/>
             </span>
@@ -80,6 +79,20 @@
             <a data-ng-show="feed === 'true' && post.commentsAllowed && loggedIn()" data-ng-href="/post/{{ post.id }}" >
                 <small>reply</small>
             </a>
+            <span class="pull-right">
+                <a data-ng-show="post.isLikedByAuthUser !== null" href data-ng-click="toggleLikedStatus(post.id)">
+                    <small>Like</small>
+                </a>
+            <span data-ng-class="{liked:post.isLikedByAuthUser}" class="glyphicon glyphicon-heart not-liked"
+                  aria-hidden="true">
+            </span>
+                {{ post.likes }}
+                <button type="button" class="btn btn-sm btn-info" data-ng-click="showLikedUsers()" popover-placement="right"
+                        uib-popover-template="'/ng/app/posts/liked_users/_usersWhoLikedPost.tpl.html'" popover-trigger="focus"
+                        data-ng-show="post.likes > 0">
+                    <span class="glyphicon glyphicon-user"></span>
+                </button>
+            </span>
         </p>
     </div>
 </div>

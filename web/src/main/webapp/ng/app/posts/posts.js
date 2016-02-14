@@ -36,12 +36,15 @@ angular.module('ft.posts', [
          * @param q
          * @param username
          * @param category
+         * @param clothes
+         * @param tag
          * @param success
          * @param error
          */
-        service.getAll = function (q, username, category, success, error) {
+        service.getAll = function (q, username, category, clothes, tagType, tagValue, success, error) {
 
-            Posts.query({hashtag: q, author: username, category: category}, function(response) {
+            Posts.query({hashtag: q, author: username, category: category, clothes: clothes,
+                tagType: tagType, tag: tagValue }, function(response) {
                 success && success(response);
             }, function(response) {
                 error && error(response);
@@ -157,6 +160,26 @@ angular.module('ft.posts', [
             return result.promise;
         };
 
+        /*
+        * Get users who liked post
+        *
+        * @param postId
+        * @returns {d.promise|Function|*|promise}
+        * */
+        service.getUsersWhoLikedPostByPostId = function (postId) {
+            var result = $q.defer();
+            var usersWhoLikedPostByPostIdUrl = urlApi + "/posts/" + postId + "/liked";
+
+            $http.get(usersWhoLikedPostByPostIdUrl)
+                .then( function (response) {
+                    result.resolve(response);
+                }, function (response) {
+                    result.reject(response);
+                });
+
+            return result.promise;
+        };
+
         return service;
     }])
 
@@ -257,6 +280,18 @@ angular.module('ft.posts', [
                     $scope.activeImage = image;
                 };
 
+                /* Load users who liked post */
+                $scope.users = [];
+                $scope.showLikedUsers = function () {
+                    if ($scope.users.length === 0) {
+                        var result = postService.getUsersWhoLikedPostByPostId($scope.post.id);
+                        result.then(function (response) {
+                            $scope.users = response.data;
+                            console.log($scope.users);
+                        });
+                    }
+                };
+
                 /**
                  * Shows the confirmation modal dialog, and deletes the post after approve.
                  */
@@ -319,6 +354,17 @@ angular.module('ft.posts', [
                     modal.result.then(function (post) {
                         postService.update($scope.post.id, post, function (data) {
                             $scope.post = data;
+
+                            /* Find updated active image */
+                            var updatedActiveImageIndex = 0;
+                            for (var i = 0; i < $scope.post.images.length; i++) {
+                                if ($scope.activeImage.id === $scope.post.images[i].id) {
+                                    $scope.activeImage = $scope.post.images[i];
+                                    break;
+                                }
+                            }
+                            /* if active image was deleted, then show first one */
+                            $scope.activeImage = $scope.post.images[0];
                         }, function (data) {
                             alert('Error: post was not updated');
                         });
@@ -400,6 +446,24 @@ angular.module('ft.posts', [
                     $scope.activeImage = image;
                 };
 
+                /*
+                * Move active image
+                * @param image
+                * @relativePosition relative position to move
+                * */
+                $scope.moveImage = function (image, relativePosition) {
+                    var currentIndex;
+                    var newIndex;
+                    for (var i = 0; i < $scope.post.images.length; i++) {
+                        if (image.id === $scope.post.images[i].id) {
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+                    newIndex = currentIndex + relativePosition;
+                    $scope.post.images.splice(newIndex, 0, $scope.post.images.splice(currentIndex, 1)[0]);
+                };
+
                 /**
                  * Remove image from post form.
                  * @param id
@@ -413,23 +477,42 @@ angular.module('ft.posts', [
                             break;
                         }
                     }
-                    if ($scope.activeImage.id === $scope.post.images[index].id) $scope.activeImage = null;
+                    if ($scope.activeImage && $scope.activeImage.id === $scope.post.images[index].id) $scope.activeImage = null;
                     $scope.post.images.splice(index, 1);
                 };
 
 
-                $scope.removeTagLine = function (tagLineId) {
-                    var result = tagService.delete(tagLineId);
+                $scope.openModalRemoveTagLine = function (tagLineId) {
 
-                    result.then(function () {
-                        for (var i = 0; i < $scope.activeImage.tagLines.length; i++) {
-                            if (tagLineId === $scope.activeImage.tagLines[i].id) {
-                                $scope.activeImage.tagLines.splice(i, 1);
-                                break;
+                    var ModelController = function ($scope, $uibModalInstance) {
+
+                        $scope.ok = function () {
+                            $uibModalInstance.close();
+                        };
+
+                        $scope.cancel = function () {
+                            $uibModalInstance.dismiss('cancel');
+                        };
+                    };
+
+                    var modal = $uibModal.open({
+                        templateUrl: '/ng/app/posts/tags/_deleteTag.tpl.html',
+                        controller: ModelController
+                    });
+
+                    modal.result.then(function () {
+                        var result = tagService.delete(tagLineId);
+
+                        result.then(function () {
+                            for (var i = 0; i < $scope.activeImage.tagLines.length; i++) {
+                                if (tagLineId === $scope.activeImage.tagLines[i].id) {
+                                    $scope.activeImage.tagLines.splice(i, 1);
+                                    break;
+                                }
                             }
-                        }
-                    }, function () {
-                        alert('Error: TagLine has not been deleted.');
+                        }, function () {
+                            alert('Error: TagLine has not been deleted.');
+                        });
                     });
                 };
 
