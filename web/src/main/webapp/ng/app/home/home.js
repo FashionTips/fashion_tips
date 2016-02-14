@@ -3,7 +3,7 @@ angular.module('ft.home', [
     ])
 
 
-    .controller('HomeController', ['$scope', 'postService', function ($scope, postService) {
+    .controller('HomeController', ['$scope', 'postService', '$http', function ($scope, postService, $http) {
 
         var qUrl = /q=([^&]+)/.exec(document.location.search);
         var q = qUrl === null ? undefined : qUrl[1].replace('%23', '#');      // get value of q url-parameter
@@ -28,5 +28,13 @@ angular.module('ft.home', [
         }, function(data) {
             console.log('Error: cannot upload list of posts.');
         });
+
+        $scope.isLoading = function () {
+            return $http.pendingRequests.length !== 0;
+        };
+
+        $scope.$watch('isLoading()', function(val) {
+            $scope.loading = val;
+        })
     }])
 ;
