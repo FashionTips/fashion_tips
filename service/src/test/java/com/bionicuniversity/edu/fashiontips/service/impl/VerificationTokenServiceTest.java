@@ -2,8 +2,11 @@ package com.bionicuniversity.edu.fashiontips.service.impl;
 
 import com.bionicuniversity.edu.fashiontips.dao.VerificationTokenDao;
 import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationTokenPK;
 import com.bionicuniversity.edu.fashiontips.service.EmailService;
+import com.bionicuniversity.edu.fashiontips.service.UserService;
 import com.bionicuniversity.edu.fashiontips.service.VerificationTokenService;
+import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -34,12 +37,16 @@ public class VerificationTokenServiceTest {
     @Mock
     private EmailService emailService;
 
+    @Mock
+    private UserService userService;
+
     @Test
     public void saveTest() {
         String email = "arusich2008@ukr.net";
         String token = "b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261";
+        VerificationTokenPK.Type type = VerificationTokenPK.Type.EMAIL_VERIFICATION;
         VerificationToken verificationToken =
-                new VerificationToken(email, token);
+                new VerificationToken(email, type, token);
 
         when(verificationTokenDao.save(verificationToken)).thenReturn(verificationToken);
 
@@ -54,20 +61,21 @@ public class VerificationTokenServiceTest {
     public void sendEmailRegistrationTokenTest() {
         String email = "arusich2008@ukr.net";
         String token = "b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261";
+        VerificationTokenPK.Type type = VerificationTokenPK.Type.EMAIL_VERIFICATION;
         String message = "Delivered link";
         LocalDateTime localDateTime = LocalDateTime.now();
         VerificationToken verificationToken =
-                new VerificationToken(email, token);
+                new VerificationToken(email, type, token);
         verificationToken.setExpairedTime(localDateTime);
 
-        doNothing().when(emailService).sentVerificationToken(email, message);
+        doNothing().when(emailService).sentVerificationToken(email, type, message);
 
         verificationTokenService.sendEmailRegistrationToken(verificationToken);
 
         verify(verificationTokenDao, times(0)).save(verificationToken);
         verify(verificationTokenDao, times(0)).update(verificationToken);
         verify(verificationTokenDao, times(0)).getToken(verificationToken);
-        verify(verificationTokenDao, times(0)).getByEmail(email);
+        verify(verificationTokenDao, times(0)).getByEmail(email, type);
         verify(verificationTokenDao, times(0)).getByToken(token);
 
     }
@@ -76,22 +84,23 @@ public class VerificationTokenServiceTest {
     public void isPresentTest() {
         String email = "arusich2008@ukr.net";
         String token = "b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261";
+        VerificationTokenPK.Type type = VerificationTokenPK.Type.EMAIL_VERIFICATION;
         VerificationToken verificationToken =
-                new VerificationToken(email, token);
+                new VerificationToken(email, type, token);
 
         when(verificationTokenDao.getByToken(token)).thenReturn(verificationToken);
-        when(verificationTokenDao.getByEmail(email)).thenReturn(verificationToken);
+        when(verificationTokenDao.getByEmail(email, type)).thenReturn(verificationToken);
         when(verificationTokenDao.getToken(verificationToken)).thenReturn(Optional.of(verificationToken));
 
         VerificationToken gottenByToken = verificationTokenService.getByToken(token).get();
-        VerificationToken gottenByEmail = verificationTokenService.getByEmail(email);
+        VerificationToken gottenByEmail = verificationTokenService.getByEmail(email, type);
         VerificationToken gottenByVerificationToken = verificationTokenService.getToken(verificationToken).get();
 
         assertEquals(verificationToken, gottenByEmail);
         assertEquals(verificationToken, gottenByToken);
         assertEquals(verificationToken, gottenByVerificationToken);
 
-        verify(verificationTokenDao, times(1)).getByEmail(email);
+        verify(verificationTokenDao, times(1)).getByEmail(email, type);
         verify(verificationTokenDao, times(1)).getByToken(token);
         verify(verificationTokenDao, times(1)).getToken(verificationToken);
     }
@@ -100,14 +109,15 @@ public class VerificationTokenServiceTest {
     public void generateTokenTest() {
         String email = "arusich2008@ukr.net";
         String token = "b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261";
+        VerificationTokenPK.Type type = VerificationTokenPK.Type.EMAIL_VERIFICATION;
         VerificationToken verificationToken =
-                new VerificationToken(email, token);
+                new VerificationToken(email, type, token);
 
-        when(verificationTokenDao.getByEmail(email)).thenReturn(verificationToken);
+        when(verificationTokenDao.getByEmail(email, type)).thenReturn(verificationToken);
         when(verificationTokenDao.save(verificationToken)).thenReturn(verificationToken);
         when(verificationTokenService.update(verificationToken)).thenReturn(verificationToken);
 
-        VerificationToken gotten = verificationTokenService.getByEmail(email);
+        VerificationToken gotten = verificationTokenService.getByEmail(email, type);
         verificationTokenService.generateToken(verificationToken);
 
         assertEquals("these object have to matchrd", verificationToken, gotten);
@@ -115,7 +125,7 @@ public class VerificationTokenServiceTest {
         assertNotNull("token has not to be null", verificationToken.getToken());
 
         verify(verificationTokenDao, atMost(1)).save(verificationToken);
-        verify(verificationTokenDao, atMost(1)).getByEmail(email);
+        verify(verificationTokenDao, atMost(1)).getByEmail(email, type);
     }
 
 
@@ -123,13 +133,14 @@ public class VerificationTokenServiceTest {
     public void registrateNewToken_WhenEmailPresent_ShouldReturnVerificationToken() {
         String email = "slav9nin2009@gmail.com";
         String token = "3b20d2eb44c5ac43ad2086a2683bb76e2666fd331bf4958c246aae6ff42a5e87";
+        VerificationTokenPK.Type type = VerificationTokenPK.Type.EMAIL_VERIFICATION;
         LocalDateTime localDateTime = LocalDateTime.now();
         VerificationToken verificationToken =
-                new VerificationToken(email, token);
+                new VerificationToken(email, type, token);
         verificationToken.setExpairedTime(localDateTime);
 
         when(verificationTokenDao.save(verificationToken)).thenReturn(verificationToken);
-        doNothing().when(emailService).sentVerificationToken(email,token);
+        doNothing().when(emailService).sentVerificationToken(email, type, token);
 
 
         VerificationToken verifiedToken = verificationTokenService.registrateNewToken(verificationToken);
@@ -148,17 +159,18 @@ public class VerificationTokenServiceTest {
 
         String email = "arusich2008@ukr.net";
         String token = "3b20d2eb44c5ac43ad2086a2683bb76e2666fd331bf4958c246aae6ff42a5e87";
+        VerificationTokenPK.Type type = VerificationTokenPK.Type.EMAIL_VERIFICATION;
         LocalDateTime localDateTime = LocalDateTime.now();
         VerificationToken verificationToken =
-                new VerificationToken(email/*, token*/);
+                new VerificationToken(email, type);
         verificationToken.setExpairedTime(localDateTime);
 
         when(verificationTokenDao.update(verificationToken)).thenReturn(verificationToken);
-        doNothing().when(emailService).sentVerificationToken(verificationToken.getEmail(), verificationToken.getToken());
+        doNothing().when(emailService).sentVerificationToken(verificationToken.getEmail(), type,  verificationToken.getToken());
 
         VerificationToken verifiedToken = verificationTokenService.resentToken(verificationToken);
 
-        doNothing().when(emailService).sentVerificationToken(verificationToken.getEmail(), verificationToken.getToken());
+        doNothing().when(emailService).sentVerificationToken(verificationToken.getEmail(), type, verificationToken.getToken());
 
         assertNotNull(verifiedToken.getToken());
         assertNotEquals(token, verificationToken.getToken());
@@ -166,5 +178,20 @@ public class VerificationTokenServiceTest {
         verify(verificationTokenDao, times(1)).update(verificationToken);
     }
 
-    //TODO Add more tests
+    @Test(expected = NotFoundException.class)
+    public void exceptionWhenCreateResetPasswordToken_ForNonexistentEmail() {
+
+        String email = "lalala@lala.com";
+        String token = "3b20d2eb44c5ac43ad2086a2683bb76e2666fd331bf4958c246aae6ff42a5e87";
+        VerificationTokenPK.Type type = VerificationTokenPK.Type.PASSWORD_RESET;
+        LocalDateTime localDateTime = LocalDateTime.now();
+        VerificationToken verificationToken =
+                new VerificationToken(email, type);
+        verificationToken.setExpairedTime(localDateTime);
+        verificationToken.setToken(token);
+
+        when(userService.findByEmail(email)).thenReturn(Optional.empty());
+        when(verificationTokenService.registrateNewToken(verificationToken));
+    }
+
 }

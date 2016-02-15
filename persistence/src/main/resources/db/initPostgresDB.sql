@@ -170,9 +170,10 @@ CREATE TABLE tags_tag_lines (
 CREATE TABLE verification_token (
   email VARCHAR NOT NULL,
   token VARCHAR NOT NULL,
+  type VARCHAR NOT NULL,
   expaired_time TIMESTAMP,
   verified BOOLEAN DEFAULT FALSE,
-  CONSTRAINT verification_token_email UNIQUE (email)
+  CONSTRAINT verification_token_pk UNIQUE (email, type)
 );
 
 CREATE TABLE outbox_emails (
