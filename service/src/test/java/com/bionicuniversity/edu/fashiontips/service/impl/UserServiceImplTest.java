@@ -6,6 +6,7 @@ import com.bionicuniversity.edu.fashiontips.dao.VerificationTokenDao;
 import com.bionicuniversity.edu.fashiontips.entity.Role;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationTokenPK;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +55,7 @@ public class UserServiceImplTest {
         Role role = new Role(1L, "USER");
         String password = "somePassword";
         User user = new User(1L, "login", "some@email", "somePassword", Collections.singletonList(role));
-        VerificationToken verificationToken = new VerificationToken("some@email", "12345");
+        VerificationToken verificationToken = new VerificationToken("some@email", VerificationTokenPK.Type.EMAIL_VERIFICATION, "12345");
 
         when(roleDao.find("ROLE_USER")).thenReturn(role);
         when(userDao.save(user)).thenReturn(user);

@@ -226,7 +226,7 @@ angular.module('ft.posts', [
                 'post': '=',
                 'loggedIn': '@'
             },
-            controller: function ($scope, sessionService, postService, $uibModal) {
+            controller: function ($scope, sessionService, postService, $uibModal, $window) {
 
                 if ($scope.id) {
                     var result = postService.get($scope.id);
@@ -244,6 +244,10 @@ angular.module('ft.posts', [
                 }, function (value) {
                     $scope.username = value;
                 });
+
+                $scope.openPost = function(id) {
+                    $window.location.href = 'post/'+id;
+                };
 
                 /**
                  * Check if user is logged in.

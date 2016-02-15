@@ -1,17 +1,13 @@
 package com.bionicuniversity.edu.fashiontips.entity;
 
-import com.bionicuniversity.edu.fashiontips.annotation.Create;
-import com.bionicuniversity.edu.fashiontips.annotation.UniqueEmail;
-import com.bionicuniversity.edu.fashiontips.entity.util.LocalDateTimeDeserializer;
-import com.bionicuniversity.edu.fashiontips.entity.util.LocalDateTimeSerializer;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -19,8 +15,7 @@ import java.time.LocalDateTime;
  * @author Alexandr Laktionov
  */
 @Entity
-@Table(name = "verification_token", uniqueConstraints =
-        {@UniqueConstraint(name = "verification_token_email", columnNames = "email")})
+@Table(name = "verification_token")
 public class VerificationToken implements Serializable {
 
     /**
@@ -28,14 +23,10 @@ public class VerificationToken implements Serializable {
      */
     public static final long EXPAIRED_PERIOD = 60L;
 
-    @Id
-    @JsonProperty(value = "email")
-    @NotBlank(message = "Email could not be empty.", groups = {Create.class})
-    @Email(message = "The given string is not email.", groups = {Create.class})
-    @UniqueEmail(groups = Create.class)
-    private String email;
+    @EmbeddedId
+    @JsonIgnore
+    private VerificationTokenPK id;
 
-    //@JsonIgnore
     @JsonProperty(value = "token")
     private String token;
 
@@ -51,24 +42,32 @@ public class VerificationToken implements Serializable {
         this.expairedTime = LocalDateTime.now().plusSeconds(EXPAIRED_PERIOD);
         this.verified = false;
     }
-
-    public VerificationToken(String email) {
+    @JsonCreator
+    public VerificationToken(@JsonProperty(value = "email") String email, @JsonProperty(value = "type") VerificationTokenPK.Type type) {
         this();
-        this.email = email;
+        this.id = new VerificationTokenPK(email, type);
     }
 
-    public VerificationToken(String email, String token) {
+    public VerificationToken(String email, VerificationTokenPK.Type type, String token) {
         this();
-        this.email = email;
+        this.id = new VerificationTokenPK(email, type);
         this.token = token;
     }
 
     public String getEmail() {
-        return email;
+        return id.getEmail();
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.id.setEmail(email);
+    }
+
+    public VerificationTokenPK.Type getType() {
+        return id.getType();
+    }
+
+    public void setType(VerificationTokenPK.Type type) {
+        this.id.setType(type);
     }
 
     public String getToken() {
@@ -99,6 +98,14 @@ public class VerificationToken implements Serializable {
         this.expairedTime = null;
     }
 
+    public VerificationTokenPK getId() {
+        return id;
+    }
+
+    public void setId(VerificationTokenPK id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -106,20 +113,21 @@ public class VerificationToken implements Serializable {
 
         VerificationToken that = (VerificationToken) o;
 
-        return email.equals(that.email);
+        return id.equals(that.id);
 
     }
 
     @Override
     public int hashCode() {
-        return email.hashCode();
+        return id.hashCode();
     }
 
     @Override
     public String toString() {
         return "VerificationToken{" +
                 "token='" + token + '\'' +
-                ", email='" + email + '\'' +
+                ", email='" + id.getEmail() + '\'' +
+                ", type='" + id.getType() + '\'' +
                 '}';
     }
 }
