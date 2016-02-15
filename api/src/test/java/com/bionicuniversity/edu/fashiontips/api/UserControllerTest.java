@@ -3,6 +3,7 @@ package com.bionicuniversity.edu.fashiontips.api;
 import com.bionicuniversity.edu.fashiontips.entity.Country;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationTokenPK;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,7 +38,6 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 /**
  * Test cases to test {@code UserController} class.
  *
@@ -86,6 +86,7 @@ public class UserControllerTest {
             Charset.forName("utf8"));
 
     private String token = "bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f9cf74086510";
+    private String resetPaswordToken = "bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f9cf74086511";
     private String badToken = "bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f90000000000";
     private String verifiedToken = "b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000002222";
     private String email = "some@email.com";
@@ -223,6 +224,7 @@ public class UserControllerTest {
 
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
+        verificationToken.setId(new VerificationTokenPK());
         verificationToken.setExpairedTime(null);
 
         mockMvc.perform(post(USERS_URL + CHECK_TOKEN_URL)
@@ -239,6 +241,7 @@ public class UserControllerTest {
 
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(badToken);
+        verificationToken.setId(new VerificationTokenPK());
         verificationToken.setExpairedTime(null);
 
         mockMvc.perform(post(USERS_URL + CHECK_TOKEN_URL)
@@ -254,7 +257,22 @@ public class UserControllerTest {
 
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(verifiedToken);
+        verificationToken.setId(new VerificationTokenPK());
         verificationToken.setExpairedTime(null);
+
+        mockMvc.perform(post(USERS_URL + CHECK_TOKEN_URL)
+                .content(json(verificationToken))
+                .contentType(contentType)
+        )
+                .andExpect(status().isForbidden());
+
+    }
+
+    @Test
+    public void exceptionWhenCheckResetPasswordTokenWithExpiredDate() throws Exception {
+
+        VerificationToken verificationToken = new VerificationToken(email,VerificationTokenPK.Type.PASSWORD_RESET);
+        verificationToken.setToken(resetPaswordToken);
 
         mockMvc.perform(post(USERS_URL + CHECK_TOKEN_URL)
                 .content(json(verificationToken))

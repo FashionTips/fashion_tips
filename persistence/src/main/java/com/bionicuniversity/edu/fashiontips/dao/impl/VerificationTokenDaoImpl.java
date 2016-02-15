@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.dao.impl;
 
 import com.bionicuniversity.edu.fashiontips.dao.VerificationTokenDao;
 import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationTokenPK;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +23,10 @@ public class VerificationTokenDaoImpl implements VerificationTokenDao {
     private EntityManager em;
 
     @Override
-    public VerificationToken getByEmail(String email) {
+    public VerificationToken getByEmail(String email, VerificationTokenPK.Type type) {
         TypedQuery<VerificationToken> query =
-                em.createQuery("SELECT t FROM VerificationToken t WHERE t.email =:email", VerificationToken.class);
-        query.setParameter("email", email);
+                em.createQuery("SELECT t FROM VerificationToken t WHERE t.id.email =:email And t.id.type =:type", VerificationToken.class);
+        query.setParameter("email", email).setParameter("type", type);
         try {
             VerificationToken verificationToken = query.getSingleResult();
             return verificationToken;
@@ -61,7 +62,7 @@ public class VerificationTokenDaoImpl implements VerificationTokenDao {
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public Optional<VerificationToken> getToken(VerificationToken verificationToken) {
-        VerificationToken token = em.find(VerificationToken.class, verificationToken.getEmail());
+        VerificationToken token = em.find(VerificationToken.class, verificationToken.getId());
         return Optional.ofNullable(token);
     }
 

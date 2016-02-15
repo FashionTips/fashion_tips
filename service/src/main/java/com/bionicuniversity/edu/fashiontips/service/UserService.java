@@ -53,4 +53,6 @@ public interface UserService {
      * @param userData user's data
      */
     void update(User user, User userData);
+
+    Optional<User> findByEmail(String email);
 }

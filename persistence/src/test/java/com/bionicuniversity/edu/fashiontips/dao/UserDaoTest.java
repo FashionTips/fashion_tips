@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.dao;
 
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationTokenPK;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -99,9 +100,9 @@ public class UserDaoTest {
     @Test(expected = EntityExistsException.class)
     public void testGeneretionTokenWhenDuplicateEmailPresent() throws EntityExistsException {
         VerificationToken verificationToken =
-                new VerificationToken("arusich2008@ukr.net",
+                new VerificationToken("arusich2008@ukr.net", VerificationTokenPK.Type.EMAIL_VERIFICATION,
                         "b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261");
-        VerificationToken verificationToken2 = new VerificationToken("arusich2008@ukr.net",
+        VerificationToken verificationToken2 = new VerificationToken("arusich2008@ukr.net",  VerificationTokenPK.Type.EMAIL_VERIFICATION,
                 "b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261");
         verificationTokenDao.save(verificationToken);
         verificationTokenDao.save(verificationToken2);
