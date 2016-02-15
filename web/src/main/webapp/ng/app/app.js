@@ -8,7 +8,8 @@ var app = angular.module('ft', [
     'ft.users',
     'ft.posts',
     'ft.posts.tags',
-    'ft.validation'
+    'ft.validation',
+    'ft.restore.password'
 ]);
 
 

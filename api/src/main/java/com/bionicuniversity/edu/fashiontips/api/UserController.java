@@ -142,7 +142,7 @@ public class UserController {
         VerificationToken verificationToken = verifiedToken.get();
         if (verificationToken.getExpairedTime() != null
                 && LocalDateTime.now().isBefore(verificationToken.getExpairedTime()))
-            throw new NotAllowedActionException("Verification email was already sent. Resending is possible after 1 minute.");
+            throw new NotAllowedActionException("Email was already sent. Resending is possible after 1 minute.");
 
         verificationTokenService.resentToken(verificationToken);
         return ResponseEntity.ok().build();

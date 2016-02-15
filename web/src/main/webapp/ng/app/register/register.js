@@ -16,7 +16,7 @@ angular.module('ft.register', [
                 $scope.credentials = {};
 
                 var getEmailByVerificationToken = function () {
-                    var result = authService.getEmailByVerificationToken($scope.token);
+                    var result = authService.getEmailByToken($scope.token);
 
                     result.then(function (data) {
                         $scope.credentials.email = data.email;
@@ -54,7 +54,7 @@ angular.module('ft.register', [
             controller:  function ($scope, authService) {
 
                 $scope.sendVerificationRequest = function () {
-                    var result = authService.sendVerificationRequest($scope.email);
+                    var result = authService.sendVerificationRequest($scope.email, "EMAIL_VERIFICATION");
 
                     result.then(function () {
                         angular.element("#successEmailVerificationModal").modal();
