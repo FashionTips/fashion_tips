@@ -3,7 +3,7 @@ angular.module('ft.home', [
     ])
 
 
-    .controller('HomeController', ['$scope', 'postService', '$window', function ($scope, postService, $window) {
+    .controller('HomeController', ['$scope', 'postService', '$http', '$window', function ($scope, postService, $http, $window) {
 
         var qUrl = /q=([^&]+)/.exec(document.location.search);
         var q = qUrl === null ? undefined : qUrl[1].replace('%23', '#');      // get value of q url-parameter
@@ -42,5 +42,13 @@ angular.module('ft.home', [
             }
             $scope.$apply();
         });
+
+        $scope.isLoading = function () {
+            return $http.pendingRequests.length !== 0;
+        };
+
+        $scope.$watch('isLoading()', function(val) {
+            $scope.loading = val;
+        })
     }])
 ;
