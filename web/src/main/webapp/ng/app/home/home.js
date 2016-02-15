@@ -3,7 +3,7 @@ angular.module('ft.home', [
     ])
 
 
-    .controller('HomeController', ['$scope', 'postService', function ($scope, postService) {
+    .controller('HomeController', ['$scope', 'postService', '$window', function ($scope, postService, $window) {
 
         var qUrl = /q=([^&]+)/.exec(document.location.search);
         var q = qUrl === null ? undefined : qUrl[1].replace('%23', '#');      // get value of q url-parameter
@@ -27,6 +27,20 @@ angular.module('ft.home', [
             $scope.posts = data;
         }, function(data) {
             console.log('Error: cannot upload list of posts.');
+        });
+
+        $scope.toTop = function(event) {
+            event.preventDefault();
+            $('html, body').animate({scrollTop: 0}, '500');
+        };
+
+        angular.element($window).on("scroll", function() {
+            if (this.pageYOffset >= 50) {
+                $scope.buttonVisibility = true;
+            } else {
+                $scope.buttonVisibility = false;
+            }
+            $scope.$apply();
         });
     }])
 ;
