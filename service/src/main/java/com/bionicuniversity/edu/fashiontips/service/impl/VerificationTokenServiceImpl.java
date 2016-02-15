@@ -53,7 +53,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
     @Override
     public void sendEmailRegistrationToken(VerificationToken verificationToken) {
-        emailService.sentEmail(verificationToken.getEmail(), verificationToken.getToken());
+        emailService.sentVerificationToken(verificationToken.getEmail(), verificationToken.getToken());
     }
 
     @Override
@@ -82,7 +82,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     public VerificationToken registrateNewToken(VerificationToken verificationToken) {
         generateToken(verificationToken);
         verificationTokenDao.save(verificationToken);
-        emailService.sentEmail(verificationToken.getEmail(), verificationToken.getToken());
+        emailService.sentVerificationToken(verificationToken.getEmail(), verificationToken.getToken());
         return verificationToken;
     }
 
@@ -91,7 +91,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     public VerificationToken resentToken(VerificationToken verificationToken) {
         generateToken(verificationToken);
         VerificationToken updated = verificationTokenDao.update(verificationToken);
-        emailService.sentEmail(updated.getEmail(), updated.getToken());
+        emailService.sentVerificationToken(updated.getEmail(), updated.getToken());
         return verificationToken;
     }
 }

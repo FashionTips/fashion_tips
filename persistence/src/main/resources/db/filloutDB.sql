@@ -1,3 +1,4 @@
+DELETE FROM outbox_emails;
 DELETE FROM verification_token;
 DELETE FROM tag_parameters;
 DELETE FROM tags_tag_lines;
@@ -26,6 +27,7 @@ ALTER SEQUENCE posts_id_seq RESTART WITH 1;
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
 ALTER SEQUENCE roles_id_seq RESTART WITH 1;
 ALTER SEQUENCE countries_id_seq RESTART WITH 1;
+ALTER SEQUENCE outbox_emails_id_seq RESTART WITH 1;
 
 INSERT INTO countries (name) VALUES
   ('Afghanistan'),
@@ -260,14 +262,14 @@ INSERT INTO images (img_name, user_id) VALUES ('4-jeans2.jpg', 2);
 INSERT INTO images (img_name, user_id) VALUES ('5-kurtka.jpg', 2);
 INSERT INTO images (img_name, user_id) VALUES ('6-sapogi.jpeg', 3);
 
-INSERT INTO post_images (post_id, img_id) VALUES (1,1);
-INSERT INTO post_images (post_id, img_id) VALUES (1,2);
-INSERT INTO post_images (post_id, img_id) VALUES (1,3);
-INSERT INTO post_images (post_id, img_id) VALUES (2,4);
-INSERT INTO post_images (post_id, img_id) VALUES (2,5);
-INSERT INTO post_images (post_id, img_id) VALUES (3,6);
-INSERT INTO post_images (post_id, img_id) VALUES (7,1);
-INSERT INTO post_images (post_id, img_id) VALUES (8,1);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (1,1,0);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (1,2,1);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (1,3,2);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (2,4,0);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (2,5,1);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (3,6,0);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (7,1,0);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (8,1,0);
 
 INSERT INTO comments (text, post_id, user_id, created, available) VALUES ('cool!', 1, 1,'2015-12-17 12:00:00', 'true');
 INSERT INTO comments (text, post_id, user_id, created, available) VALUES ('hidden', 1, 1,'2015-12-17 12:00:00', 'false');

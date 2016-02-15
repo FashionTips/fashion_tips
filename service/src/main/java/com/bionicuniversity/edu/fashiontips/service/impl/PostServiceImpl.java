@@ -1,9 +1,10 @@
 package com.bionicuniversity.edu.fashiontips.service.impl;
 
+import com.bionicuniversity.edu.fashiontips.dao.ClothesDao;
 import com.bionicuniversity.edu.fashiontips.dao.PostDao;
-import com.bionicuniversity.edu.fashiontips.entity.Image;
-import com.bionicuniversity.edu.fashiontips.entity.Post;
-import com.bionicuniversity.edu.fashiontips.entity.User;
+import com.bionicuniversity.edu.fashiontips.dao.TagDao;
+import com.bionicuniversity.edu.fashiontips.dao.TagTypeDao;
+import com.bionicuniversity.edu.fashiontips.entity.*;
 import com.bionicuniversity.edu.fashiontips.service.PostService;
 import com.bionicuniversity.edu.fashiontips.service.util.PostUtil;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
@@ -14,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +31,15 @@ public class PostServiceImpl implements PostService {
 
     @Inject
     private PostDao postDao;
+
+    @Inject
+    private TagDao tagDao;
+
+    @Inject
+    private TagTypeDao tagTypeDao;
+
+    @Inject
+    private ClothesDao clothesDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -64,6 +71,39 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public List<Post> findAllByCategory(Post.Category category, User loggedUser) {
         List<Post> posts = postDao.findByCategory(category);
+        PostUtil.normalizeForClient(posts, loggedUser);
+        PostUtil.handleDeletedMessages(posts);
+        return posts;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Post> findAllByTagAndTagTypeValue(String tag, String tagType, User loggedUser) {
+        if (!tagDao.existsValue(tag)) return Collections.emptyList();
+        TagType existingTagType = tagTypeDao.findByType(tagType);
+        if (existingTagType == null) return Collections.emptyList();
+        List<Post> posts = postDao.findByTagValueAndTagTypeId(tag, existingTagType.getId());
+        PostUtil.normalizeForClient(posts, loggedUser);
+        PostUtil.handleDeletedMessages(posts);
+        return posts;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Post> findAllByTagTypeValue(String tagType, User loggedUser) {
+        TagType existingTagType = tagTypeDao.findByType(tagType);
+        if (existingTagType == null) return Collections.emptyList();
+        List<Post> posts = postDao.findByTagTypeId(existingTagType.getId());
+        PostUtil.normalizeForClient(posts, loggedUser);
+        PostUtil.handleDeletedMessages(posts);
+        return posts;
+    }
+    @Transactional(readOnly = true)
+    @Override
+    public List<Post> findAllByClothes(String name, User loggedUser) {
+        Clothes clothes = clothesDao.findByName(name);
+        if (clothes == null) return Collections.emptyList();
+        List<Post> posts = postDao.findByClothesId(clothes.getId());
         PostUtil.normalizeForClient(posts, loggedUser);
         PostUtil.handleDeletedMessages(posts);
         return posts;
@@ -111,7 +151,8 @@ public class PostServiceImpl implements PostService {
         if (images != null) post.setImages(images);
         boolean commentsAllowed = update.isCommentsAllowed();
         post.setCommentsAllowed(commentsAllowed);
-
+        boolean notificationEnabled = update.isNotificationEnabled();
+        post.setNotificationEnabled(notificationEnabled);
         /* Update logic for status of post */
         Post.Status status = update.getStatus();
         if (status != null) {
@@ -211,5 +252,10 @@ public class PostServiceImpl implements PostService {
             }
         }
         return postDao.save(post);
+    }
+
+    @Override
+    public List<User> getLikedUsers(long id) {
+        return postDao.getLikedUsers(id);
     }
 }
