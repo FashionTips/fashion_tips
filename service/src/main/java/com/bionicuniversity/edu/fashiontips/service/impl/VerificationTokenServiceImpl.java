@@ -2,7 +2,9 @@ package com.bionicuniversity.edu.fashiontips.service.impl;
 
 import com.bionicuniversity.edu.fashiontips.dao.VerificationTokenDao;
 import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationTokenPK;
 import com.bionicuniversity.edu.fashiontips.service.EmailService;
+import com.bionicuniversity.edu.fashiontips.service.UserService;
 import com.bionicuniversity.edu.fashiontips.service.VerificationTokenService;
 import com.bionicuniversity.edu.fashiontips.service.util.VerificationTokenUtil;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotFoundException;
@@ -25,10 +27,13 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Inject
     private EmailService emailService;
 
+    @Inject
+    private UserService userService;
+
     @Override
     @Transactional(readOnly = true)
-    public VerificationToken getByEmail(String email) {
-        VerificationToken verificationToken = verificationTokenDao.getByEmail(email);
+    public VerificationToken getByEmail(String email, VerificationTokenPK.Type type) {
+        VerificationToken verificationToken = verificationTokenDao.getByEmail(email, type);
         if (verificationToken == null) throw new NotFoundException();
         return verificationToken;
     }
@@ -53,7 +58,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
     @Override
     public void sendEmailRegistrationToken(VerificationToken verificationToken) {
-        emailService.sentEmail(verificationToken.getEmail(), verificationToken.getToken());
+        emailService.sentVerificationToken(verificationToken.getEmail(), verificationToken.getType(), verificationToken.getToken());
     }
 
     @Override
@@ -71,8 +76,8 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
     @Override
     public void generateToken(VerificationToken verificationToken) {
-        verificationToken.setExpairedTime(LocalDateTime.now().plusSeconds(VerificationToken.EXPAIRED_PERIOD));
-        String unhashedToken = verificationToken.getEmail() + LocalDateTime.now();
+        verificationToken.setExpiredTime(LocalDateTime.now().plusSeconds(VerificationToken.EXPIRED_PERIOD));
+        String unhashedToken = verificationToken.getEmail() + verificationToken.getType() + LocalDateTime.now();
         String token = VerificationTokenUtil.getHash(unhashedToken, VerificationTokenUtil.SHA_256);
         verificationToken.setToken(token);
     }
@@ -80,9 +85,14 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Override
     @Transactional(timeout = 60)
     public VerificationToken registrateNewToken(VerificationToken verificationToken) {
+        if (verificationToken.getType() == VerificationTokenPK.Type.PASSWORD_RESET &&
+                !userService.findByEmail(verificationToken.getEmail()).isPresent()) {
+            throw new NotFoundException(String.format("The user with email %s was not found.", verificationToken.getEmail()));
+        }
+
         generateToken(verificationToken);
         verificationTokenDao.save(verificationToken);
-        emailService.sentEmail(verificationToken.getEmail(), verificationToken.getToken());
+        emailService.sentVerificationToken(verificationToken.getEmail(), verificationToken.getType(), verificationToken.getToken());
         return verificationToken;
     }
 
@@ -90,8 +100,11 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Transactional(timeout = 60)
     public VerificationToken resentToken(VerificationToken verificationToken) {
         generateToken(verificationToken);
+        if (verificationToken.getType() == VerificationTokenPK.Type.PASSWORD_RESET && verificationToken.isVerified()) {
+            verificationToken.setVerified(false);
+        }
         VerificationToken updated = verificationTokenDao.update(verificationToken);
-        emailService.sentEmail(updated.getEmail(), updated.getToken());
+        emailService.sentVerificationToken(updated.getEmail(), verificationToken.getType(), updated.getToken());
         return verificationToken;
     }
 }

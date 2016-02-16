@@ -1,3 +1,4 @@
+DELETE FROM OUTBOX_EMAILS;
 DELETE FROM VERIFICATION_TOKEN;
 DELETE FROM TAG_PARAMETERS;
 DELETE FROM TAGS_TAG_LINES;
@@ -15,6 +16,7 @@ DELETE FROM users;
 DELETE FROM roles;
 DELETE FROM countries;
 
+ALTER TABLE OUTBOX_EMAILS ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE TAG_PARAMETERS ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE TAGS ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE TAG_TYPES ALTER COLUMN id RESTART WITH 1;
@@ -260,14 +262,14 @@ INSERT INTO images (img_name, user_id) VALUES ('4-jeans2.jpg', 2);
 INSERT INTO images (img_name, user_id) VALUES ('5-kurtka.jpg', 2);
 INSERT INTO images (img_name, user_id) VALUES ('6-sapogi.jpeg', 3);
 
-INSERT INTO post_images (post_id, img_id) VALUES (1,1);
-INSERT INTO post_images (post_id, img_id) VALUES (1,2);
-INSERT INTO post_images (post_id, img_id) VALUES (1,3);
-INSERT INTO post_images (post_id, img_id) VALUES (2,4);
-INSERT INTO post_images (post_id, img_id) VALUES (2,5);
-INSERT INTO post_images (post_id, img_id) VALUES (3,6);
-INSERT INTO post_images (post_id, img_id) VALUES (7,1);
-INSERT INTO post_images (post_id, img_id) VALUES (8,1);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (1,1,0);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (1,2,1);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (1,3,2);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (2,4,0);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (2,5,1);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (3,6,0);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (7,1,0);
+INSERT INTO post_images (post_id, img_id, img_order) VALUES (8,1,0);
 
 INSERT INTO comments (text, post_id, user_id, created, available) VALUES ('cool!', 1, 1,'2015-12-17 12:00:00', 'true');
 INSERT INTO comments (text, post_id, user_id, created, available) VALUES ('hidden', 1, 1,'2015-12-17 12:00:00', 'false');
@@ -340,11 +342,13 @@ INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://untitledandco.c
 INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://www.karmaloop.com/product/The-Hey-Ma-Tee-in-White/549232', 'url', 1);
 INSERT INTO TAG_PARAMETERS (VALUE, NAME, TAG_ID) VALUES ('http://finchwear.com.ua/', 'site', 1);
 
-INSERT INTO verification_token (email, token)
-  VALUES ('arusich2008@ukr.net', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261');
-INSERT INTO verification_token (email, token, verified)
-  VALUES ('email1@example.com', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000002222', TRUE);
-INSERT INTO verification_token (email, token)
-  VALUES ('email4@example.com', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000004444');
-INSERT INTO verification_token (email, token)
-    VALUES ('some@email.com', 'bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f9cf74086510');
+INSERT INTO verification_token (email, token, type)
+  VALUES ('arusich2008@ukr.net', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b1d89840fc573f28551f86261', 'EMAIL_VERIFICATION');
+INSERT INTO verification_token (email, token, type, verified)
+  VALUES ('email1@example.com', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000002222', 'EMAIL_VERIFICATION', TRUE);
+INSERT INTO verification_token (email, token, type)
+  VALUES ('email4@example.com', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000004444', 'EMAIL_VERIFICATION');
+INSERT INTO verification_token (email, token, type)
+  VALUES ('some@email.com', 'bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f9cf74086510', 'EMAIL_VERIFICATION');
+INSERT INTO verification_token (email, token, type, expired_time)
+  VALUES ('some@email.com', 'bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f9cf74086511', 'PASSWORD_RESET', '2016-02-11 12:00:00');

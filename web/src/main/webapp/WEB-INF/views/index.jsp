@@ -42,6 +42,7 @@
     <script src="/ng/app/register/register.js"></script>
     <script src="/ng/app/users/users.js"></script>
     <script src="/ng/app/app.js"></script>
+    <script src="/ng/app/restore_password/restorePassword.js"></script>
 </head>
 <body data-ng-app="ft" >
 

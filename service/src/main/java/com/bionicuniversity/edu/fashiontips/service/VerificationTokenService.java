@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.service;
 
 import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationTokenPK;
 
 import java.util.Optional;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
  */
 public interface VerificationTokenService {
 
-    VerificationToken getByEmail(String email);
+    VerificationToken getByEmail(String email, VerificationTokenPK.Type type);
 
     Optional<VerificationToken> getByToken(String token);
 
@@ -28,5 +29,4 @@ public interface VerificationTokenService {
     VerificationToken registrateNewToken(VerificationToken verificationToken);
 
     VerificationToken resentToken(VerificationToken verificationToken);
-
 }

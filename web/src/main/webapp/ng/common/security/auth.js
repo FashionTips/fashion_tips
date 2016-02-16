@@ -76,11 +76,11 @@ angular.module('ft.security.auth', [
                 });
         };
 
-        service.sendVerificationRequest = function (email) {
+        service.sendVerificationRequest = function (email, tokenType) {
 
             var result = $q.defer();
 
-            $http.post(urlApi + "/users/tokens/create", {email: email})
+            $http.post(urlApi + "/users/tokens/create", {email: email, type: tokenType})
                 .then(function () {
                     result.resolve();
                 }, function (response) {
@@ -90,7 +90,7 @@ angular.module('ft.security.auth', [
             return result.promise;
         };
 
-        service.getEmailByVerificationToken = function (token) {
+        service.getEmailByToken = function (token) {
             var result = $q.defer();
 
             $http.post(urlApi + "/users/tokens/check", {token: token})

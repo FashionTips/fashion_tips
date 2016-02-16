@@ -6,6 +6,7 @@ import com.bionicuniversity.edu.fashiontips.annotation.Update;
 import com.bionicuniversity.edu.fashiontips.api.util.ImageUtil;
 import com.bionicuniversity.edu.fashiontips.entity.User;
 import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationTokenPK;
 import com.bionicuniversity.edu.fashiontips.service.UserService;
 import com.bionicuniversity.edu.fashiontips.service.VerificationTokenService;
 import com.bionicuniversity.edu.fashiontips.service.util.exception.NotAllowedActionException;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.inject.Inject;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 /**
@@ -49,7 +51,7 @@ public class UserController {
     public ResponseEntity getUser(@PathVariable long id) {
         User user = userService.findOne(id)
                 .orElseThrow(() -> new NotFoundException(String.format("The user with id %d was not found.", id)));
-        if(user.getAvatar() != null) {
+        if (user.getAvatar() != null) {
             ImageUtil.createUrlName(user.getAvatar());
         }
         return ResponseEntity.ok(user);
@@ -64,8 +66,9 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, value = "/by")
     public ResponseEntity getUserByLogin(@RequestParam String login) {
         User user = userService.findOne(login)
-                .orElseThrow(() -> new NotFoundException(String.format("The user with login %s was not found.", login)));;
-        if(user.getAvatar() != null) {
+                .orElseThrow(() -> new NotFoundException(String.format("The user with login %s was not found.", login)));
+        ;
+        if (user.getAvatar() != null) {
             ImageUtil.createUrlName(user.getAvatar());
         }
         return ResponseEntity.ok(user);
@@ -98,7 +101,7 @@ public class UserController {
      * Updates user with given data.
      *
      * @param userData user data
-     * @param id user's id
+     * @param id       user's id
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public void updateUser(@Validated(Update.class) @RequestBody User userData, @PathVariable long id) {
@@ -137,8 +140,8 @@ public class UserController {
             return ResponseEntity.ok().build();
         }
         VerificationToken verificationToken = verifiedToken.get();
-        if (verificationToken.getExpairedTime() != null
-                && LocalDateTime.now().isBefore(verificationToken.getExpairedTime()))
+        if (verificationToken.getExpiredTime() != null
+                && LocalDateTime.now().isBefore(verificationToken.getExpiredTime()))
             throw new NotAllowedActionException("Verification email was already sent. Resending is possible after 1 minute.");
 
         verificationTokenService.resentToken(verificationToken);
@@ -152,10 +155,38 @@ public class UserController {
 
         VerificationToken verificationToken =
                 verificationTokenService.getByToken(token.getToken()).
-                        orElseThrow(() -> new NotFoundException("Your verification code is invalid. Try validate your email one more time."));
+                        orElseThrow(() -> new NotFoundException("Your verification code is invalid."));
 
-        if (verificationToken.isVerified()) throw new IllegalArgumentException("Account with this e-mail is already registered.");
+        if (verificationToken.isVerified())
+            throw new IllegalArgumentException("Your verification code is already used.");
+        if (verificationToken.getType() == VerificationTokenPK.Type.PASSWORD_RESET
+                && ChronoUnit.HOURS.between(verificationToken.getExpiredTime(), LocalDateTime.now()) > 24L) {
+            throw new IllegalArgumentException("Your verification code is expired");
+        }
+
         return new ResponseEntity(verificationToken, HttpStatus.OK);
+    }
+
+    /**
+     * Reset password
+     *
+     * @param userData user data with new password
+     * @param token    verification token which was send to user email
+     */
+    @RequestMapping(value = "/reset/password", method = RequestMethod.PUT)
+    public ResponseEntity resetPassword(@RequestBody User userData, @RequestParam String token) {
+        VerificationToken verificationToken = verificationTokenService.getByToken(token)
+                .orElseThrow(() -> new NotFoundException("This token does not exist"));
+
+        if (verificationToken.getType() != VerificationTokenPK.Type.PASSWORD_RESET || verificationToken.isVerified()) {
+            throw new IllegalArgumentException("Your verification code is invalid.");
+        }
+
+        User user = userService.findByEmail(verificationToken.getEmail()).get();
+        userService.update(user, userData);
+        verificationToken.setVerified(true);
+        verificationTokenService.update(verificationToken);
+        return ResponseEntity.ok().build();
     }
 
 }

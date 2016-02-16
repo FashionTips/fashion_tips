@@ -25,8 +25,9 @@
                           'has-success': commentForm.commentText.$valid && commentForm.commentText.$dirty}">
                         <label for="inputCommentText">Have thoughts? Type them here:</label>
                         <textarea id="inputCommentText" name="commentText" class="form-control" rows="3"
-                                  data-ng-model="commentText" required maxlength="255">
+                                  data-ng-model="commentText" required maxlength="255" ng-trim="false">
                         </textarea>
+                        <span data-ng-show="(255 - commentText.length) < 100" class="help-block">{{ 255 - commentText.length }} symbols left</span>
                         <div data-ng-messages="commentForm.commentText.$error" role="alert"
                              data-ng-show="commentForm.commentText.$dirty">
                             <div data-ng-messages-include="/messages.html">

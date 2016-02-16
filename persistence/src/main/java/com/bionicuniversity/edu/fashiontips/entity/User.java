@@ -30,6 +30,22 @@ import java.util.List;
  */
 @Entity
 @Table(name = "users")
+@SqlResultSetMapping(name = "post.user.followers", classes = {
+        @ConstructorResult(targetClass = User.class, columns = {@ColumnResult(name = "id", type = Long.class),
+                @ColumnResult(name = "login", type = String.class),
+                @ColumnResult(name = "img_id", type = Long.class),
+                @ColumnResult(name = "img_name", type = String.class)})
+})
+@NamedQueries({
+        @NamedQuery(
+                name = "User.getByLogin",
+                query = "SELECT u from User u WHERE u.login=:login"
+        ),
+        @NamedQuery(
+                name = "User.findByEmail",
+                query = "SELECT u from User u WHERE u.email=:email"
+        )
+})
 public class User extends BaseEntity<Long> {
 
     @NotBlank(message = "Login could not be empty.", groups = {Create.class, Update.class})
@@ -101,6 +117,17 @@ public class User extends BaseEntity<Long> {
      * Default Constructor
      */
     public User() {
+    }
+
+    public User(Long id, String login) {
+        this.id = id;
+        this.login = login;
+    }
+
+    public User(Long id, String login, Long imgId, String imgName) {
+        this.id = id;
+        this.login = login;
+        this.avatar = new Image(imgId,imgName);
     }
 
     /**

@@ -16,7 +16,6 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +30,68 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "posts")
+@NamedQueries({
+        @NamedQuery(
+                name="Post.findByUser",
+                query = "SELECT p FROM Post p WHERE p.user = :user AND p.status = :published ORDER BY p.publicationTime DESC"
+        ),
+        @NamedQuery(
+                name = "Post.findForAuthor",
+                query = "SELECT p FROM Post p WHERE p.user = :author ORDER BY p.created DESC"
+        ),
+        @NamedQuery(
+                name = "Post.findByWord",
+                query = "SELECT p FROM Post p WHERE p.textMessage LIKE :pattern AND p.status = :published ORDER BY p.publicationTime DESC"
+        ),
+        @NamedQuery(
+                name = "Post.findByCategory",
+                query = "SELECT p FROM Post p WHERE p.category = :category AND p.status = :published ORDER BY p.publicationTime DESC"
+        ),
+        @NamedQuery(
+                name = "Post.findAll",
+                query = "SELECT p FROM Post p WHERE p.status = :published ORDER BY p.publicationTime DESC"
+        ),
+        @NamedQuery(
+                name = "Post.findUnpublished",
+                query = "SELECT p FROM Post p WHERE p.status =:wait AND p.publicationTime < :now ORDER BY p.publicationTime ASC"
+        ),
+        @NamedQuery(
+                name = "Post.findByTagValueAndTagTypeId",
+                query = "SELECT DISTINCT p FROM Post p JOIN p.images imgs JOIN imgs.tagLines tagLines JOIN tagLines.tags tags " +
+                        "WHERE tags.value = :tagValue AND tags.tagType.id = :tagTypeId AND p.status  = :published ORDER BY p.publicationTime DESC"
+        ),
+        @NamedQuery(
+                name = "Post.findByTagTypeId",
+                query = "SELECT DISTINCT p " +
+                        "FROM Post p " +
+                        "JOIN p.images imgs " +
+                        "JOIN imgs.tagLines tagLines " +
+                        "JOIN tagLines.tags tags " +
+                        "JOIN tags.tagType tagType " +
+                        "WHERE tagType.id = :tagType_id " +
+                        "AND p.status = :published " +
+                        "ORDER BY p.publicationTime DESC"
+        ),
+        @NamedQuery(
+                name = "Post.findByClothesId",
+                query = "SELECT DISTINCT p " +
+                        "FROM Post p " +
+                        "JOIN p.images imgs " +
+                        "JOIN imgs.tagLines tagLines " +
+                        "WHERE tagLines.clothes.id = :clothesId " +
+                        "AND p.status = :published " +
+                        "ORDER BY p.publicationTime DESC"
+        )
+})
+@NamedNativeQuery(
+        name = "Post.getLikedUsers",
+        query = "SELECT DISTINCT u.id, u.login, img.id AS img_id, img.img_name FROM users u " +
+                "   INNER JOIN POST_USER_LIKES pul ON u.id = pul.user_id " +
+                "   LEFT JOIN USER_IMAGES ui ON ui.user_id = u.id " +
+                "   LEFT JOIN IMAGES img ON img.id = ui.img_id " +
+                "   WHERE pul.POST_ID = :id",
+        resultSetMapping = "post.user.followers"
+)
 public class Post extends BaseEntity<Long> {
 
     /**
@@ -87,6 +148,7 @@ public class Post extends BaseEntity<Long> {
     * Relationships store in separate table
     * */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderColumn(name = "img_order", nullable = false)
     @JoinTable(
             name = "post_images",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -102,6 +164,11 @@ public class Post extends BaseEntity<Long> {
     @Column(name = "is_comments_allowed", nullable = false)
     private boolean commentsAllowed = true;
 
+    /*
+     * Enable notification about new comment
+     * */
+    @Column(name = "notification_enabled", nullable = false)
+    private boolean notificationEnabled = false;
     /*
     * Set of users that liked post
     * */
@@ -283,6 +350,14 @@ public class Post extends BaseEntity<Long> {
 
     public void setPublicationTime(LocalDateTime publicationTime) {
         this.publicationTime = publicationTime;
+    }
+
+    public boolean isNotificationEnabled() {
+        return notificationEnabled;
+    }
+
+    public void setNotificationEnabled(boolean notificationEnabled) {
+        this.notificationEnabled = notificationEnabled;
     }
 
     @Override

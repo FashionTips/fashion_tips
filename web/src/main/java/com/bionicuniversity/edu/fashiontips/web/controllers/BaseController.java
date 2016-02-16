@@ -40,9 +40,20 @@ public class BaseController {
         return isLoggedIn() ? "redirect:/" : "register";
     }
 
+    @RequestMapping(value = "/restorePassword", method = RequestMethod.GET)
+    public String restorePassword(@RequestParam(value = "token", required = true) String token, Model model) {
+        model.addAttribute("token", token);
+        return isLoggedIn() ? "redirect:/" : "restorePassword";
+    }
+
     @RequestMapping(value = "/emailVerification", method = RequestMethod.GET)
     public String emailVerificationRequest() {
         return isLoggedIn() ? "redirect:/" : "emailVerification";
+    }
+
+    @RequestMapping(value = "/restorePasswordRequest", method = RequestMethod.GET)
+    public String restorePasswordRequest() {
+        return isLoggedIn() ? "redirect:/" : "restorePasswordRequest";
     }
 
     @RequestMapping(value = "/user/{data}", method = RequestMethod.GET)

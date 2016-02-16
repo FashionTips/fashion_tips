@@ -7,6 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "tags")
+@NamedQuery(name = "Tag.existsValue", query = "SELECT COUNT(t.value) FROM Tag t WHERE t.value = :tagValue")
 public class Tag extends BaseEntity<Long> {
 
     @NotNull(message = "Tag should contain 'TagType'")
@@ -50,8 +51,9 @@ public class Tag extends BaseEntity<Long> {
         this.tagParameters = tagParameters;
         this.value = value;
     }
-    public Tag(){
 
+    public Tag(){
+        // for JPA
     }
 
     @Override

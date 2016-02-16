@@ -1,6 +1,7 @@
 package com.bionicuniversity.edu.fashiontips.dao;
 
 import com.bionicuniversity.edu.fashiontips.entity.VerificationToken;
+import com.bionicuniversity.edu.fashiontips.entity.VerificationTokenPK;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -43,14 +44,16 @@ public class VerificationTokenTest {
     @Test
     public void getByEmailIfPresentTest() {
         String email = "arusich2008@ukr.net";
-        VerificationToken verificationToken = verificationTokenDao.getByEmail(email);
+        VerificationTokenPK.Type type = VerificationTokenPK.Type.EMAIL_VERIFICATION;
+        VerificationToken verificationToken = verificationTokenDao.getByEmail(email, type);
         assertReflectionEquals(ArusichVerificationTokenAndNotVerified, verificationToken);
     }
 
     @Test
     public void getByEmailIfNotPresentTest() {
         String email = "arusich777@ukr.net";
-        VerificationToken verificationToken = verificationTokenDao.getByEmail(email);
+        VerificationTokenPK.Type type = VerificationTokenPK.Type.EMAIL_VERIFICATION;
+        VerificationToken verificationToken = verificationTokenDao.getByEmail(email, type);
         assertNull(verificationToken);
     }
 
@@ -66,17 +69,17 @@ public class VerificationTokenTest {
 
     @Test
     public void saveTest() {
-        VerificationToken verificationToken = new VerificationToken("slav9nin2009@gmail.com");
+        VerificationToken verificationToken = new VerificationToken("slav9nin2009@gmail.com", EMAIL_VERIFICATION);
         verificationTokenDao.save(verificationToken);
         assertNotNull(verificationToken);
         assertEquals(NewVerificationToken.getEmail(), verificationToken.getEmail());
         assertFalse(verificationToken.isVerified());
-        assertNotNull(verificationToken.getExpairedTime());
-        assertTrue(verificationToken.getExpairedTime().isAfter(LocalDateTime.now()));
+        assertNotNull(verificationToken.getExpiredTime());
+        assertTrue(verificationToken.getExpiredTime().isAfter(LocalDateTime.now()));
         VerificationToken newToken =
-                new VerificationToken("email4@example.com",
+                new VerificationToken("email4@example.com", EMAIL_VERIFICATION,
                         "b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000004444");
-        newToken.setExpairedTime(LOCAL_DATE_TIME_NOW);
+        newToken.setExpiredTime(LOCAL_DATE_TIME_NOW);
         verificationTokenDao.save(newToken);
         assertReflectionEquals(NotPresentedInUserToken, newToken);
 
@@ -104,11 +107,11 @@ public class VerificationTokenTest {
         verificationTokenDao.update(token);
         VerificationToken updatedToken = verificationTokenDao.getToken(token).get();
         assertReflectionEquals(ArusichVerificationTokenAndVerified, updatedToken);
-        updatedToken.setExpairedTime(LocalDateTime.now());
+        updatedToken.setExpiredTime(LocalDateTime.now());
         updatedToken.setVerified(false);
         verificationTokenDao.update(updatedToken);
         VerificationToken secondUpdatedToken = verificationTokenDao.getToken(updatedToken).get();
-        assertNotNull(secondUpdatedToken.getExpairedTime());
+        assertNotNull(secondUpdatedToken.getExpiredTime());
         assertFalse(secondUpdatedToken.isVerified());
     }
 
