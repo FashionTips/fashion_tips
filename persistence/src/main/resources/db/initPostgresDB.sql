@@ -125,8 +125,6 @@ CREATE TABLE clothes (
   CONSTRAINT "clothes_id" PRIMARY KEY (id)
 );
 
-CREATE UNIQUE INDEX clothes_name ON clothes (name);
-
 CREATE TABLE tag_lines (
   id BIGSERIAL,
   image_id BIGINT NOT NULL,
