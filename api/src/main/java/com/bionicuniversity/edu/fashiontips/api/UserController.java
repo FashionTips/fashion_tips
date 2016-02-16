@@ -140,9 +140,9 @@ public class UserController {
             return ResponseEntity.ok().build();
         }
         VerificationToken verificationToken = verifiedToken.get();
-        if (verificationToken.getExpairedTime() != null
-                && LocalDateTime.now().isBefore(verificationToken.getExpairedTime()))
-            throw new NotAllowedActionException("Email was already sent. Resending is possible after 1 minute.");
+        if (verificationToken.getExpiredTime() != null
+                && LocalDateTime.now().isBefore(verificationToken.getExpiredTime()))
+            throw new NotAllowedActionException("Verification email was already sent. Resending is possible after 1 minute.");
 
         verificationTokenService.resentToken(verificationToken);
         return ResponseEntity.ok().build();
@@ -160,7 +160,7 @@ public class UserController {
         if (verificationToken.isVerified())
             throw new IllegalArgumentException("Your verification code is already used.");
         if (verificationToken.getType() == VerificationTokenPK.Type.PASSWORD_RESET
-                && ChronoUnit.HOURS.between(verificationToken.getExpairedTime(), LocalDateTime.now()) > 24L) {
+                && ChronoUnit.HOURS.between(verificationToken.getExpiredTime(), LocalDateTime.now()) > 24L) {
             throw new IllegalArgumentException("Your verification code is expired");
         }
 

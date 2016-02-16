@@ -225,7 +225,7 @@ public class UserControllerTest {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
         verificationToken.setId(new VerificationTokenPK());
-        verificationToken.setExpairedTime(null);
+        verificationToken.setExpiredTime(null);
 
         mockMvc.perform(post(USERS_URL + CHECK_TOKEN_URL)
                 .content(json(verificationToken))
@@ -242,7 +242,7 @@ public class UserControllerTest {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(badToken);
         verificationToken.setId(new VerificationTokenPK());
-        verificationToken.setExpairedTime(null);
+        verificationToken.setExpiredTime(null);
 
         mockMvc.perform(post(USERS_URL + CHECK_TOKEN_URL)
                 .content(json(verificationToken))
@@ -258,7 +258,7 @@ public class UserControllerTest {
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(verifiedToken);
         verificationToken.setId(new VerificationTokenPK());
-        verificationToken.setExpairedTime(null);
+        verificationToken.setExpiredTime(null);
 
         mockMvc.perform(post(USERS_URL + CHECK_TOKEN_URL)
                 .content(json(verificationToken))

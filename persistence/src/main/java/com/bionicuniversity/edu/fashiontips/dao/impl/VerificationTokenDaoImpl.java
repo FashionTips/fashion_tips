@@ -25,11 +25,10 @@ public class VerificationTokenDaoImpl implements VerificationTokenDao {
     @Override
     public VerificationToken getByEmail(String email, VerificationTokenPK.Type type) {
         TypedQuery<VerificationToken> query =
-                em.createQuery("SELECT t FROM VerificationToken t WHERE t.id.email =:email And t.id.type =:type", VerificationToken.class);
+                em.createNamedQuery("VerificationToken.getByEmail", VerificationToken.class);
         query.setParameter("email", email).setParameter("type", type);
         try {
-            VerificationToken verificationToken = query.getSingleResult();
-            return verificationToken;
+            return query.getSingleResult();
         } catch (NoResultException ex) {
             return null;
         }
@@ -38,11 +37,10 @@ public class VerificationTokenDaoImpl implements VerificationTokenDao {
     @Override
     public VerificationToken getByToken(String token) {
         TypedQuery<VerificationToken> query =
-                em.createQuery("SELECT t FROM VerificationToken t WHERE t.token = :token", VerificationToken.class);
+                em.createNamedQuery("VerificationToken.getByToken", VerificationToken.class);
         query.setParameter("token", token);
         try {
-            VerificationToken verificationToken = query.getSingleResult();
-            return verificationToken;
+            return query.getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
@@ -51,7 +49,6 @@ public class VerificationTokenDaoImpl implements VerificationTokenDao {
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public VerificationToken save(VerificationToken verificationToken) {
-//        Objects.requireNonNull(verificationToken);
         if (verificationToken == null && verificationToken.getEmail() == null) {
             throw new IllegalArgumentException("Email could not be empty");
         }

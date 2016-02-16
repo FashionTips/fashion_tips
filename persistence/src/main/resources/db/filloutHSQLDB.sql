@@ -350,5 +350,5 @@ INSERT INTO verification_token (email, token, type)
   VALUES ('email4@example.com', 'b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000004444', 'EMAIL_VERIFICATION');
 INSERT INTO verification_token (email, token, type)
   VALUES ('some@email.com', 'bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f9cf74086510', 'EMAIL_VERIFICATION');
-INSERT INTO verification_token (email, token, type, expaired_time)
+INSERT INTO verification_token (email, token, type, expired_time)
   VALUES ('some@email.com', 'bddb893798745da191393b0bfcfe454967857d84c2ad0d420dc4f9cf74086511', 'PASSWORD_RESET', '2016-02-11 12:00:00');

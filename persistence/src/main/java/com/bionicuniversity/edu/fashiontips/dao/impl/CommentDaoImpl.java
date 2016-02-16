@@ -20,9 +20,7 @@ public class CommentDaoImpl extends GenericDaoImpl<Comment, Long> implements Com
 
     @Override
     public List<Comment> findAllByPost(Post post) {
-        TypedQuery<Comment> query = em.createQuery(
-                "SELECT DISTINCT c FROM Comment c WHERE c.post.id = :id ORDER BY c.created DESC", Comment.class
-        );
+        TypedQuery<Comment> query = em.createNamedQuery("Comment.findAllByPost", Comment.class);
         query.setParameter("id", post.getId());
         return query.getResultList();
     }

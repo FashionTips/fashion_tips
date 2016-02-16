@@ -15,7 +15,7 @@ public class UserDaoImpl extends GenericDaoImpl<User, Long> implements UserDao{
 
     @Override
     public User getByLogin(String login) {
-        TypedQuery<User> query = em.createQuery("SELECT u from User u WHERE u.login=:login", User.class);
+        TypedQuery<User> query = em.createNamedQuery("User.getByLogin", User.class);
         try {
             return query.setParameter("login", login).getSingleResult();
         } catch (NoResultException ex) {
@@ -25,7 +25,7 @@ public class UserDaoImpl extends GenericDaoImpl<User, Long> implements UserDao{
 
     @Override
     public User findByEmail(String email) {
-        TypedQuery<User> query = em.createQuery("SELECT u from User u WHERE u.email=:email", User.class);
+        TypedQuery<User> query = em.createNamedQuery("User.findByEmail", User.class);
         try {
             return query.setParameter("email", email).getSingleResult();
         } catch (NoResultException ex) {

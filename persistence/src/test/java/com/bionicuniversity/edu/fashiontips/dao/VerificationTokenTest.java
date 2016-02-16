@@ -74,12 +74,12 @@ public class VerificationTokenTest {
         assertNotNull(verificationToken);
         assertEquals(NewVerificationToken.getEmail(), verificationToken.getEmail());
         assertFalse(verificationToken.isVerified());
-        assertNotNull(verificationToken.getExpairedTime());
-        assertTrue(verificationToken.getExpairedTime().isAfter(LocalDateTime.now()));
+        assertNotNull(verificationToken.getExpiredTime());
+        assertTrue(verificationToken.getExpiredTime().isAfter(LocalDateTime.now()));
         VerificationToken newToken =
                 new VerificationToken("email4@example.com", EMAIL_VERIFICATION,
                         "b36e992c2cc62c9f5f589e006862b2e5d7fa485b111111111111000000004444");
-        newToken.setExpairedTime(LOCAL_DATE_TIME_NOW);
+        newToken.setExpiredTime(LOCAL_DATE_TIME_NOW);
         verificationTokenDao.save(newToken);
         assertReflectionEquals(NotPresentedInUserToken, newToken);
 
@@ -107,11 +107,11 @@ public class VerificationTokenTest {
         verificationTokenDao.update(token);
         VerificationToken updatedToken = verificationTokenDao.getToken(token).get();
         assertReflectionEquals(ArusichVerificationTokenAndVerified, updatedToken);
-        updatedToken.setExpairedTime(LocalDateTime.now());
+        updatedToken.setExpiredTime(LocalDateTime.now());
         updatedToken.setVerified(false);
         verificationTokenDao.update(updatedToken);
         VerificationToken secondUpdatedToken = verificationTokenDao.getToken(updatedToken).get();
-        assertNotNull(secondUpdatedToken.getExpairedTime());
+        assertNotNull(secondUpdatedToken.getExpiredTime());
         assertFalse(secondUpdatedToken.isVerified());
     }
 

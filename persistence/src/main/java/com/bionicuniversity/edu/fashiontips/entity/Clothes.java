@@ -1,6 +1,8 @@
 package com.bionicuniversity.edu.fashiontips.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * Entity class, which represents tag line's clothes.
@@ -9,6 +11,10 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "clothes")
+@NamedQuery(
+        name = "Clothes.findByName",
+        query = "SELECT c FROM Clothes c WHERE c.name = :name"
+)
 public class Clothes extends BaseEntity<Long> {
 
     private String name;

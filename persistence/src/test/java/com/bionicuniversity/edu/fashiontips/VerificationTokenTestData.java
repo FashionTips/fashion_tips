@@ -69,21 +69,21 @@ public class VerificationTokenTestData {
     public static final LocalDateTime LOCAL_DATE_TIME_NOW = LocalDateTime.now();
 
     static {
-        ArusichVerificationTokenAndNotVerified.setExpairedTime(null);
+        ArusichVerificationTokenAndNotVerified.setExpiredTime(null);
         ArusichVerificationTokenAndVerified.setVerified(true);
-        ArusichVerificationTokenAndVerified.setExpairedTime(null);
+        ArusichVerificationTokenAndVerified.setExpiredTime(null);
         NonArusichVerificationTokenWithCompletedTokenAndVerifies.setVerified(true);
-        ArusichVerificationTokenAndNotVerifiedAndNotExpiredTime.setExpairedTime(LocalDateTime.now().plusYears(3000L));
-        ArusichVerificationTokenAndVerifiedAndNotExpiredTime.setExpairedTime(LocalDateTime.now().plusYears(3000L));
+        ArusichVerificationTokenAndNotVerifiedAndNotExpiredTime.setExpiredTime(LocalDateTime.now().plusYears(3000L));
+        ArusichVerificationTokenAndVerifiedAndNotExpiredTime.setExpiredTime(LocalDateTime.now().plusYears(3000L));
 
-        NotPresentedInUserToken.setExpairedTime(LOCAL_DATE_TIME_NOW);
+        NotPresentedInUserToken.setExpiredTime(LOCAL_DATE_TIME_NOW);
 
         Login1VerificationTokenWithVerifiedFlag.setVerified(true);
-        Login1VerificationTokenWithExpiredTime.setExpairedTime(LocalDateTime.now());
-        Login1VerificationTokenWithVerifiedFlagAndExpiredTime.setExpairedTime(LocalDateTime.now());
+        Login1VerificationTokenWithExpiredTime.setExpiredTime(LocalDateTime.now());
+        Login1VerificationTokenWithVerifiedFlagAndExpiredTime.setExpiredTime(LocalDateTime.now());
 
         NotPresentedInUserTokenAndVerified.setVerified(true);
 
-        NullableVerificationToken.setExpairedTime(null);
+        NullableVerificationToken.setExpiredTime(null);
     }
 }

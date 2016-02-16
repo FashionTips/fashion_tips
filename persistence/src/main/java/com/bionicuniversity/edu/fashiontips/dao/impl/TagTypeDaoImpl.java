@@ -11,7 +11,7 @@ import javax.persistence.TypedQuery;
 public class TagTypeDaoImpl extends GenericDaoImpl<TagType, Long> implements TagTypeDao {
     @Override
     public TagType findByType(String type) {
-        TypedQuery<TagType> query = em.createQuery("SELECT tagType FROM TagType tagType WHERE tagType.type = :tagType", TagType.class);
+        TypedQuery<TagType> query = em.createNamedQuery("TagType.findByType", TagType.class);
         try {
             return query.setParameter("tagType", type).getSingleResult();
         } catch (NoResultException ex) {

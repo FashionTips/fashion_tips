@@ -19,7 +19,7 @@ public class RoleDaoImpl extends GenericDaoImpl<Role, Long> implements RoleDao {
     @Override
     public Role find(String name) {
 
-        TypedQuery<Role> query = em.createQuery("SELECT r FROM Role r WHERE r.name = :name", Role.class);
+        TypedQuery<Role> query = em.createNamedQuery("Role.find", Role.class);
 
         try {
             return query.setParameter("name", name).getSingleResult();

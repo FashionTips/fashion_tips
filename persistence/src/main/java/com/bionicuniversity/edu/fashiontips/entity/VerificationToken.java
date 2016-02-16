@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -16,12 +13,22 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "verification_token")
+@NamedQueries({
+        @NamedQuery(
+                name = "VerificationToken.getByEmail",
+                query = "SELECT t FROM VerificationToken t WHERE t.id.email =:email And t.id.type =:type"
+        ),
+        @NamedQuery(
+                name = "VerificationToken.getByToken",
+                query = "SELECT t FROM VerificationToken t WHERE t.token = :token"
+        )
+})
 public class VerificationToken implements Serializable {
 
     /**
      * Avoid duplicate invoking generate a new token
      */
-    public static final long EXPAIRED_PERIOD = 60L;
+    public static final long EXPIRED_PERIOD = 60L;
 
     @EmbeddedId
     @JsonIgnore
@@ -31,15 +38,15 @@ public class VerificationToken implements Serializable {
     private String token;
 
     @JsonIgnore
-    @Column(name = "expaired_time")
-    private LocalDateTime expairedTime;
+    @Column(name = "expired_time")
+    private LocalDateTime expiredTime;
 
     @JsonIgnore
     @Column(name = "verified")
     private boolean verified;
 
     public VerificationToken() {
-        this.expairedTime = LocalDateTime.now().plusSeconds(EXPAIRED_PERIOD);
+        this.expiredTime = LocalDateTime.now().plusSeconds(EXPIRED_PERIOD);
         this.verified = false;
     }
     @JsonCreator
@@ -78,12 +85,12 @@ public class VerificationToken implements Serializable {
         this.token = token;
     }
 
-    public LocalDateTime getExpairedTime() {
-        return expairedTime;
+    public LocalDateTime getExpiredTime() {
+        return expiredTime;
     }
 
-    public void setExpairedTime(LocalDateTime expairedTime) {
-        this.expairedTime = expairedTime;
+    public void setExpiredTime(LocalDateTime expiredTime) {
+        this.expiredTime = expiredTime;
     }
 
     public boolean isVerified() {
@@ -95,7 +102,7 @@ public class VerificationToken implements Serializable {
     }
 
     public void clear() {
-        this.expairedTime = null;
+        this.expiredTime = null;
     }
 
     public VerificationTokenPK getId() {

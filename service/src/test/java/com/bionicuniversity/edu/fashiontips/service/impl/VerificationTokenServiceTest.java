@@ -66,7 +66,7 @@ public class VerificationTokenServiceTest {
         LocalDateTime localDateTime = LocalDateTime.now();
         VerificationToken verificationToken =
                 new VerificationToken(email, type, token);
-        verificationToken.setExpairedTime(localDateTime);
+        verificationToken.setExpiredTime(localDateTime);
 
         doNothing().when(emailService).sentVerificationToken(email, type, message);
 
@@ -137,7 +137,7 @@ public class VerificationTokenServiceTest {
         LocalDateTime localDateTime = LocalDateTime.now();
         VerificationToken verificationToken =
                 new VerificationToken(email, type, token);
-        verificationToken.setExpairedTime(localDateTime);
+        verificationToken.setExpiredTime(localDateTime);
 
         when(verificationTokenDao.save(verificationToken)).thenReturn(verificationToken);
         doNothing().when(emailService).sentVerificationToken(email, type, token);
@@ -163,7 +163,7 @@ public class VerificationTokenServiceTest {
         LocalDateTime localDateTime = LocalDateTime.now();
         VerificationToken verificationToken =
                 new VerificationToken(email, type);
-        verificationToken.setExpairedTime(localDateTime);
+        verificationToken.setExpiredTime(localDateTime);
 
         when(verificationTokenDao.update(verificationToken)).thenReturn(verificationToken);
         doNothing().when(emailService).sentVerificationToken(verificationToken.getEmail(), type,  verificationToken.getToken());
@@ -187,7 +187,7 @@ public class VerificationTokenServiceTest {
         LocalDateTime localDateTime = LocalDateTime.now();
         VerificationToken verificationToken =
                 new VerificationToken(email, type);
-        verificationToken.setExpairedTime(localDateTime);
+        verificationToken.setExpiredTime(localDateTime);
         verificationToken.setToken(token);
 
         when(userService.findByEmail(email)).thenReturn(Optional.empty());
