@@ -47,4 +47,14 @@
         <put-attribute name="body" value="/WEB-INF/views/components/post.jsp"/>
     </definition>
 
+    <definition name="restorePasswordRequest" extends="common">
+        <put-attribute name="title" value="Restore Password Request"/>
+        <put-attribute name="body" value="/WEB-INF/views/components/restorePasswordRequest.jsp"/>
+    </definition>
+
+    <definition name="restorePassword" extends="common">
+        <put-attribute name="title" value="Restore Password"/>
+        <put-attribute name="body" value="/WEB-INF/views/components/restorePassword.jsp"/>
+    </definition>
+
 </tiles-definitions>
