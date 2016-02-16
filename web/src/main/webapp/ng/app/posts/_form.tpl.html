@@ -82,7 +82,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-2" data-ng-repeat="image in post.images">
-                    <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}" data-ng-click="showImage(image)"/>
+                    <img class="img-thumbnail" data-ng-src="{{image.imgUrl}}" data-ng-click="showImage(image)" data-ng-class="{activeImage:activeImage.id === image.id}"/>
                     <a href="#" data-ng-click="removeImage(image.id)"><span class="glyphicon glyphicon-remove"
                                                                             aria-hidden="true"></span></a>
                 </div>
