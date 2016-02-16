@@ -287,13 +287,10 @@ angular.module('ft.posts', [
                 /* Load users who liked post */
                 $scope.users = [];
                 $scope.showLikedUsers = function () {
-                    if ($scope.users.length === 0) {
-                        var result = postService.getUsersWhoLikedPostByPostId($scope.post.id);
-                        result.then(function (response) {
-                            $scope.users = response.data;
-                            console.log($scope.users);
-                        });
-                    }
+                    var result = postService.getUsersWhoLikedPostByPostId($scope.post.id);
+                    result.then(function (response) {
+                        $scope.users = response.data;
+                    });
                 };
 
                 /**

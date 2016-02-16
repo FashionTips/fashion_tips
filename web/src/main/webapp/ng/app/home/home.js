@@ -20,7 +20,7 @@ angular.module('ft.home', [
         tagType = tagTypeUrl === null ? undefined : tagTypeUrl[1];      // get value of tag type url-parameter
         tagValue = tagValueUrl === null ? undefined : tagValueUrl[1];      // get value of tag value url-parameter
 
-        $scope.posts = [];
+        $scope.posts = null;
 
         /* requests all posts and assigns them to scope variable */
         postService.getAll(q, null, category, clothes, tagType, tagValue, function(data) {
@@ -44,7 +44,8 @@ angular.module('ft.home', [
         });
 
         $scope.isLoading = function () {
-            return $http.pendingRequests.length !== 0;
+            //return $http.pendingRequests.length !== 0;
+            return $scope.posts === null;
         };
 
         $scope.$watch('isLoading()', function(val) {

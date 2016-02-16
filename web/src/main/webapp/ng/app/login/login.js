@@ -6,7 +6,7 @@ angular.module('ft.login', [
     return {
         restrict: 'E',
         templateUrl: '/ng/app/login/_loginForm.tpl.html',
-        controller: function ($scope, authService) {
+        controller: function ($scope, $window, authService) {
 
             /* Define variable for credential object which will be filled from inputs in Login and Register form */
             $scope.credentials = {};
@@ -20,6 +20,8 @@ angular.module('ft.login', [
                     /* if user is on login page - redirect him to home*/
                     if ($scope.toHome === 'true') {
                         window.location.href = "/";
+                    } else {
+                        $window.location.reload()
                     }
                 }, function(data) {
                     $scope.showLoginErrorMessage = true;
