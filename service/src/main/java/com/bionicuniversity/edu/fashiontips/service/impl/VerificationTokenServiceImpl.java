@@ -76,7 +76,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
     @Override
     public void generateToken(VerificationToken verificationToken) {
-        verificationToken.setExpairedTime(LocalDateTime.now().plusSeconds(VerificationToken.EXPAIRED_PERIOD));
+        verificationToken.setExpiredTime(LocalDateTime.now().plusSeconds(VerificationToken.EXPIRED_PERIOD));
         String unhashedToken = verificationToken.getEmail() + verificationToken.getType() + LocalDateTime.now();
         String token = VerificationTokenUtil.getHash(unhashedToken, VerificationTokenUtil.SHA_256);
         verificationToken.setToken(token);

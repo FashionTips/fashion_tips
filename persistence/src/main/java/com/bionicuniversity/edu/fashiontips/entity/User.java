@@ -36,6 +36,16 @@ import java.util.List;
                 @ColumnResult(name = "img_id", type = Long.class),
                 @ColumnResult(name = "img_name", type = String.class)})
 })
+@NamedQueries({
+        @NamedQuery(
+                name = "User.getByLogin",
+                query = "SELECT u from User u WHERE u.login=:login"
+        ),
+        @NamedQuery(
+                name = "User.findByEmail",
+                query = "SELECT u from User u WHERE u.email=:email"
+        )
+})
 public class User extends BaseEntity<Long> {
 
     @NotBlank(message = "Login could not be empty.", groups = {Create.class, Update.class})

@@ -2,6 +2,7 @@ package com.bionicuniversity.edu.fashiontips.entity;
 
 
 import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -11,6 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tag_types")
+@NamedQuery(name = "TagType.findByType", query = "SELECT tagType FROM TagType tagType WHERE tagType.type = :tagType")
 public class TagType extends BaseEntity<Long> {
 
     private String type;
@@ -29,8 +31,9 @@ public class TagType extends BaseEntity<Long> {
     }
 
     public TagType(){
-
+        // for JPA
     }
+
     @Override
     public String toString() {
         return "TagType{" +

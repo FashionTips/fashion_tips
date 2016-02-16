@@ -15,7 +15,7 @@ import javax.persistence.TypedQuery;
 public class TagDaoImpl extends GenericDaoImpl<Tag, Long> implements TagDao {
     @Override
     public boolean existsValue(String value) {
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(t.value) FROM Tag t WHERE t.value = :tagValue", Long.class);
+        TypedQuery<Long> query = em.createNamedQuery("Tag.existsValue", Long.class);
         return query.setParameter("tagValue", value).getSingleResult() > 0;
     }
 }

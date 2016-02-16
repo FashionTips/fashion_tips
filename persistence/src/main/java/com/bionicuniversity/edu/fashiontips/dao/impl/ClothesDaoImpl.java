@@ -11,7 +11,7 @@ import javax.persistence.TypedQuery;
 public class ClothesDaoImpl extends GenericDaoImpl<Clothes, Long> implements ClothesDao {
     @Override
     public Clothes findByName(String name) {
-        TypedQuery<Clothes> query = em.createQuery("SELECT clothes FROM Clothes clothes WHERE clothes.name = :name", Clothes.class);
+        TypedQuery<Clothes> query = em.createNamedQuery("Clothes.findByName", Clothes.class);
         try {
             return query.setParameter("name", name).getSingleResult();
         } catch (NoResultException ex) {

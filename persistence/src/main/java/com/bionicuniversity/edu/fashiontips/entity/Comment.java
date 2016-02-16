@@ -24,6 +24,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments")
+@NamedQuery(
+        name = "Comment.findAllByPost",
+        query = "SELECT DISTINCT c FROM Comment c WHERE c.post.id = :id ORDER BY c.created DESC"
+)
 public class Comment extends BaseEntity<Long> {
 
     /**
@@ -139,5 +143,4 @@ public class Comment extends BaseEntity<Long> {
                 ", created='" + created + '\'' +
                 '}';
     }
-
 }
