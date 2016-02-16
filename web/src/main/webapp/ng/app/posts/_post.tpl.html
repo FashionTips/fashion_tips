@@ -44,7 +44,8 @@
         </div>
 
         <!-- Active image -->
-        <img class="img-responsive post-img" data-ng-src="{{activeImage.imgUrl}}" data-ng-show="activeImage.imgUrl" data-ng-click="openPost(post.id)"/>
+        <!--<img class="img-responsive post-img" data-ng-src="{{activeImage.imgUrl}}" data-ng-show="activeImage.imgUrl" data-ng-click="openPost(post.id)"/>-->
+        <a href="/post/{{ post.id }}" class="main-post-image" style="background-image: url({{activeImage.imgUrl}})" data-ng-show="activeImage.imgUrl"></a>
 
         <!--Tags -->
         <div class="form-group">
